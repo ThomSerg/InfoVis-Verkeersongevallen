@@ -115,3 +115,7 @@
         - richting van de fietser
     - links:
         - https://opendata.apps.mow.vlaanderen.be/fietstellingen/index.html  
+
+- Eurostat verkeersongevallen
+    - links:
+        - https://ec.europa.eu/eurostat/web/main/search/-/search/estatsearchportlet_WAR_estatsearchportlet_INSTANCE_bHVzuvn1SZ8J?p_auth=BZhpIR3O&text=Persons+killed+in+road+accidents+by+type+of+road+%28source%3A+CARE%29&_estatsearchportlet_WAR_estatsearchportlet_INSTANCE_bHVzuvn1SZ8J_collection=&_estatsearchportlet_WAR_estatsearchportlet_INSTANCE_bHVzuvn1SZ8J_theme=
