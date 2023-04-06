@@ -4,6 +4,7 @@ import * as d3 from 'd3'
 import './App.css';
 import { Card, Layout, Space } from 'antd';
 import BarChart from './plotFunctions/barchart';
+import belgie from './images/belgium.png'
 
 
 function App() {
@@ -71,26 +72,51 @@ function App() {
       <h1>Verkeersongevallen in België</h1>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }} >
         <div style={{ flex: 1.2, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
-          <Card style={{ flex: 2, height: "550px", backgroundColor: "lightgray", marginBottom: "20px" }}> cool </Card>
-          <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}> cool </Card>
+          <Card style={{ flex: 2, height: "550px", backgroundColor: "lightgray", marginBottom: "20px" }}>
+            <img src={belgie} alt="" style={{ height: "500px" }}></img>
+          </Card>
+          <div style={{ flex: 1, height: "230px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <Card style={{ flex: 1, height: "230px", backgroundColor: "lightgray" }}>
+              <BarChart data={[25, 50, 35, 15, 94, 10]} width={400} height={175} />
+            </Card>
+            <Card style={{ flex: 1, height: "230px", backgroundColor: "lightgray" }}>
+              <BarChart data={[25, 50, 35, 15, 94, 10]} width={400} height={175} />
+            </Card>
+          </div>
         </div>
 
         <div style={{ flex: 1, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
-          <div style={{ flex: 1,  height: "200px" , display: "flex", justifyContent: "space-between" }}>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray"}}> cool </Card>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}> cool </Card>
+          <div style={{ flex: 1, height: "200px", display: "flex", justifyContent: "space-between" }}>
+            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
+              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
+            </Card>
+            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
+              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
+            </Card>
           </div>
-          <div style={{ flex: 1,  height: "200px", display: "flex", justifyContent: "space-between" }}>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray"}}> cool </Card>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}> cool </Card>
+          <div style={{ flex: 1, height: "200px", display: "flex", justifyContent: "space-between" }}>
+            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
+              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
+            </Card>
+            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
+              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
+            </Card>
           </div>
-          <div style={{ flex: 1,  height: "200px" , display: "flex", justifyContent: "space-between" }}>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray"}}> cool </Card>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}> cool </Card>
+          <div style={{ flex: 1, height: "200px", display: "flex", justifyContent: "space-between" }}>
+            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
+              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
+            </Card>
+            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
+              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
+            </Card>
           </div>
-          <div style={{ flex: 1,  height: "200px" , display: "flex", justifyContent: "space-between" }}>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray"}}> cool </Card>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}> cool </Card>
+          <div style={{ flex: 1, height: "200px", display: "flex", justifyContent: "space-between" }}>
+            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
+              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
+            </Card>
+            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
+              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
+            </Card>
           </div>
         </div>
 

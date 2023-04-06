@@ -1,19 +1,18 @@
 import React, { useRef, useEffect } from "react";
 import * as d3 from "d3";
 
-function BarChart({ data }) {
+function BarChart({ data , width, height }) {
   const svgRef = useRef();
 
   useEffect(() => {
-    const w = 400;
-    const h = 300;
+    const w = width || 400;
+    const h = height || 300;
 
     const svg = d3
       .select(svgRef.current)
       .attr("width", w)
       .attr("height", h)
       .style("overflow", "visible")
-      .style("margin-top", "75px");
 
     const xScale = d3
       .scaleBand()
