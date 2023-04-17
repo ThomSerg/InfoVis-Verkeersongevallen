@@ -168,3 +168,9 @@ verslag
         - Belgium in perspective: https://www.vias.be/publications/Belgi%C3%AB%20in%20Europees%20perspectief%20-%20Een%20systematische%20vergelijking%20van%20indicatoren%20voor%20verkeersveiligheid/Belgium_in_a_european_perspective.pdf
         - interactive dashboard: https://app.powerbi.com/view?r=eyJrIjoiM2Y5MzEwYTMtMTE1Mi00MzNkLWFlOWQtNmU2ZWNiM2RhYzJlIiwidCI6IjlkMWIxYjIyLWE5ZTAtNDg1Mi1hMTEwLWZlYzRmZDc1N2M2ZSIsImMiOjh9&pageName=ReportSection9fbd3f40b24badccab99
         - other publications: https://www.esranet.eu/en/publications/#europe
+
+
+- FERSI road safety information
+    collectie aan bronnen, websites voor europese road safety
+    - links: 
+        - https://fersi.org/road-safety-technical-information/
