@@ -22,6 +22,47 @@
 - vergelijking regios
 	- zeker goed extra grafieken naast hoofd vis om vergelijkingen inzicht te geven
 
+#### 17/04
+proberen om patronen in data te linken met artikels, ... -> verklaren waarom patroon zien
+
+toenamen aantal ongevallen 2021
+- reden achter deze toename onderzoeken, wat zijn de factoren
+- welke factoren zijn mee veranderd
+
+hypothese invloed corona
+- wanneer gingen de nachtclubs terug open
+- waar ligt de piek in de data en waarom
+wat is er veranderd, wanneer is het veranderd
+
+-> proberen een soort contextualisering van de data te maken, moeten geen harde links zijn
+
+proberen wat ideeen op te doen uit voorbeeldvisualisaties
+
+proberen een visualisatie te maken rond een uitspraak in het nieuws (vb bepaalde stijding verklaren)
+
+interessanter om een héél specifieke doelgroep te hebben, duidelijk wat ze met de data moeten doen
+
+moeten niet persé véél visualisaties zijn
+- twee sterk inzichtelijke en met elkaar gelinkte visualisaties is ook goed (KISS)
+
+doelgroep
+- advies aan overheden
+- welke campagnes voeren?
+-> starten met de inzichten, hier een visualisatie rond maken
+
+
+presentatie
+- idee
+- inspiratie
+- inzichten met prototype
+- ruwe grafieken
+- hoe afgeweken van origineel ontwerp
+
+verslag
+- redenering laten zien van waar de design keuzes zijn gekomen
+- laten zien welke afwegingen zijn gemaakt
+- iteratief designproces laten zien
+
 ### Datasets
 
 - Verkeersslachtoffers [2005-2021]
@@ -119,3 +160,11 @@
 - Eurostat verkeersongevallen
     - links:
         - https://ec.europa.eu/eurostat/web/main/search/-/search/estatsearchportlet_WAR_estatsearchportlet_INSTANCE_bHVzuvn1SZ8J?p_auth=BZhpIR3O&text=Persons+killed+in+road+accidents+by+type+of+road+%28source%3A+CARE%29&_estatsearchportlet_WAR_estatsearchportlet_INSTANCE_bHVzuvn1SZ8J_collection=&_estatsearchportlet_WAR_estatsearchportlet_INSTANCE_bHVzuvn1SZ8J_theme=
+
+- ESRA (E-Survey of Road users' Attitudes)
+    - links:
+        - pdf report: https://www.vias.be/publications/ESRA%202%20A%20global%20look%20at%20road%20safety/A%20global%20look%20at%20road%20safety%20-%20Synthesis%20from%20the%20ESRA2%20survey%20in%2048%20countries.pdf
+        - Vias institute: https://www.vias.be/en/research/networks/international-networks/#question-2
+        - Belgium in perspective: https://www.vias.be/publications/Belgi%C3%AB%20in%20Europees%20perspectief%20-%20Een%20systematische%20vergelijking%20van%20indicatoren%20voor%20verkeersveiligheid/Belgium_in_a_european_perspective.pdf
+        - interactive dashboard: https://app.powerbi.com/view?r=eyJrIjoiM2Y5MzEwYTMtMTE1Mi00MzNkLWFlOWQtNmU2ZWNiM2RhYzJlIiwidCI6IjlkMWIxYjIyLWE5ZTAtNDg1Mi1hMTEwLWZlYzRmZDc1N2M2ZSIsImMiOjh9&pageName=ReportSection9fbd3f40b24badccab99
+        - other publications: https://www.esranet.eu/en/publications/#europe
