@@ -174,3 +174,8 @@ verslag
     collectie aan bronnen, websites voor europese road safety
     - links: 
         - https://fersi.org/road-safety-technical-information/
+
+- WHO Global Status Report On Road Safety 2018
+    - links:
+        - publication: https://www.who.int/publications/i/item/9789241565684
+        - dashboard: https://extranet.who.int/roadsafety/death-on-the-roads/#vehicles/front_impact
