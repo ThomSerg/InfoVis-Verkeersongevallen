@@ -7,7 +7,7 @@ function LineChart({ width, height }) {
   useEffect(() => {
 
     const margin = { top: 30, right: 10, bottom: 10, left: 0 };
-    const width = 1800 - margin.left - margin.right;
+    const width = 1920 - margin.left - margin.right;
     const height = 200 - margin.top - margin.bottom;
 
     const svg = d3.select(svgRef.current)
