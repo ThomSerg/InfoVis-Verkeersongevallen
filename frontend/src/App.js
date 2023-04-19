@@ -5,7 +5,8 @@ import './App.css';
 import { Card, Layout, Space } from 'antd';
 import BarChart from './plotFunctions/barchart';
 import belgie from './images/belgium.png'
-
+import {MapContainer, TileLayer} from 'react-leaflet'
+import 'leaflet/dist/leaflet.css'
 
 function App() {
 
@@ -71,7 +72,11 @@ function App() {
 
       <h1>Verkeersongevallen in België</h1>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }} >
+<<<<<<< HEAD
         <div style={{ flex: 1.2, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
+=======
+        {/* <div style={{ flex: 1.2, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
+>>>>>>> 057e093b82b6721c66410096673a4ebe9b6e811b
           <Card style={{ flex: 2, height: "550px", backgroundColor: "lightgray", marginBottom: "20px" }}>
             <img src={belgie} alt="" style={{ height: "500px" }}></img>
           </Card>
@@ -83,9 +88,26 @@ function App() {
               <BarChart data={[25, 50, 35, 15, 94, 10]} width={400} height={175} />
             </Card>
           </div>
+<<<<<<< HEAD
         </div>
 
         <div style={{ flex: 1, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
+=======
+        </div> */}
+        <MapContainer
+          center={[47.931044594186, 10.368814770567818]}
+          zoom={5}
+          style={{ width: '100vw', height: '100vh'}}>
+        <TileLayer 
+          url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=eSTvidUJfgEQsuinQFfC"
+          attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
+        />
+        </MapContainer>
+
+        
+
+        {/* <div style={{ flex: 1, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
+>>>>>>> 057e093b82b6721c66410096673a4ebe9b6e811b
           <div style={{ flex: 1, height: "200px", display: "flex", justifyContent: "space-between" }}>
             <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
               <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
@@ -117,8 +139,13 @@ function App() {
             <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
               <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
             </Card>
+<<<<<<< HEAD
           </div>
         </div>
+=======
+          </div> */}
+        {/* </div> */}
+>>>>>>> 057e093b82b6721c66410096673a4ebe9b6e811b
 
       </div>
 
