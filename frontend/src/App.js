@@ -5,8 +5,9 @@ import './App.css';
 import { Card, Layout, Space } from 'antd';
 import BarChart from './plotFunctions/barchart';
 import belgie from './images/belgium.png'
-import {MapContainer, TileLayer} from 'react-leaflet'
+import {MapContainer, Polygon, TileLayer} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
+import {landData} from './europe'
 
 function App() {
 
@@ -54,6 +55,11 @@ function App() {
     backgroundColor: '#7dbcea',
   };
 
+  // const landData = fetchJSON('./europe')
+
+  // const data = JSON.parse(require('./geo_europe'));
+
+
 
   // flex duidt de relatieve grootte aan van de elementen, de container gaat proberen de elementen even groot te maken
   // Een hogere flex waarde tegenover de andere gaat dus meer ruimte innemen
@@ -93,6 +99,51 @@ function App() {
           url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=eSTvidUJfgEQsuinQFfC"
           attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
         />
+        {
+          landData.features.map((land) => {
+            
+
+            const coordinates = land.geometry.coordinates[0].map((item) => [item[1], item[0]]);
+
+            return(<Polygon
+              pathOptions={{
+                fillColor: '#FD8D3C',
+                fillOpacity: 0.7,
+                weight: 2,
+                opacity: 1,
+                dashArray: 3,
+                color: 'white'
+              }}
+              positions={coordinates}
+              eventHandlers={{
+                mouseover: (e) => {
+                  const layer = e.target;
+                  layer.setStyle({
+                    dashArray: "",
+                    fillColor: "#BD0026",
+                    fillOpacity: 0.7,
+                    weight: 2,
+                    opacity: 1,
+                    color: "white",
+                  })
+                },
+                mouseout: (e) => {
+                  const layer = e.target;
+                  layer.setStyle({
+                    fillOpacity: 0.7,
+                    weight: 2,
+                    dashArray: "3",
+                    color: 'white',
+                    fillColor: '#FD8D3C'
+                  });
+                },
+                click: (e) => {
+  
+                }
+              }}
+            />)
+          })
+        }
         </MapContainer>
 
         
@@ -145,5 +196,13 @@ function App() {
 
 
 }
+
+function fetchJSON(url) {
+  return fetch(url)
+    .then(function(response) {
+      return response.json();
+    });
+}
+
 
 export default App;
