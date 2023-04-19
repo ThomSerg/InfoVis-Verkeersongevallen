@@ -1,13 +1,14 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from 'd3';
 
-function LineChart() {
+function LineChart({ width, height }) {
   const svgRef = useRef(null);
 
   useEffect(() => {
+
     const margin = { top: 30, right: 10, bottom: 10, left: 0 };
-    const width = 1000 - margin.left - margin.right;
-    const height = 500 - margin.top - margin.bottom;
+    const width = 1800 - margin.left - margin.right;
+    const height = 200 - margin.top - margin.bottom;
 
     const svg = d3.select(svgRef.current)
       .append("svg")
@@ -21,6 +22,7 @@ function LineChart() {
 
       // Extract the list of dimensions we want to keep in the plot. Here I keep all except the column called Species
       const dimensions = ['Sepal_Length', 'Sepal_Width', 'Petal_Length', 'Petal_Width']
+      
 
       // For each dimension, I build a linear scale. I store all in a y object
       const y = {}
@@ -74,6 +76,7 @@ function LineChart() {
 
     })
   }, [])
+
 
   return (
     <div ref={svgRef}></div>

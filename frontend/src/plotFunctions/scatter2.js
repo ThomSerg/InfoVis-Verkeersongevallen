@@ -1,5 +1,6 @@
 import React, { useEffect, useRef } from 'react';
-import * as d3 from 'd3';
+// import * as d3 from 'd3';
+import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 
 function Scatter2() {
   const svgRef = useRef(null);
@@ -8,7 +9,7 @@ function Scatter2() {
     // Set the dimensions and margins of the graph
     const margin = { top: 10, right: 30, bottom: 30, left: 60 };
     const width = 800 - margin.left - margin.right;
-    const height = 750 - margin.top - margin.bottom;
+    const height = 600 - margin.top - margin.bottom;
 
     // Append the SVG object to the body of the page
     const svg = d3.select(svgRef.current)
@@ -18,9 +19,8 @@ function Scatter2() {
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     // Read the data
-    d3.csv('2_TwoNum.csv').then(data => {
-        
-    //console.log(data);
+    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/2_TwoNum.csv").then(data => {        
+      console.log(data);
 
       // Add X axis
       const x = d3.scaleLinear()
@@ -52,12 +52,13 @@ function Scatter2() {
             d3.select(this).transition().duration(200).style("stroke", "red");
             
         });
+
     });
   }, []);
-
   return (
     <svg ref={svgRef}></svg>
   );
+
 }
 
 export default Scatter2;

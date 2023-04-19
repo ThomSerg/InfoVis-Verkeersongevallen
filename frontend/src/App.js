@@ -10,25 +10,11 @@ import 'leaflet/dist/leaflet.css'
 import {landData} from './europe'
 import LineChart from "./plotFunctions/linechart";
 import Scatter2 from "./plotFunctions/scatter2";
+import { Canvas, canvas } from "leaflet";
+
 
 function App() {
 
-  /*const [data] = useState([25, 50, 35, 15, 94, 10]);
-
-  const charts = [];
-
-  // Create an array of BarChart components with the same data
-  for (let i = 0; i < 8; i++) {
-    charts.push(<BarChart key={i} data={data} />);
-  }
-  
-
-  return (
-    <div className="App">
-      <div className="row">{charts.slice(0, 4)}</div>
-      <div className="row">{charts.slice(4, 8)}</div>
-    </div>
-  );*/
   const { Header, Footer, Sider, Content } = Layout;
   const headerStyle = {
     textAlign: 'center',
@@ -57,6 +43,7 @@ function App() {
     backgroundColor: '#7dbcea',
   };
 
+
   // const landData = fetchJSON('./europe')
 
   // const data = JSON.parse(require('./geo_europe'));
@@ -66,7 +53,6 @@ function App() {
   // flex duidt de relatieve grootte aan van de elementen, de container gaat proberen de elementen even groot te maken
   // Een hogere flex waarde tegenover de andere gaat dus meer ruimte innemen
 
-  //TODO relatieve groottes   <Card style={{ flex: 1, height: "300px", backgroundColor: "lightgray", marginLeft: "10px", marginRight: "10px" }}> cool </Card>
   return (
     <div className="App">
 
@@ -78,57 +64,29 @@ function App() {
         size={[0, 48]}
       ></Space>
 
-      <h1>Verkeersongevallen in België</h1>
+      <h1>Verkeersongevallen in Europa</h1>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }} >
-        {/* <div style={{ flex: 1.2, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
-          <Card style={{ flex: 2, height: "550px", backgroundColor: "lightgray", marginBottom: "20px" }}>
-            <img src={belgie} alt="" style={{ height: "500px" }}></img>
-          </Card>
-
-          <div style={{ flex: 1, height: "230px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-            <Card style={{ flex: 1, height: "230px", backgroundColor: "lightgray" }}>
-              <BarChart data={[25, 50, 35, 15, 94, 10]} width={400} height={175} />
-            </Card>
-            <Card style={{ flex: 1, height: "230px", backgroundColor: "lightgray" }}>
-              <BarChart data={[25, 50, 35, 15, 94, 10]} width={400} height={175} />
-            </Card>
-          </div>
-        </div> */}
-        {/*<div style={{ flex: 1.2, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
-          <Card style={{ flex: 2, height: "550px", backgroundColor: "lightgray", marginBottom: "20px" }}>
-            <img src={belgie} alt="" style={{ height: "500px" }}></img>
-          </Card>
-        </div>
-        <div style={{ flex: 1, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
-            <Card style={{ flex: 1, height: "550px", backgroundColor: "lightgray", marginBottom: "20px" }}>
-              <Scatter2  />
-            </Card>
-        </div>
-      </div>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }} >
-      <div style={{ flex: 1, height: "230px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-            <Card style={{ flex: 1, height: "550px", backgroundColor: "lightgray" }}>
-              <LineChart />
-            </Card>
-          </div>
-      </div>
-    </div>
-        */}
-
-        
-        <MapContainer
-          center={[47.931044594186, 10.368814770567818]}
-          zoom={5}
-          style={{ width: '100vw', height: '100vh'}}>
+      <MapContainer 
+          center={[51.91803195062262, 14.706545280906075]}
+          dragging={false}
+          zoom={3.5}
+          maxZoom={3.5}
+          minZoom={3.5}
+          zoomControl={false}
+          style={{ width: '50%', height: '65vh'}}>
         <TileLayer 
           url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=eSTvidUJfgEQsuinQFfC"
           attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
         />
         {
+          
           landData.features.map((land) => {
-            
 
+            
             const coordinates = land.geometry.coordinates[0].map((item) => [item[1], item[0]]);
+            if (land.geometry.type == 'MultiPolygon') {
+              console.log(land.properties.NAME)
+            } 
 
             return(<Polygon
               pathOptions={{
@@ -171,62 +129,17 @@ function App() {
         }
         </MapContainer>
 
-        
-
-        {/* <div style={{ flex: 1, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
-          <div style={{ flex: 1, height: "200px", display: "flex", justifyContent: "space-between" }}>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
-              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
-            </Card>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
-              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
-            </Card>
-          </div>
-          <div style={{ flex: 1, height: "200px", display: "flex", justifyContent: "space-between" }}>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
-              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
-            </Card>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
-              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
-            </Card>
-          </div>
-          <div style={{ flex: 1, height: "200px", display: "flex", justifyContent: "space-between" }}>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
-              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
-            </Card>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
-              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
-            </Card>
-          </div>
-          <div style={{ flex: 1, height: "200px", display: "flex", justifyContent: "space-between" }}>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
-              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
-            </Card>
-            <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
-              <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
-            </Card>
-          </div> */}
-        {/* </div> */}
-
+        <div class="scatterplot">
+          <Scatter2 class="scatterplot" />
+        </div>
       </div>
-
-
-
-
+      <div style={{ flex: 1, height: "230px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <LineChart />
+      </div>
     </div>
+
   );
 
-
-
-
-
-}
-
-function fetchJSON(url) {
-  return fetch(url)
-    .then(function(response) {
-      return response.json();
-    });
 }
 
 
