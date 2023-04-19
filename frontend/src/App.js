@@ -8,6 +8,8 @@ import belgie from './images/belgium.png'
 import {MapContainer, Polygon, TileLayer} from 'react-leaflet'
 import 'leaflet/dist/leaflet.css'
 import {landData} from './europe'
+import LineChart from "./plotFunctions/linechart";
+import Scatter2 from "./plotFunctions/scatter2";
 
 function App() {
 
@@ -82,6 +84,7 @@ function App() {
           <Card style={{ flex: 2, height: "550px", backgroundColor: "lightgray", marginBottom: "20px" }}>
             <img src={belgie} alt="" style={{ height: "500px" }}></img>
           </Card>
+
           <div style={{ flex: 1, height: "230px", display: "flex", justifyContent: "space-between", width: "100%" }}>
             <Card style={{ flex: 1, height: "230px", backgroundColor: "lightgray" }}>
               <BarChart data={[25, 50, 35, 15, 94, 10]} width={400} height={175} />
@@ -91,6 +94,28 @@ function App() {
             </Card>
           </div>
         </div> */}
+        {/*<div style={{ flex: 1.2, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
+          <Card style={{ flex: 2, height: "550px", backgroundColor: "lightgray", marginBottom: "20px" }}>
+            <img src={belgie} alt="" style={{ height: "500px" }}></img>
+          </Card>
+        </div>
+        <div style={{ flex: 1, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
+            <Card style={{ flex: 1, height: "550px", backgroundColor: "lightgray", marginBottom: "20px" }}>
+              <Scatter2  />
+            </Card>
+        </div>
+      </div>
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }} >
+      <div style={{ flex: 1, height: "230px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <Card style={{ flex: 1, height: "550px", backgroundColor: "lightgray" }}>
+              <LineChart />
+            </Card>
+          </div>
+      </div>
+    </div>
+        */}
+
+        
         <MapContainer
           center={[47.931044594186, 10.368814770567818]}
           zoom={5}
