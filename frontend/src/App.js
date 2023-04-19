@@ -72,11 +72,7 @@ function App() {
 
       <h1>Verkeersongevallen in België</h1>
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }} >
-<<<<<<< HEAD
-        <div style={{ flex: 1.2, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
-=======
         {/* <div style={{ flex: 1.2, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
->>>>>>> 057e093b82b6721c66410096673a4ebe9b6e811b
           <Card style={{ flex: 2, height: "550px", backgroundColor: "lightgray", marginBottom: "20px" }}>
             <img src={belgie} alt="" style={{ height: "500px" }}></img>
           </Card>
@@ -88,11 +84,6 @@ function App() {
               <BarChart data={[25, 50, 35, 15, 94, 10]} width={400} height={175} />
             </Card>
           </div>
-<<<<<<< HEAD
-        </div>
-
-        <div style={{ flex: 1, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
-=======
         </div> */}
         <MapContainer
           center={[47.931044594186, 10.368814770567818]}
@@ -107,7 +98,6 @@ function App() {
         
 
         {/* <div style={{ flex: 1, flexDirection: "column", height: "800px", marginLeft: "10px", marginRight: "10px", display: "flex", justifyContent: "space-between" }}>
->>>>>>> 057e093b82b6721c66410096673a4ebe9b6e811b
           <div style={{ flex: 1, height: "200px", display: "flex", justifyContent: "space-between" }}>
             <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
               <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
@@ -139,13 +129,8 @@ function App() {
             <Card style={{ flex: 1, height: "200px", backgroundColor: "lightgray" }}>
               <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150} />
             </Card>
-<<<<<<< HEAD
-          </div>
-        </div>
-=======
           </div> */}
         {/* </div> */}
->>>>>>> 057e093b82b6721c66410096673a4ebe9b6e811b
 
       </div>
 
