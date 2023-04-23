@@ -63,6 +63,39 @@ verslag
 - laten zien welke afwegingen zijn gemaakt
 - iteratief designproces laten zien
 
+#### 2nd intermediate pres. (20/04)
+
+small multiples
+- zo veel relaties snel zichtbaar maken
+
+kaart misschien opnieuw niet zo centraal
+- kan wel interessant zijn om iets locatiegebonden te doen, hoe over europa verdeeld (assistenten zijn het er niet over eens)
+
+werken met twee kleuren niet zo goed
+- orange/blauw op kaart
+- meestal niet zo duidelijk
+
+opletten met parallele coordinaten
+- meestal niet zo duidelijk, lastig om relaties te zien
+
+als doelgroep beleidsmakers zijn, waarom niet één land selecteren en de rest hiermee laten vergelijken
+- kijken naar paper van België (VIAS)
+
+probeer een aantal interessante naratieven te vinden en hierop te focussen
+- niet persé een dashboard van alles maken
+- => call to action
+- niet zo losstaande grafieken
+
+kijken naar andere visualisaties
+
+zeker nieuwe interessante datasets
+- veel interessantere inzichten
+
+toch nog kijken naar tijd
+- belgie heeft afgelopen jaren veel geinvesteerd
+- zien ofdat dit nut heeft gehad
+- ESRA zal niet mee updaten
+
 ### Datasets
 
 - Verkeersslachtoffers [2005-2021]
