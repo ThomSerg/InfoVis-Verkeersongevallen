@@ -5,9 +5,11 @@ import './App.css';
 import { Card, Layout, Space } from 'antd';
 import BarChart from './plotFunctions/barchart';
 import 'leaflet/dist/leaflet.css'
-import LineChart from "./plotFunctions/linechart";
 import Scatter2 from "./plotFunctions/scatter2";
 import Map from "./map_europe/map"
+import BarChartHorz from "./plotFunctions/barchart_horz";
+import PieChart from "./plotFunctions/piechart";
+import BarChartFisheye from "./plotFunctions/barchart_fisheye";
 
 
 function App() {
@@ -70,8 +72,13 @@ function App() {
           <Scatter2 class="scatterplot" />
         </div>
       </div>
-      <div style={{ flex: 1, height: "230px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <LineChart />
+      <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <BarChartHorz />
+      </div>
+      <div style={{ flex: 1, height: "450px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <PieChart />
+      </div>
+      <div style={{ flex: 1, height: "450px", display: "flex", justifyContent: "space-between", width: "100%" }}>
       </div>
     </div>
 
