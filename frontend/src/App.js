@@ -9,10 +9,19 @@ import Scatter2 from "./plotFunctions/scatter2";
 import Map from "./map_europe/map"
 import BarChartHorz from "./plotFunctions/barchart_horz";
 import PieChart from "./plotFunctions/piechart";
-import BarChartFisheye from "./plotFunctions/barchart_fisheye";
 
 
 function App() {
+
+  const [selectedButton, setSelectedButton] = useState('buttonOne');
+
+  const handleButtonOneClick = () => {
+    setSelectedButton('buttonOne');
+  };
+
+  const handleButtonTwoClick = () => {
+    setSelectedButton('buttonTwo');
+  };
 
   const { Header, Footer, Sider, Content } = Layout;
   const headerStyle = {
@@ -64,22 +73,31 @@ function App() {
       ></Space>
 
       <h1>Verkeersongevallen in Europa</h1>
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }} >
-      
-        <Map />
 
+      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }} >
+          <button onClick={handleButtonOneClick}>Inzicht1</button>
+          <button onClick={handleButtonTwoClick}>Inzicht2</button>
+        </div>
+
+      <div style={{ display: "flex", marginBottom: "20px" }} >
+        <Map />
+      {selectedButton === 'buttonOne' && (
         <div class="scatterplot">
-          <Scatter2 class="scatterplot" />
+        <Scatter2 class="scatterplot" />
+      </div>
+      )
+      
+      }
+      {selectedButton === 'buttonTwo' && (
+        <div>
+        <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <BarChartHorz />
+          <PieChart />
         </div>
       </div>
-      <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <BarChartHorz />
+      )}
       </div>
-      <div style={{ flex: 1, height: "450px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <PieChart />
-      </div>
-      <div style={{ flex: 1, height: "450px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-      </div>
+
     </div>
 
   );
