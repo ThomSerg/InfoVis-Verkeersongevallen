@@ -37,10 +37,17 @@ function BarChart({ data , width, height }) {
       .selectAll(".bar")
       .data(data)
       .join("rect")
+      .attr("class", "bar")
       .attr("x", (value, index) => xScale(index))
-      .attr("y", (value) => yScale(value))
+      .attr("y", h) // Start each bar at the bottom of the chart
       .attr("width", xScale.bandwidth())
-      .attr("height", (value) => h - yScale(value));
+      .transition() // Add transition
+      .duration(1000) // Set the duration to 1 second
+      .attr("y", (value) => yScale(value)) // Animate the height of each bar
+      .attr("height", (value) => h - yScale(value)); // Animate the height of each bar
+
+    
+
   }, [data]);
 
   return <svg ref={svgRef}></svg>;

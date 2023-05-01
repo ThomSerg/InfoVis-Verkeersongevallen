@@ -43,15 +43,18 @@ const BarChart = () => {
 
       //Bars
       svg.selectAll("myRect")
-        .data(data)
-        .enter()
-        .append("rect")
-        .attr("x", x(0))
-        .attr("y", function (d) { return y(d.Country); })
-        .attr("width", function (d) { return x(d.Value); })
-        .attr("height", y.bandwidth())
-        .attr("fill", "#69b3a2")
-    });
+      .data(data)
+      .enter()
+      .append("rect")
+      .attr("x", x(0))
+      .attr("y", function (d) { return y(d.Country); })
+      .attr("width", 0) // set initial width to 0
+      .attr("height", y.bandwidth())
+      .attr("fill", "#69b3a2")
+      .transition() // add transition
+      .duration(1000) // set duration of transition
+      .attr("width", function (d) { return x(d.Value); }) // gradually increase width to final value
+  });
   }, []);
 
   return <svg ref={svgRef}></svg>;
