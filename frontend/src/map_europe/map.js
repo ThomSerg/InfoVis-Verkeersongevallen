@@ -10,7 +10,7 @@ function Map() {
         maxZoom={3.5}
         minZoom={3.5}
         zoomControl={false}
-        style={{ width: '50%', height: '65vh'}}>
+        style={{ width: '30%', height: '65vh'}}>
       <TileLayer 
         url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=eSTvidUJfgEQsuinQFfC"
         attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'

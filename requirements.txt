@@ -3,3 +3,8 @@ pandas
 numpy
 openpyxl
 matplotlib
+BeautifulSoup4
+Requests
+lxml
+folium
+mapclassify
