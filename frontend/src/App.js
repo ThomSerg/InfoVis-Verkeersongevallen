@@ -61,6 +61,8 @@ function App() {
   // flex duidt de relatieve grootte aan van de elementen, de container gaat proberen de elementen even groot te maken
   // Een hogere flex waarde tegenover de andere gaat dus meer ruimte innemen
 
+
+
   return (
     <div className="App">
 
@@ -75,8 +77,8 @@ function App() {
       <h1>Verkeersongevallen in Europa</h1>
 
       <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }} >
-          <button onClick={handleButtonOneClick}>Inzicht1</button>
-          <button onClick={handleButtonTwoClick}>Inzicht2</button>
+          <button className="button" onClick={handleButtonOneClick}>Inzicht1</button>
+          <button className="button" onClick={handleButtonTwoClick}>Inzicht2</button>
         </div>
 
       <div style={{ display: "flex", marginBottom: "20px" }} >
@@ -93,6 +95,7 @@ function App() {
         <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
           <BarChartHorz />
           <PieChart />
+          <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150}/>
         </div>
       </div>
       )}
