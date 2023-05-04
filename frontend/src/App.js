@@ -34,9 +34,9 @@ function App() {
       <h1>Verkeersongevallen in Europa</h1>
 
       <div class="buttonContainer" >
-          <button id="button1" onClick={(e) => handleClick(e.target.id)}>Inzicht1</button>
-          <button id="button2" onClick={(e) => handleClick(e.target.id)}>Inzicht2</button>
-          <button id="button3" onClick={(e) => handleClick(e.target.id)}>Inzicht3</button>
+          <button id="button1" onClick={(e) => handleClick(e.target.id)}>Inzicht 1</button>
+          <button id="button2" onClick={(e) => handleClick(e.target.id)}>Inzicht 2</button>
+          <button id="button3" onClick={(e) => handleClick(e.target.id)}>Inzicht 3</button>
         </div>
 
       <div style={{ display: "flex", marginBottom: "20px" }} >
