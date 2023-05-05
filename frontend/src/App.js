@@ -9,59 +9,16 @@ import Scatter2 from "./plotFunctions/scatter2";
 import Map from "./map_europe/map"
 import BarChartHorz from "./plotFunctions/barchart_horz";
 import PieChart from "./plotFunctions/piechart";
+import { select } from "d3";
 
 
 function App() {
 
-  const [selectedButton, setSelectedButton] = useState('buttonOne');
+  const [selectedButton, setSelectedButton] = useState('button1');
 
-  const handleButtonOneClick = () => {
-    setSelectedButton('buttonOne');
-  };
-
-  const handleButtonTwoClick = () => {
-    setSelectedButton('buttonTwo');
-  };
-
-  const { Header, Footer, Sider, Content } = Layout;
-  const headerStyle = {
-    textAlign: 'center',
-    color: '#fff',
-    height: 64,
-    paddingInline: 50,
-    lineHeight: '64px',
-    backgroundColor: '#7dbcea',
-  };
-  const contentStyle = {
-    textAlign: 'center',
-    minHeight: 120,
-    lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#108ee9',
-  };
-  const siderStyle = {
-    textAlign: 'center',
-    lineHeight: '120px',
-    color: '#fff',
-    backgroundColor: '#3ba0e9',
-  };
-  const footerStyle = {
-    textAlign: 'center',
-    color: '#fff',
-    backgroundColor: '#7dbcea',
-  };
-
-
-  // const landData = fetchJSON('./europe')
-
-  // const data = JSON.parse(require('./geo_europe'));
-
-
-
-  // flex duidt de relatieve grootte aan van de elementen, de container gaat proberen de elementen even groot te maken
-  // Een hogere flex waarde tegenover de andere gaat dus meer ruimte innemen
-
-
+  function handleClick(id) {
+    setSelectedButton(id);
+  }
 
   return (
     <div className="App">
@@ -76,21 +33,22 @@ function App() {
 
       <h1>Verkeersongevallen in Europa</h1>
 
-      <div style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }} >
-          <button className="button" onClick={handleButtonOneClick}>Inzicht1</button>
-          <button className="button" onClick={handleButtonTwoClick}>Inzicht2</button>
+      <div class="buttonContainer" >
+          <button id="button1" onClick={(e) => handleClick(e.target.id)}>Inzicht 1</button>
+          <button id="button2" onClick={(e) => handleClick(e.target.id)}>Inzicht 2</button>
+          <button id="button3" onClick={(e) => handleClick(e.target.id)}>Inzicht 3</button>
         </div>
 
       <div style={{ display: "flex", marginBottom: "20px" }} >
         <Map />
-      {selectedButton === 'buttonOne' && (
+      {selectedButton === 'button1' && (
         <div class="scatterplot">
         <Scatter2 class="scatterplot" />
       </div>
       )
       
       }
-      {selectedButton === 'buttonTwo' && (
+      {selectedButton === 'button2' && (
         <div>
         <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
           <BarChartHorz />

@@ -45,7 +45,7 @@ function Map() {
 function drawPolygon(coordinates) {
     return(<Polygon
       pathOptions={{
-        fillColor: '#FD8D3C',
+        fillColor: '#7f7e90',
         fillOpacity: 0.7,
         weight: 2,
         opacity: 1,
@@ -58,7 +58,7 @@ function drawPolygon(coordinates) {
           const layer = e.target;
           layer.setStyle({
             dashArray: "",
-            fillColor: "#BD0026",
+            fillColor: "#e1dfba",
             fillOpacity: 0.7,
             weight: 2,
             opacity: 1,
@@ -72,7 +72,7 @@ function drawPolygon(coordinates) {
             weight: 2,
             dashArray: "3",
             color: 'white',
-            fillColor: '#FD8D3C'
+            fillColor: '#7f7e90'
           });
         },
         click: (e) => {

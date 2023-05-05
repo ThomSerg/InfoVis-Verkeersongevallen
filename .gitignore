@@ -1,2 +1,5 @@
 ./conda
 *.pyc
+node_modules/
+
+
