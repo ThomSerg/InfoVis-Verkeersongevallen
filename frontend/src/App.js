@@ -53,18 +53,17 @@ function App() {
         <div>
         <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
           <PieChart cat="standard_driver"/>
-          <PieChart cat ="novice_driver"/>
+          <PieChart cat ="standard_minus_novice"/>
         </div>
         <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>   
-          <BoxPlotGraph/>
-          <BoxPlotGraph/>
+          <BoxPlotGraph cat1="standard_driver" cat2="beh_alchohol"/>
+          <BoxPlotGraph cat1="standard_minus_novice" cat2="beh_alchohol"/>
         </div>
       </div>
       )}
 
       {selectedButton === 'button3' && (
         <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <BoxPlotGraph/>
         </div>
       )}
       </div>

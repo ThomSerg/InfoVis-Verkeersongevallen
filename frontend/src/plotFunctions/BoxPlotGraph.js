@@ -3,7 +3,7 @@ import * as d3 from "d3";
 import data2 from "../europe_gov.csv";
 
 
-function BoxPlotGraph() {
+function BoxPlotGraph({cat1, cat2}) {
   const svgRef = useRef(null);
 
   useEffect(() => {
@@ -28,10 +28,10 @@ d3.csv(data2).then(data => {
 
 
 // Compute quartiles, median, inter quantile range min and max --> these info are then used to draw the box.
-const sumstat = Array.from(d3.group(data, d => d.standard_driver), ([key, values]) => {
-  const q1 = d3.quantile(values.map(d => d.beh_alchohol).sort(d3.ascending), 0.25);
-  const median = d3.quantile(values.map(d => d.beh_alchohol).sort(d3.ascending), 0.5);
-  const q3 = d3.quantile(values.map(d => d.beh_alchohol).sort(d3.ascending), 0.75);
+const sumstat = Array.from(d3.group(data, d => d[cat1]), ([key, values]) => {
+  const q1 = d3.quantile(values.map(d => d[cat2]).sort(d3.ascending), 0.25);
+  const median = d3.quantile(values.map(d => d[cat2]).sort(d3.ascending), 0.5);
+  const q3 = d3.quantile(values.map(d => d[cat2]).sort(d3.ascending), 0.75);
   const interQuantileRange = q3 - q1;
   const min = q1 - 1.5 * interQuantileRange;
   const max = q3 + 1.5 * interQuantileRange;
@@ -40,11 +40,19 @@ const sumstat = Array.from(d3.group(data, d => d.standard_driver), ([key, values
 
 console.log(sumstat);
 
+const driverValues = data.reduce((acc, cur) => {
+  if (!acc.includes(cur[cat1])) {
+    acc.push(cur[cat1]);
+  }
+  return acc;
+}, []).sort(d3.ascending).filter(d => d !== "");
+
+
 
 // Show the X scale
 var x = d3.scaleBand()
 .range([ 0, width ])
-.domain(["0", "0.2", "0.4", "0.5", "0.8"])
+.domain(driverValues)
 .paddingInner(1)
 .paddingOuter(.5);
 
@@ -96,10 +104,10 @@ svg.selectAll("medianLines")
 // Add individual points with jitter
 var jitterWidth = 5;
 svg.selectAll("indPoints")
-  .data(data.filter(d => d.standard_driver !== ""))
+  .data(data.filter(d => d[cat1] !== ""))
   .join("circle")
-    .attr("cx", d => x(d.standard_driver) - jitterWidth / 2 + Math.random() * jitterWidth)
-    .attr("cy", d => y(d.beh_alchohol))
+    .attr("cx", d => x(d[cat1]) - jitterWidth / 2 + Math.random() * jitterWidth)
+    .attr("cy", d => y(d[cat2]))
     .attr("r", 3)
     .attr("fill", "white")
     .attr("stroke", "black");
@@ -107,7 +115,7 @@ svg.selectAll("indPoints")
 
 
 });
-}, []);
+}, [cat1,cat2]);
 
 return (
   <svg ref={svgRef} width="500" height="500"/>
