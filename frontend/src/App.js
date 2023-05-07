@@ -9,6 +9,7 @@ import Scatter2 from "./plotFunctions/scatter2";
 import Map from "./map_europe/map"
 import BarChartHorz from "./plotFunctions/barchart_horz";
 import PieChart from "./plotFunctions/piechart";
+import BoxPlotGraph from "./plotFunctions/BoxPlotGraph";
 import { select } from "d3";
 
 
@@ -56,6 +57,12 @@ function App() {
           <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150}/>
         </div>
       </div>
+      )}
+
+      {selectedButton === 'button3' && (
+        <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <BoxPlotGraph/>
+        </div>
       )}
       </div>
 
