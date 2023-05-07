@@ -40,7 +40,7 @@ function App() {
           <button id="button3" onClick={(e) => handleClick(e.target.id)}>Inzicht 3</button>
         </div>
 
-      <div style={{ display: "flex", marginBottom: "20px" }} >
+      <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
         <Map />
       {selectedButton === 'button1' && (
         <div class="scatterplot">
@@ -51,10 +51,13 @@ function App() {
       }
       {selectedButton === 'button2' && (
         <div>
-        <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <BarChartHorz />
-          <PieChart />
-          <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150}/>
+        <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <PieChart cat="standard_driver"/>
+          <PieChart cat ="novice_driver"/>
+        </div>
+        <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>   
+          <BoxPlotGraph/>
+          <BoxPlotGraph/>
         </div>
       </div>
       )}
@@ -65,8 +68,8 @@ function App() {
         </div>
       )}
       </div>
-
     </div>
+
 
   );
 
