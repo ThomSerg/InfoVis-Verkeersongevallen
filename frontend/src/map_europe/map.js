@@ -2,19 +2,23 @@ import {MapContainer, Polygon, TileLayer} from 'react-leaflet'
 import {landData} from './europe'
 
 
-function Map() {
+function Map({setHoveredCountry, hoveredCountry}) {
+
+  const onHover=(country)=> {
+    setHoveredCountry(country);
+  }
     return (<MapContainer 
         center={[55.287175894140645, 14.90326637107352]}
         dragging={false}
-        zoom={3.5}
-        maxZoom={3.5}
-        minZoom={3.5}
+        zoom={3.2}
+        maxZoom={3.2}
+        minZoom={3.2}
         zoomControl={false}
-        style={{ width: '30%', height: '65vh'}}>
-      <TileLayer 
+        style={{ width: '30%', height: '65vh', background: 'inherit'}}>
+      {/* <TileLayer 
         url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=eSTvidUJfgEQsuinQFfC"
         attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-      />
+      /> */}
       {
         
         landData.features.map((land) => {
@@ -22,13 +26,6 @@ function Map() {
           const coordinates = land.geometry.coordinates[0].map((item) => [item[1], item[0]]);
           if (land.geometry.type == 'MultiPolygon') {
 
-            // console.log(land.properties.NAME)
-            // for (let polygon in land.geometry.coordinates) {
-            //   for (let coordinates in polygon) {
-            //     coordinates.map((item) => [item[1], item[0]]);
-            //   }
-            //   drawPolygon(coordinates)
-            // }
             for (let i = 0; i < land.geometry.coordinates.length; i++) {
               for(let j = 0; j < land.geometry.coordinates[i].length; j++) {
                 coordinates.push(land.geometry.coordinates[i][j].map((item) => [item[1], item[0]]));
@@ -36,29 +33,34 @@ function Map() {
             }
 
           }
-          return drawPolygon(coordinates)
+          let country = land.properties.NAME;
+          return drawPolygon(coordinates, country)
         })
       }
       </MapContainer>
 )
 
-function drawPolygon(coordinates) {
+function drawPolygon(coordinates, country) {
+    let color;
+    country == hoveredCountry ? color = '#b5c2c7' : color = '#9d7463';
     return(<Polygon
       pathOptions={{
-        fillColor: '#7f7e90',
+        fillColor: color,
         fillOpacity: 0.7,
         weight: 2,
         opacity: 1,
         dashArray: 3,
-        color: 'white'
+        color: 'white',
       }}
+      country={country}
       positions={coordinates}
       eventHandlers={{
         mouseover: (e) => {
+          onHover(e.target.options.country);
           const layer = e.target;
           layer.setStyle({
             dashArray: "",
-            fillColor: "#e1dfba",
+            fillColor: "#b5c2c7",
             fillOpacity: 0.7,
             weight: 2,
             opacity: 1,
@@ -72,7 +74,7 @@ function drawPolygon(coordinates) {
             weight: 2,
             dashArray: "3",
             color: 'white',
-            fillColor: '#7f7e90'
+            fillColor: '#9d7463',
           });
         },
         click: (e) => {

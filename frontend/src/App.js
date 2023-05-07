@@ -16,6 +16,7 @@ import { select } from "d3";
 function App() {
 
   const [selectedButton, setSelectedButton] = useState('button1');
+  const [hoveredCountry, setHoveredCountry] = useState('');
 
   function handleClick(id) {
     setSelectedButton(id);
@@ -41,10 +42,10 @@ function App() {
         </div>
 
       <div style={{ display: "flex", marginBottom: "20px" }} >
-        <Map />
+        <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
       {selectedButton === 'button1' && (
         <div class="scatterplot">
-        <Scatter2 class="scatterplot" />
+        <Scatter2 setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry} class="scatterplot" />
       </div>
       )
       

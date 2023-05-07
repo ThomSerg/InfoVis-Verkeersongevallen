@@ -15,8 +15,8 @@
 }
 
 button {
-  background-color: #555c78;
-  color: #e1dfba;
+  background-color: #565c5e ;
+  color: #dfdbd8;
   padding: 10px;
   border-radius: 20px;
   cursor: pointer;
@@ -27,8 +27,8 @@ button {
 }
 
 button:hover {
-  color: #555c78;
-  background-color: #e1dfba ;
+  color: #565c5e ;
+  background-color: #dfdbd8 ;
   transition-duration: 400ms;
 }
 
@@ -36,17 +36,17 @@ button:hover {
 .buttonContainer {
    justify-content: "space-between";
    margin-bottom: 15px;
-   border-bottom: 10px solid #555c78;
+   border-bottom: 10px solid #565c5e ;
    padding-bottom: 15px;
 }
 
 h1 {
   font-weight: 1000;
   text-decoration: underline;
-  color: #555c78;
+  color: #565c5e ;
 }
 
 body {
-  background-color: #e1dfba;
+  background-color: #dfdbd8;
 }
 
