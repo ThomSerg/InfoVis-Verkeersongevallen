@@ -64,6 +64,9 @@ function App() {
 
       {selectedButton === 'button3' && (
         <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <Scatter2 class="scatterplot" cat1="control_alchohol" cat2="beh_alchohol"/>
+          <Scatter2 class="scatterplot" cat1="control_seatbelt" cat2="beh_seatbelt"/>
+          <Scatter2 class="scatterplot" cat1="control_texting" cat2="beh_texting"/>
         </div>
       )}
       </div>

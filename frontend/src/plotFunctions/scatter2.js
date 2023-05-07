@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-// import * as d3 from 'd3';
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import * as d3 from 'd3';
+//import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import data2 from "../europe_gov.csv";
 
-function Scatter2() {
+function Scatter2({cat1, cat2}) {
   const svgRef = useRef(null);
 
   useEffect(() => {
@@ -19,12 +20,16 @@ function Scatter2() {
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
 
     // Read the data
-    d3.csv("https://raw.githubusercontent.com/holtzy/data_to_viz/master/Example_dataset/2_TwoNum.csv").then(data => {        
+    d3.csv(data2).then(data => {        
       console.log(data);
+
+      // Filter data to exclude empty values
+      const filteredData = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
+
 
       // Add X axis
       const x = d3.scaleLinear()
-        .domain([0, 4000])
+        .domain([0, 1])
         .range([0, width]);
 
       svg.append('g')
@@ -33,7 +38,7 @@ function Scatter2() {
 
       // Add Y axis
       const y = d3.scaleLinear()
-        .domain([0, 500000])
+        .domain([0, 1])
         .range([height, 0]);
 
       svg.append('g')
@@ -41,20 +46,23 @@ function Scatter2() {
 
       // Add dots
       svg.selectAll('dot')
-        .data(data)
+        .data(filteredData)
         .enter()
         .append('circle')
-        .attr('cx', d => x(d.GrLivArea))
-        .attr('cy', d => y(d.SalePrice))
-        .attr('r', 1.5)
+        .attr('cx', d => x(d[cat1]))
+        .attr('cy', d => y(d[cat2]))
+        .attr('r', 3)
         .style('fill', '#69b3a2')
         .on("click", function (event, d){
-            d3.select(this).transition().duration(200).style("stroke", "red");
-            
+            d3.select(this).transition().duration(200).style("stroke", "red"); 
         });
 
+       
+
+      
+
     });
-  }, []);
+  }, [cat1,cat2]);
   return (
     <svg ref={svgRef}></svg>
   );
