@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
 import * as d3 from "d3";
+import data2 from "../europe_gov.csv";
 
-function BoxPlotGraph() {
+
+function BoxPlotGraph({cat1, cat2}) {
   const svgRef = useRef(null);
 
   useEffect(() => {
@@ -21,39 +23,46 @@ var svg = d3.select(svgRef.current)
       "translate(" + margin.left + "," + margin.top + ")");
 
 // Read the data and compute summary statistics for each specie
-d3.csv("https://raw.githubusercontent.com/holtzy/D3-graph-gallery/master/DATA/iris.csv").then(data => { 
+d3.csv(data2).then(data => { 
 
 
 
 // Compute quartiles, median, inter quantile range min and max --> these info are then used to draw the box.
-// Compute quartiles, median, inter quantile range min and max --> these info are then used to draw the box.
-// Compute quartiles, median, inter quantile range min and max --> these info are then used to draw the box.
-const sumstat = Array.from(d3.group(data, d => d.Species), ([key, values]) => {
-  const q1 = d3.quantile(values.map(d => d.Sepal_Length).sort(d3.ascending), 0.25);
-  const median = d3.quantile(values.map(d => d.Sepal_Length).sort(d3.ascending), 0.5);
-  const q3 = d3.quantile(values.map(d => d.Sepal_Length).sort(d3.ascending), 0.75);
+const sumstat = Array.from(d3.group(data, d => d[cat1]), ([key, values]) => {
+  const q1 = d3.quantile(values.map(d => d[cat2]).sort(d3.ascending), 0.25);
+  const median = d3.quantile(values.map(d => d[cat2]).sort(d3.ascending), 0.5);
+  const q3 = d3.quantile(values.map(d => d[cat2]).sort(d3.ascending), 0.75);
   const interQuantileRange = q3 - q1;
   const min = q1 - 1.5 * interQuantileRange;
   const max = q3 + 1.5 * interQuantileRange;
   return { key, values, q1, median, q3, interQuantileRange, min, max };
-});
+}).filter(({ key }) => key !== "");
 
 console.log(sumstat);
+
+const driverValues = data.reduce((acc, cur) => {
+  if (!acc.includes(cur[cat1])) {
+    acc.push(cur[cat1]);
+  }
+  return acc;
+}, []).sort(d3.ascending).filter(d => d !== "");
+
 
 
 // Show the X scale
 var x = d3.scaleBand()
 .range([ 0, width ])
-.domain(["setosa", "versicolor", "virginica"])
+.domain(driverValues)
 .paddingInner(1)
 .paddingOuter(.5);
+
 svg.append("g")
 .attr("transform", "translate(0," + height + ")")
 .call(d3.axisBottom(x));
 
 // Show the Y scale
 var y = d3.scaleLinear()
-.domain([3,9])
+.domain([-0.1,0.5])
 .range([height, 0]);
 svg.append("g").call(d3.axisLeft(y));
 
@@ -70,7 +79,7 @@ svg
   .style("width", 40);
 
 // rectangle for the main box
-var boxWidth = 100;
+var boxWidth = 20;
 svg.selectAll("boxes")
   .data(sumstat)
   .join("rect")
@@ -93,22 +102,24 @@ svg.selectAll("medianLines")
     .attr("stroke-width", 2);
 
 // Add individual points with jitter
-var jitterWidth = 50;
+var jitterWidth = 5;
 svg.selectAll("indPoints")
-  .data(data)
+  .data(data.filter(d => d[cat1] !== ""))
   .join("circle")
-    .attr("cx", d => x(d.Species) - jitterWidth / 2 + Math.random() * jitterWidth)
-    .attr("cy", d => y(d.Sepal_Length))
-    .attr("r", 4)
+    .attr("cx", d => x(d[cat1]) - jitterWidth / 2 + Math.random() * jitterWidth)
+    .attr("cy", d => y(d[cat2]))
+    .attr("r", 3)
     .attr("fill", "white")
     .attr("stroke", "black");
 
 
 
 });
-}, []);
+}, [cat1,cat2]);
 
-return <svg ref={svgRef}></svg>;
+return (
+  <svg ref={svgRef} width="500" height="500"/>
+);
 }
 
 

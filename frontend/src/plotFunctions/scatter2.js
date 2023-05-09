@@ -4,7 +4,7 @@ import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import data from '../europe_gov.csv';
 import { lab } from 'd3';
 
-function Scatter2({setHoveredCountry, hoveredCountry}) {
+function Scatter2({cat1, cat2, setHoveredCountry, hoveredCountry}) {
   const svgRef = useRef(null);
 
   useEffect(() => {
@@ -25,9 +25,13 @@ function Scatter2({setHoveredCountry, hoveredCountry}) {
     d3.csv(data).then(data => {
       console.log(data)
 
+      // Filter data to exclude empty values
+      const filteredData = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
+
+
       // Add X axis
       const x = d3.scaleLinear()
-        .domain([0, 12])
+        .domain([0, 10])
         .range([0, width]);
 
       svg.append('g')
@@ -64,8 +68,8 @@ function Scatter2({setHoveredCountry, hoveredCountry}) {
         .data(data)
         .enter()
         .append('circle')
-        .attr('cx', d => x(d.cas))
-        .attr('cy', d => y(d.roadQuality))
+        .attr('cx', d => x(d[cat1]))
+        .attr('cy', d => y(d[cat2]))
         .attr('r', 4)
         .style('fill', '#9d7463')
         .on("click", function (event, d){
@@ -80,8 +84,8 @@ function Scatter2({setHoveredCountry, hoveredCountry}) {
         .filter((d) => {
           return d.Country == hoveredCountry})
         .append('circle')
-        .attr('cx', d => x(d.cas))
-        .attr('cy', d => y(d.roadQuality))
+        .attr('cx', d => x(d[cat1]))
+        .attr('cy', d => y(d[cat2]))
         .attr('r', 4)
         .style('fill', '#FFFF00')
         .on("click", function (event, d){
@@ -89,12 +93,8 @@ function Scatter2({setHoveredCountry, hoveredCountry}) {
             
         });
 
-      svg.selectAll('')
-        .data(hoveredCountry)
-        // .update(svg.render())
-
     });
-  }, []);
+  }, [cat1,cat2]);
   return (
     <svg ref={svgRef}></svg>
   );

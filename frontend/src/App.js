@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import * as d3 from 'd3'
 import './App.css';
@@ -41,7 +40,7 @@ function App() {
           <button id="button3" onClick={(e) => handleClick(e.target.id)}>Inzicht 3</button>
         </div>
 
-      <div style={{ display: "flex", marginBottom: "20px" }} >
+      <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
         <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
       {selectedButton === 'button1' && (
         <div class="scatterplot">
@@ -52,22 +51,27 @@ function App() {
       }
       {selectedButton === 'button2' && (
         <div>
-        <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <BarChartHorz />
-          <PieChart />
-          <BarChart data={[25, 50, 35, 15, 94, 10]} width={300} height={150}/>
+        <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+          <PieChart cat="standard_driver"/>
+          <PieChart cat ="standard_minus_novice"/>
+        </div>
+        <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>   
+          <BoxPlotGraph cat1="standard_driver" cat2="beh_alchohol"/>
+          <BoxPlotGraph cat1="standard_minus_novice" cat2="beh_alchohol"/>
         </div>
       </div>
       )}
 
       {selectedButton === 'button3' && (
         <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <BoxPlotGraph/>
+          <Scatter2 class="scatterplot" cat1="control_alchohol" cat2="beh_alchohol"/>
+          <Scatter2 class="scatterplot" cat1="control_seatbelt" cat2="beh_seatbelt"/>
+          <Scatter2 class="scatterplot" cat1="control_texting" cat2="beh_texting"/>
         </div>
       )}
       </div>
-
     </div>
+
 
   );
 
