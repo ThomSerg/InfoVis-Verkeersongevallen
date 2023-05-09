@@ -16,7 +16,8 @@
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4"
+    "web-vitals": "^2.1.4",
+    "data": "file:../db/Europe/europe_gov.csv"
   },
   "scripts": {
     "start": "react-scripts start",

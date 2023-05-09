@@ -1,4 +1,3 @@
-
 import React, { useState, useRef, useEffect } from "react";
 import * as d3 from 'd3'
 import './App.css';
@@ -16,6 +15,7 @@ import { select } from "d3";
 function App() {
 
   const [selectedButton, setSelectedButton] = useState('button1');
+  const [hoveredCountry, setHoveredCountry] = useState('');
   const [selectedNestedButton, setSelectedNestedButton] = useState(null);
 
   function handleOuterButtonClick(id) {
@@ -54,10 +54,10 @@ function App() {
         </div>
 
       <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
-        <Map />
+        <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
       {selectedButton === 'button1' && (
         <div class="scatterplot">
-        <Scatter2 class="scatterplot" />
+        <Scatter2 setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry} class="scatterplot" />
       </div>
       ) }
 
