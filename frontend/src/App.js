@@ -16,9 +16,22 @@ import { select } from "d3";
 function App() {
 
   const [selectedButton, setSelectedButton] = useState('button1');
+  const [selectedNestedButton, setSelectedNestedButton] = useState(null);
 
-  function handleClick(id) {
-    setSelectedButton(id);
+  function handleOuterButtonClick(id) {
+    if(id =="button2"){
+      setSelectedButton(id);
+      setSelectedNestedButton("nestedButton1");
+    }
+    else{
+      setSelectedButton(id);
+      setSelectedNestedButton(null); 
+    }
+    
+  }
+
+  function handleNestedButtonClick(id) {
+    setSelectedNestedButton(id);
   }
 
   return (
@@ -35,9 +48,9 @@ function App() {
       <h1>Verkeersongevallen in Europa</h1>
 
       <div class="buttonContainer" >
-          <button id="button1" onClick={(e) => handleClick(e.target.id)}>Inzicht 1</button>
-          <button id="button2" onClick={(e) => handleClick(e.target.id)}>Inzicht 2</button>
-          <button id="button3" onClick={(e) => handleClick(e.target.id)}>Inzicht 3</button>
+          <button id="button1" onClick={(e) => handleOuterButtonClick(e.target.id)}>Wegkwaliteit</button>
+          <button id="button2" onClick={(e) => handleOuterButtonClick(e.target.id)}>Alchohol</button>
+          <button id="button3" onClick={(e) => handleOuterButtonClick(e.target.id)}>Controles</button>
         </div>
 
       <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
@@ -46,21 +59,31 @@ function App() {
         <div class="scatterplot">
         <Scatter2 class="scatterplot" />
       </div>
-      )
-      
-      }
+      ) }
+
       {selectedButton === 'button2' && (
-        <div>
-        <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <PieChart cat="standard_driver"/>
-          <PieChart cat ="standard_minus_novice"/>
-        </div>
-        <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>   
-          <BoxPlotGraph cat1="standard_driver" cat2="beh_alchohol"/>
-          <BoxPlotGraph cat1="standard_minus_novice" cat2="beh_alchohol"/>
-        </div>
-      </div>
-      )}
+          <div>
+            <div className="buttonContainer">
+                <button id="nestedButton1" onClick={(e) => handleNestedButtonClick(e.target.id)}>Alle bestuurders</button>
+                <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(e.target.id)}>Jonge bestuurders</button>
+            </div>
+            {selectedNestedButton === 'nestedButton1' && (
+              <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+                <PieChart cat="standard_driver" />
+                <BoxPlotGraph cat1="standard_driver" cat2="beh_alchohol" />
+                
+              </div>
+            )}
+            {selectedNestedButton === 'nestedButton2' && (
+              <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+                <PieChart cat="standard_minus_novice" />
+                <BoxPlotGraph cat1="standard_minus_novice" cat2="beh_alchohol" />
+              </div>
+            )}
+            </div>
+            )}
+            
+              
 
       {selectedButton === 'button3' && (
         <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
