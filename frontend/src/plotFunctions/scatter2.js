@@ -1,14 +1,19 @@
 import React, { useEffect, useRef } from 'react';
-// import * as d3 from 'd3';
 import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
 import data from '../europe_gov.csv';
-import { lab } from 'd3';
+import './scatter2.css';
 
-function Scatter2({cat1, cat2, setHoveredCountry, hoveredCountry}) {
+function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknown variable", title = "Unknown title", setHoveredCountry, hoveredCountry}) {
   const svgRef = useRef(null);
 
   useEffect(() => {
     // Set the dimensions and margins of the graph
+    //const margin = { top: 10, right: 30, bottom: 60, left: 60 };
+    //const width = 800 - margin.left - margin.right;
+    //const height = 600 - margin.top - margin.bottom;
+
+
+        // Set the dimensions and margins of the graph
     const margin = { top: 10, right: 30, bottom: 60, left: 60 };
     const width = 800 - margin.left - margin.right;
     const height = 600 - margin.top - margin.bottom;
@@ -25,40 +30,60 @@ function Scatter2({cat1, cat2, setHoveredCountry, hoveredCountry}) {
     d3.csv(data).then(data => {
       console.log(data)
 
-      // Filter data to exclude empty values
-      const filteredData = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
+    // Filter data to exclude empty values
+    data = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
+
+    console.log("Filtered data is ");
+    console.log(data);
+
+    // x values never on the axis itself
+    const xDiff = d3.max(data, d => parseFloat(d[cat1])) - d3.min(data, d => d[cat1]);
+    const xMin = d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff;
+    const xMax = d3.max(data, d => parseFloat(d[cat1])) + 0.05 * xDiff;
+
+    console.log("xmin and xmax values are:");
+    console.log(xMin, xMax);
 
 
-      // Add X axis
-      const x = d3.scaleLinear()
-        .domain([0, 10])
-        .range([0, width]);
+    // Compute the domain dynamically based on the data
+    const x = d3.scaleLinear()
+      //.domain(d3.extent(data, d => d[cat1]))
+      .domain([xMin, xMax])
+      .range([0, width]);
+
+      // y values never on the axis itself
+      const yDiff = d3.max(data, d => parseFloat(d[cat2])) - d3.min(data, d => d[cat2]);
+      const yMin = d3.min(data, d => parseFloat(d[cat2])) ;//- 0.05 * yDiff;
+      const yMax = d3.max(data, d => parseFloat(d[cat2])) ;//+ 0.05 * yDiff;
+      console.log("Ymin and Ymax values are:");
+      console.log(yMin, yMax);
+
+      const y = d3.scaleLinear()
+      .domain([yMin, yMax])
+      .range([height , 0]);
 
       svg.append('g')
         .attr('transform', `translate(0, ${height})`)
         .text("test")
         .call(d3.axisBottom(x));
 
-      // Add Y axis
-      const y = d3.scaleLinear()
-        .domain([0, 10])
-        .range([height, 0]);
 
       svg.append("text")
         .attr("class", "x label")
         .attr("text-anchor", "end")
         .attr("x", width)
         .attr("y", height +40)
-        .text("total amount of casualties");
+        .text(varXAxis);
 
     
-      svg.append("text")
+        svg.append("text")
           .attr("class", "y label")
           .attr("text-anchor", "end")
-          .attr("y", -40)
+          .attr("y", -50) // decrease y position to move the label upwards
           .attr("dy", ".75em")
           .attr("transform", "rotate(-90)")
-          .text("Road Quality");
+          .text(varYaxis);
+      
 
       svg.append('g')
         .call(d3.axisLeft(y));
@@ -76,6 +101,8 @@ function Scatter2({cat1, cat2, setHoveredCountry, hoveredCountry}) {
             d3.select(this).transition().duration(200).style("stroke", "red");
             
         });
+
+ 
 
 
       svg.selectAll('dot')
@@ -95,8 +122,12 @@ function Scatter2({cat1, cat2, setHoveredCountry, hoveredCountry}) {
 
     });
   }, [cat1,cat2]);
+
   return (
+    <>
+    <div className="scatterTitle">{title}</div>
     <svg ref={svgRef}></svg>
+    </>
   );
 
 }

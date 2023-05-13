@@ -10,6 +10,7 @@ import BarChartHorz from "./plotFunctions/barchart_horz";
 import PieChart from "./plotFunctions/piechart";
 import BoxPlotGraph from "./plotFunctions/BoxPlotGraph";
 import { select } from "d3";
+import Wegkwaliteit from './Wegkwaliteit/WegKwaliteit';
 
 
 function App() {
@@ -33,7 +34,11 @@ function App() {
   function handleNestedButtonClick(id) {
     setSelectedNestedButton(id);
   }
-
+/*
+<div class="scatterplot">
+            <Scatter2 setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry} class="scatterplot" />
+          </div>
+*/
   return (
     <div className="App">
 
@@ -56,9 +61,10 @@ function App() {
       <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
         <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
       {selectedButton === 'button1' && (
-        <div class="scatterplot">
-        <Scatter2 setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry} class="scatterplot" />
-      </div>
+        <div id = "wegkwaliteit">
+          <Wegkwaliteit />
+          
+        </div>
       ) }
 
       {selectedButton === 'button2' && (
