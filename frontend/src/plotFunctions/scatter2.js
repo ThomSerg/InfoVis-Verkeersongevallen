@@ -1,8 +1,9 @@
 import React, { useEffect, useRef } from 'react';
-// import * as d3 from 'd3';
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
+import * as d3 from 'd3';
 import data from '../europe_gov.csv';
-import { lab } from 'd3';
+import * as ss from 'simple-statistics'
+
+
 
 function Scatter2({cat1, cat2, setHoveredCountry, hoveredCountry}) {
   const svgRef = useRef(null);
@@ -12,6 +13,7 @@ function Scatter2({cat1, cat2, setHoveredCountry, hoveredCountry}) {
     const margin = { top: 10, right: 30, bottom: 60, left: 60 };
     const width = 800 - margin.left - margin.right;
     const height = 600 - margin.top - margin.bottom;
+
 
     // Append the SVG object to the body of the page
     const svg = d3.select(svgRef.current)
@@ -23,16 +25,33 @@ function Scatter2({cat1, cat2, setHoveredCountry, hoveredCountry}) {
 
     // Read the data
     d3.csv(data).then(data => {
-      console.log(data)
+      //console.log(data)
 
       // Filter data to exclude empty values
-      const filteredData = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
+      data = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
+      console.log(data);
+
+      const dataArray = data.map(d => [Number(d[cat1]), Number(d[cat2])]);
+      console.log(dataArray);
+
+      const regression = ss.linearRegression(dataArray);
+      console.log(regression);
+    // Get slope and intercept values
+    const slope = regression.m;
+    const intercept = regression.b;
+
+    // Calculate predicted y values for each x value in dataset
+    const yPredicted = dataArray.map(d => slope * d[0] + intercept);
+
+
+
+
 
 
       // Add X axis
       const x = d3.scaleLinear()
-        .domain([0, 10])
-        .range([0, width]);
+      .domain([d3.min(data, d => Number(d[cat1])), 1])
+      .range([0, width]);
 
       svg.append('g')
         .attr('transform', `translate(0, ${height})`)
@@ -41,7 +60,7 @@ function Scatter2({cat1, cat2, setHoveredCountry, hoveredCountry}) {
 
       // Add Y axis
       const y = d3.scaleLinear()
-        .domain([0, 10])
+        .domain([0, 1])
         .range([height, 0]);
 
       svg.append("text")
@@ -89,9 +108,19 @@ function Scatter2({cat1, cat2, setHoveredCountry, hoveredCountry}) {
         .attr('r', 4)
         .style('fill', '#FFFF00')
         .on("click", function (event, d){
-            d3.select(this).transition().duration(200).style("stroke", "red");
-            
+            d3.select(this).transition().duration(200).style("stroke", "red");  
         });
+      
+      svg.append("path")
+      .datum(dataArray)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 2)
+      .attr("d", d3.line()
+      .x(d => x(d[0]))
+      .y((d, i) => y(yPredicted[i]))
+      );
+
 
     });
   }, [cat1,cat2]);
