@@ -1,7 +1,10 @@
 import React, { useEffect, useRef } from 'react';
-import * as d3 from "https://cdn.jsdelivr.net/npm/d3@7/+esm";
-import data from '../europe_gov.csv';
+
 import './scatter2.css';
+import * as d3 from 'd3';
+import data from '../europe_gov.csv';
+import * as ss from 'simple-statistics'
+
 
 function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknown variable", title = "Unknown title", setHoveredCountry, hoveredCountry}) {
   const svgRef = useRef(null);
@@ -18,6 +21,7 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
     const width = 800 - margin.left - margin.right;
     const height = 600 - margin.top - margin.bottom;
 
+
     // Append the SVG object to the body of the page
     const svg = d3.select(svgRef.current)
       .attr('width', width + margin.left + margin.right)
@@ -28,7 +32,7 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
 
     // Read the data
     d3.csv(data).then(data => {
-      console.log(data)
+      //console.log(data)
 
     // Filter data to exclude empty values
     data = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
@@ -61,6 +65,18 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
       const y = d3.scaleLinear()
       .domain([yMin, yMax])
       .range([height , 0]);
+
+      const dataArray = data.map(d => [Number(d[cat1]), Number(d[cat2])]);
+      console.log(dataArray);
+
+      const regression = ss.linearRegression(dataArray);
+      console.log(regression);
+    // Get slope and intercept values
+    const slope = regression.m;
+    const intercept = regression.b;
+
+    // Calculate predicted y values for each x value in dataset
+    const yPredicted = dataArray.map(d => slope * d[0] + intercept);
 
       svg.append('g')
         .attr('transform', `translate(0, ${height})`)
@@ -116,9 +132,19 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
         .attr('r', 4)
         .style('fill', '#FFFF00')
         .on("click", function (event, d){
-            d3.select(this).transition().duration(200).style("stroke", "red");
-            
+            d3.select(this).transition().duration(200).style("stroke", "red");  
         });
+      
+      svg.append("path")
+      .datum(dataArray)
+      .attr("fill", "none")
+      .attr("stroke", "steelblue")
+      .attr("stroke-width", 2)
+      .attr("d", d3.line()
+      .x(d => x(d[0]))
+      .y((d, i) => y(yPredicted[i]))
+      );
+
 
     });
   }, [cat1,cat2]);

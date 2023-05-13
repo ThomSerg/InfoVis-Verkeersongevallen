@@ -10,7 +10,11 @@ import BarChartHorz from "./plotFunctions/barchart_horz";
 import PieChart from "./plotFunctions/piechart";
 import BoxPlotGraph from "./plotFunctions/BoxPlotGraph";
 import { select } from "d3";
+<<<<<<< HEAD
 import Wegkwaliteit from './Wegkwaliteit/WegKwaliteit';
+=======
+import StackedBarChart from "./plotFunctions/StackedBarChart";
+>>>>>>> e52be8a66247233ba67a76b228fdd5eb2c1204ef
 
 
 function App() {
@@ -73,18 +77,25 @@ function App() {
                 <button id="nestedButton1" onClick={(e) => handleNestedButtonClick(e.target.id)}>Alle bestuurders</button>
                 <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(e.target.id)}>Jonge bestuurders</button>
             </div>
-            {selectedNestedButton === 'nestedButton1' && (
+            {selectedNestedButton === 'nestedButton1' && (  
+              <div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <PieChart cat="standard_driver" />
-                <BoxPlotGraph cat1="standard_driver" cat2="beh_alchohol" />
-                
+              <StackedBarChart cat="standard_driver" />
               </div>
+              <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+              <BoxPlotGraph cat1="standard_driver" cat2="beh_alchohol" />
+              </div>
+              </div> 
             )}
             {selectedNestedButton === 'nestedButton2' && (
+              <div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <PieChart cat="standard_minus_novice" />
+                <StackedBarChart cat="standard_minus_novice" />
+              </div>
+              <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
                 <BoxPlotGraph cat1="standard_minus_novice" cat2="beh_alchohol" />
               </div>
+              </div>           
             )}
             </div>
             )}

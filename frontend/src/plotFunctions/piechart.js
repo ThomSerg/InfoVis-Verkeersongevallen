@@ -26,6 +26,7 @@ function PieChart({cat}) {
 
 
     d3.csv(data2).then(data => { 
+      
     const sumstat = d3.rollup(data, v => v.length, d => d[cat]);
     const pieData = Array.from(sumstat, ([label, value]) => ({ label, value }))
     .filter(({ label }) => label !== "");
