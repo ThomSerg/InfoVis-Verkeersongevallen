@@ -10,11 +10,9 @@ import BarChartHorz from "./plotFunctions/barchart_horz";
 import PieChart from "./plotFunctions/piechart";
 import BoxPlotGraph from "./plotFunctions/BoxPlotGraph";
 import { select } from "d3";
-<<<<<<< HEAD
 import Wegkwaliteit from './Wegkwaliteit/WegKwaliteit';
-=======
+
 import StackedBarChart from "./plotFunctions/StackedBarChart";
->>>>>>> e52be8a66247233ba67a76b228fdd5eb2c1204ef
 
 
 function App() {

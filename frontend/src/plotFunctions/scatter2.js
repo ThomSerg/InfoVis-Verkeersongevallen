@@ -6,6 +6,7 @@ import data from '../europe_gov.csv';
 import * as ss from 'simple-statistics'
 
 
+
 function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknown variable", title = "Unknown title", setHoveredCountry, hoveredCountry}) {
   const svgRef = useRef(null);
 
@@ -55,16 +56,16 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
       .domain([xMin, xMax])
       .range([0, width]);
 
-      // y values never on the axis itself
-      const yDiff = d3.max(data, d => parseFloat(d[cat2])) - d3.min(data, d => d[cat2]);
-      const yMin = d3.min(data, d => parseFloat(d[cat2])) ;//- 0.05 * yDiff;
-      const yMax = d3.max(data, d => parseFloat(d[cat2])) ;//+ 0.05 * yDiff;
-      console.log("Ymin and Ymax values are:");
-      console.log(yMin, yMax);
+    // y values never on the axis itself
+    const yDiff = d3.max(data, d => parseFloat(d[cat2])) - d3.min(data, d => d[cat2]);
+    const yMin = d3.min(data, d => parseFloat(d[cat2])) - 0.05 * yDiff;
+    const yMax = d3.max(data, d => parseFloat(d[cat2])) + 0.05 * yDiff;
+    console.log("Ymin and Ymax values are:");
+    console.log(yMin, yMax);
 
-      const y = d3.scaleLinear()
-      .domain([yMin, yMax])
-      .range([height , 0]);
+    const y = d3.scaleLinear()
+    .domain([yMin, yMax])
+    .range([height , 0]);
 
       const dataArray = data.map(d => [Number(d[cat1]), Number(d[cat2])]);
       console.log(dataArray);
@@ -104,6 +105,35 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
       svg.append('g')
         .call(d3.axisLeft(y));
 
+
+      // setting up all the hover effects
+      var div = d3.select("body").append("div")
+        .attr("class", "tooltip-scatter")
+        .style("opacity", 0);
+
+      function mouseover( d) {
+        d3.select(this).transition()
+          .duration('50')
+          .attr('opacity', '.5');
+
+        div.transition()
+          .duration(50)
+          .style("opacity", 1);
+      }
+
+      function mouseout(d) {
+        d3.select(this).transition()
+          .duration('50')
+          .attr('opacity', '1');
+
+        div.transition()
+          .duration('50')
+          .style("opacity", 0);
+      }
+
+
+
+
       // Add dots
       svg.selectAll('dot')
         .data(data)
@@ -113,9 +143,30 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
         .attr('cy', d => y(d[cat2]))
         .attr('r', 4)
         .style('fill', '#9d7463')
+        //Our new hover effects
+        .on('mouseover', function (event, d) {
+            d3.select(this).transition()
+                .duration(50)
+                .attr('opacity', '.5');
+            //Makes the new div appear on hover:
+            div.transition()
+                .duration(50)
+                .style("opacity", 1);
+            div.html(d["Country"])
+            .style("left", (event.pageX + 10) + "px")
+            .style("top", (event.pageY - 15) + "px");
+        })
+        .on('mouseout', function (event, d) {
+            d3.select(this).transition()
+                .duration(50)
+                .attr('opacity', '1');
+            //Makes the new div disappear:
+            div.transition()
+                .duration('50')
+                .style("opacity", 0);
+        })
         .on("click", function (event, d){
             d3.select(this).transition().duration(200).style("stroke", "red");
-            
         });
 
  
