@@ -37,10 +37,18 @@ function App() {
     setSelectedNestedButton(id);
   }
 /*
-<div class="scatterplot">
-            <Scatter2 setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry} class="scatterplot" />
-          </div>
+
+
+/*
+
+No idea why this doesn't work, but it doesn't.
+
+<Card style={{  display: "flex", marginBottom: "20px",width: "100%", backgroundColor: "lightgray" }}> 
+             <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
+          </Card>
 */
+
+
   return (
     <div className="App">
 
@@ -62,8 +70,10 @@ function App() {
 
       <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
         <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
+
+        
       {selectedButton === 'button1' && (
-        <div id = "wegkwaliteit">
+        <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
           <Wegkwaliteit />
           
         </div>

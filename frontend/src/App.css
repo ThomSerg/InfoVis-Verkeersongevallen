@@ -3,16 +3,6 @@
 }
 
 
-.scatterplot {
-  flex: 1;
-  flex-direction: "column";
-  height: "800px";
-  margin-left: "10px"; 
-  margin-right: "10px"; 
-  display: "flex";
-  justify-content: "space-between";
-  width:50%;
-}
 
 button {
   background-color: #565c5e ;

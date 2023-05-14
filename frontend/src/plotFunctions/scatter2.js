@@ -7,7 +7,7 @@ import * as ss from 'simple-statistics'
 
 
 
-function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknown variable", title = "Unknown title", setHoveredCountry, hoveredCountry}) {
+function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown variable", varYaxis = "Unknown variable", title = "Unknown title", setHoveredCountry, hoveredCountry}) {
   const svgRef = useRef(null);
 
   useEffect(() => {
@@ -19,14 +19,14 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
 
         // Set the dimensions and margins of the graph
     const margin = { top: 10, right: 30, bottom: 60, left: 60 };
-    const width = 800 - margin.left - margin.right;
-    const height = 600 - margin.top - margin.bottom;
+    const widthPlot = width - margin.left - margin.right;
+    const heightPlot = height - margin.top - margin.bottom;
 
 
-    // Append the SVG object to the body of the page
+    // Append the SVG object to the body of the pageheight: "550px"
     const svg = d3.select(svgRef.current)
-      .attr('width', width + margin.left + margin.right)
-      .attr('height', height + margin.top + margin.bottom)
+      .attr('width', widthPlot + margin.left + margin.right)
+      .attr('height', heightPlot + margin.top + margin.bottom)
       .append('g')
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
     
@@ -41,6 +41,10 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
     console.log("Filtered data is ");
     console.log(data);
 
+    const xname = varXAxis.split(" (")[0];
+    const yname = varYaxis.split(" (")[0];
+
+
     // x values never on the axis itself
     const xDiff = d3.max(data, d => parseFloat(d[cat1])) - d3.min(data, d => d[cat1]);
     const xMin = d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff;
@@ -54,7 +58,7 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
     const x = d3.scaleLinear()
       //.domain(d3.extent(data, d => d[cat1]))
       .domain([xMin, xMax])
-      .range([0, width]);
+      .range([0, widthPlot]);
 
     // y values never on the axis itself
     const yDiff = d3.max(data, d => parseFloat(d[cat2])) - d3.min(data, d => d[cat2]);
@@ -65,7 +69,7 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
 
     const y = d3.scaleLinear()
     .domain([yMin, yMax])
-    .range([height , 0]);
+    .range([heightPlot , 0]);
 
       const dataArray = data.map(d => [Number(d[cat1]), Number(d[cat2])]);
       console.log(dataArray);
@@ -80,7 +84,7 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
     const yPredicted = dataArray.map(d => slope * d[0] + intercept);
 
       svg.append('g')
-        .attr('transform', `translate(0, ${height})`)
+        .attr('transform', `translate(0, ${heightPlot})`)
         .text("test")
         .call(d3.axisBottom(x));
 
@@ -88,8 +92,8 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
       svg.append("text")
         .attr("class", "x label")
         .attr("text-anchor", "end")
-        .attr("x", width)
-        .attr("y", height +40)
+        .attr("x", widthPlot)
+        .attr("y", heightPlot +40)
         .text(varXAxis);
 
     
@@ -152,9 +156,10 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
             div.transition()
                 .duration(50)
                 .style("opacity", 1);
-            div.html(d["Country"])
-            .style("left", (event.pageX + 10) + "px")
-            .style("top", (event.pageY - 15) + "px");
+            div.html(`<strong><u>${d.Country}</u></strong><br/>${xname}: ${Math.round(d[cat1] * 100)/100}<br/>${yname}: ${Math.round(d[cat2] * 100)/100}`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 15) + "px");
+            
         })
         .on('mouseout', function (event, d) {
             d3.select(this).transition()
@@ -202,7 +207,7 @@ function Scatter2({cat1, cat2, varXAxis = "Unknown variable", varYaxis = "Unknow
 
   return (
     <>
-    <div className="scatterTitle">{title}</div>
+    <div style={{ width: width }} className="scatterTitle">{title}</div>
     <svg ref={svgRef}></svg>
     </>
   );

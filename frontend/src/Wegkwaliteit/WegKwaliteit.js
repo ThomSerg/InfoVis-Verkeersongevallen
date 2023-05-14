@@ -1,20 +1,20 @@
-import React, { Component } from 'react';
+import React, { Component, useState, useRef, useEffect } from "react";
 import * as d3 from 'd3';
 import Scatter2 from "../plotFunctions/scatter2";
 import BoxPlotGraph from "../plotFunctions/BoxPlotGraph";
+import Map from "../map_europe/map"
+import { Card, Layout, Space } from 'antd';
 
 
 class Wegkwaliteit extends Component {
+    
 
     constructor(props) {
         super(props);
-    
-        // Define the column names for each scatterplot
-        this.scatterplots = [
-          { x: 'column1', y: 'column2', title: 'Scatterplot 1' },
-          { x: 'column3', y: 'column4', title: 'Scatterplot 2' },
-          { x: 'column5', y: 'column6', title: 'Scatterplot 3' },
-        ];
+        
+        this.state = {
+          hoveredCountry: ''
+        };
       }
 
       componentDidMount() {
@@ -30,18 +30,30 @@ class Wegkwaliteit extends Component {
         });*/
       }
 
+      setHoveredCountry = (country) => {
+        this.setState({hoveredCountry: country});
+      }
 
 
-  render() {
-    //<Scatter2 cat1="RoadQuality" cat2="cas" varXAxis='Geinvesteerd per capita (€)' varYaxis='Verkeersdoden (per 100000 inwoners)' title='Investering in wegen Europa'/>
-    return (
-      <div>
-        
-        <Scatter2 cat1="RoadQuality" cat2="cas" varXAxis='Wegkwaliteit (score op 7)' varYaxis='Verkeersdoden (per 100000 inwoners)' title='Wegkwaliteit Europa'/>
-        
-      </div>
-    );
-  }
+//<Map setHoveredCountry={this.setHoveredCountry} hoveredCountry={this.state.hoveredCountry}/>
+      render() {
+        return (
+          <div >
+          <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginLeft: "10px", marginRight: "0px" }}>
+            <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+              <Scatter2 cat1="RoadQuality" cat2="cas" varXAxis='Wegkwaliteit (score op 7)' varYaxis='Verkeersdoden (per 100000 inwoners)' title='Wegkwaliteit Europa'/>
+            </Card>
+            <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+              <Scatter2 cat1="RoadQuality" cat2="log(GDP(2019))" varXAxis='Wegkwaliteit (score op 7)' varYaxis='log(GDP) (€)' title='GDP Europa'/>
+            </Card>
+            <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+              <Scatter2 cat1="Invest per capita" cat2="cas" varXAxis='Geïnvesteerd per capita (€ per inwoner)' varYaxis='Verkeersdoden (per 100000 inwoners)' title='Investering in wegen Europa'/>
+            </Card>
+            </div>
+
+          </div>
+        );
+      }
 }
 
 export default Wegkwaliteit;
