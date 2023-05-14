@@ -14,7 +14,7 @@ function Map({setHoveredCountry, hoveredCountry}) {
         maxZoom={3.2}
         minZoom={3.2}
         zoomControl={false}
-        style={{ width: '30%', height: '65vh', background: 'inherit'}}>
+        style={{ width: '30%', height: '65vh', background: 'lightgray', border: '1px solid #F0F0F0', borderRadius: '8px' }}>
       {/* <TileLayer 
         url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=eSTvidUJfgEQsuinQFfC"
         attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
