@@ -55,7 +55,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         d3.csv(data2).then(data => {     
 
             // Get x-axis labels, sorted
-            const xValues = data.reduce((acc, cur) => {
+            const xValues = data.filter(function(d) {return d[cat2] != ""}).reduce((acc, cur) => {
                 if (!acc.includes(cur[cat1])) {
                 acc.push(cur[cat1]);
                 }
@@ -245,10 +245,13 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 setUpdateLock(true);
 
                 var a = data.filter(function(d){return d[cat1] == cat1value})
-                var b = d3.map(a, function(d){return(d["Country"].replace(/\s/g, ''))})
+                var b = d3.map(a, function(d){return(d["Country"])})
+                var c = d3.map(b, function(d){return(d.replace(/\s/g, ''))})
+
+                console.log(c)
 
                 grayout(svg);
-                colorMulti(b);                
+                colorMulti(c);                
 
                 setHoveredCountry(b);
             }
