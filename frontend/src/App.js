@@ -18,7 +18,7 @@ import StackedBarChart from "./plotFunctions/StackedBarChart";
 function App() {
 
   const [selectedButton, setSelectedButton] = useState('button1');
-  const [hoveredCountry, setHoveredCountry] = useState('');
+  const [hoveredCountry, setHoveredCountry] = useState([]);
   const [selectedNestedButton, setSelectedNestedButton] = useState(null);
 
   function handleOuterButtonClick(id) {
