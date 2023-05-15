@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import data2 from "../europe_gov.csv";
 
-function StackedBarChart({cat}) {
+function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
   // Reference to the SVG
   const svgRef = useRef(null);
@@ -38,6 +38,24 @@ function StackedBarChart({cat}) {
   }, [])
 
 
+  function selectLabels(labels) {
+    console.log(labels)
+    console.log(svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label)}))
+    svg.selectAll('.rect-stacked').filter(function(rs) {return labels.includes(rs.label)}).style('opacity', '1');
+    svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label)}).style('opacity', '.5');
+  }
+
+  function selectCountries(countries, data) {
+    console.log(countries)
+    var labels = data.filter(function(d) {return countries.includes(d["Country"])}).map(function(d) {return d[cat]});
+    selectLabels(labels)
+  }
+
+  function colorAll() {
+    svg.selectAll('.rect-stacked').style('opacity', '1');
+  }
+
+
   useEffect(() => {
     
     if (svg) {
@@ -47,15 +65,16 @@ function StackedBarChart({cat}) {
     d3.csv(data2).then(data => { 
       
         const rollupData = d3.rollups(data, v => v.length, d => d[cat])
-        .map(([label, value]) => ({ label, value }))
+        .map(([label, value]) => ({ label, value}))
         .filter(({ label }) => label !== "");
 
+        console.log("hey")
         console.log(rollupData);
 
         const total = d3.sum(rollupData, d => d.value);
         console.log(total);
 
-        function groupDataFunc(data) {
+        function groupDataFunc(data_) {
             // use a scale to get percentage values
             const percent = d3.scaleLinear()
               .domain([0, total])
@@ -64,14 +83,16 @@ function StackedBarChart({cat}) {
             // also get mapping for next placement
             // (save having to format data for d3 stack)
             let cumulative = 0
-            const _data = data.map(d => {
+            const _data = data_.map(d => {
               cumulative += d.value
+              var countries = data.filter(function(d_) {return d_[cat] == d.label}).map(d => d["Country"])
               return {
                 value: d.value,
                 // want the cumulative to prior value (start of rect)
                 cumulative: cumulative - d.value,
                 label: d.label,
-                percent: percent(d.value)
+                percent: percent(d.value),
+                countries: countries
               }
             }).filter(d => d.value > 0)
             return _data
@@ -89,7 +110,25 @@ function StackedBarChart({cat}) {
     const join = svg.selectAll('g')
       .data(groupData)
       .join('g')
-      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')');
+      .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
+
+      .on('mouseover', function(event, d) {
+        setUpdateLock(true);
+
+        selectLabels([d.label]);        
+        
+        setHoveredCountry(d.countries)
+        
+      })
+
+      .on('mouseout', function(event, d) {
+        
+        colorAll();
+
+        setHoveredCountry([])
+
+        setUpdateLock(false);
+      })
 
     join.append('rect')
       .attr('class', 'rect-stacked')
@@ -99,25 +138,7 @@ function StackedBarChart({cat}) {
       .attr('width', d => xScale(d.value))
       .style('fill', (d, i) => colors[i])
 
-      .on('mouseover', function(event, d) {
-        setUpdateLock(true);
-
-
-        svg.selectAll('.rect-stacked').filter(function(rs) {return rs.label != d.label}).style('opacity', '.5');
-        
-        // .each(function(rs,i) {
-        //   if (rs.label != d.label) {
-        //     console.log(rs);
-        //     rs.style('opacity', '.5');
-        //   }
-        // })
-      })
-
-      .on('mouseout', function(event, d) {
-        svg.selectAll('.rect-stacked').filter(function(rs) {return rs.label != d.label}).style('opacity', '1');
-
-        setUpdateLock(false);
-      })
+      
 
     join.append('text')
       .attr('class', 'text-value')
@@ -146,6 +167,25 @@ function StackedBarChart({cat}) {
     });
   }
   }, [cat, svg]);
+
+
+  /* * * * * * * * * *
+     * Update on hover *
+     * * * * * * * * * */
+  useEffect(() => {
+    if (svg && (!updateLock)) {
+  
+        if (hoveredCountry.length != 0) {
+          d3.csv(data2).then(data => { 
+            selectCountries(hoveredCountry, data);
+          })
+        } else {
+          colorAll();
+        }
+    }
+  }, [svg, hoveredCountry, updateLock])
+
+
 
   return (
     <svg ref={svgRef} width="600" height="500"/>

@@ -89,7 +89,11 @@ No idea why this doesn't work, but it doesn't.
             {selectedNestedButton === 'nestedButton1' && (  
               <div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-              <StackedBarChart cat="standard_driver" />
+              <StackedBarChart 
+                cat="standard_driver" 
+                setHoveredCountry={setHoveredCountry} 
+                hoveredCountry={hoveredCountry}
+              />
               </div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
               <ViolinGraph 
@@ -114,7 +118,11 @@ No idea why this doesn't work, but it doesn't.
                   setHoveredCountry={setHoveredCountry} 
                   hoveredCountry={hoveredCountry}
                 />
-                <StackedBarChart cat="standard_minus_novice" />
+                <StackedBarChart 
+                  cat="standard_minus_novice" 
+                  setHoveredCountry={setHoveredCountry} 
+                  hoveredCountry={hoveredCountry}
+                />
               </div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
               </div>
