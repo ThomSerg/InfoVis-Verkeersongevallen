@@ -39,14 +39,13 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
 
   function selectLabels(labels) {
-    console.log(labels)
-    console.log(svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label)}))
-    svg.selectAll('.rect-stacked').filter(function(rs) {return labels.includes(rs.label)}).style('opacity', '1');
-    svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label)}).style('opacity', '.5');
+    svg.selectAll('.rect-stacked').filter(function(rs) {return labels.includes(rs.label) & rs.label != ""}).style('opacity', '1');
+    svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label) & rs.label != ""}).style('opacity', '.5');
   }
 
   function selectCountries(countries, data) {
-    console.log(countries)
+    // var labels = svg.selectAll('.rect-stacked').filter(function(rs) {return rs.countries.some(c => countries.includes(c))}) //.map(function(d) {return d.label})
+    // console.log(labels)
     var labels = data.filter(function(d) {return countries.includes(d["Country"])}).map(function(d) {return d[cat]});
     selectLabels(labels)
   }
@@ -68,12 +67,8 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
         .map(([label, value]) => ({ label, value}))
         .filter(({ label }) => label !== "");
 
-        console.log("hey")
-        console.log(rollupData);
-
         const total = d3.sum(rollupData, d => d.value);
-        console.log(total);
-
+ 
         function groupDataFunc(data_) {
             // use a scale to get percentage values
             const percent = d3.scaleLinear()
@@ -100,7 +95,6 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
 
         const groupData = groupDataFunc(rollupData);
-        console.log(groupData);
 
 
         const xScale = d3.scaleLinear()
@@ -130,37 +124,56 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
         setUpdateLock(false);
       })
 
+    var delay = 500
+
     join.append('rect')
       .attr('class', 'rect-stacked')
-      .attr('x', d => xScale(d.cumulative))
+      .attr('x', d => xScale(0))
       .attr('y', height / 2 - halfBarHeight)
       .attr('height', barHeight)
-      .attr('width', d => xScale(d.value))
+      .attr('width', 0)
       .style('fill', (d, i) => colors[i])
+
+      .transition()
+      .duration(delay)
+      .attr('x', d => xScale(d.cumulative))
+      .attr('width', d => xScale(d.value))
 
       
 
     join.append('text')
       .attr('class', 'text-value')
       .attr('text-anchor', 'middle')
-      .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
+      .attr('x', d => xScale(0))
       .attr('y', (height / 2) + 5)
-      .text(d => d.value);
+      .text(d => d.value)
+
+      .transition()
+      .duration(delay)
+      .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
 
     join.append('text')
       .attr('class', 'text-percent')
       .attr('text-anchor', 'middle')
-      .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
+      .attr('x', d => xScale(0))
       .attr('y', (height / 2) - (halfBarHeight * 1.1))
-      .text(d => d3.format('.1f')(d.percent) + ' %');
+      .text(d => d3.format('.1f')(d.percent) + ' %')
+
+      .transition()
+      .duration(delay)
+      .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
 
     join.append('text')
       .attr('class', 'text-label')
       .attr('text-anchor', 'middle')
-      .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
+      .attr('x', d => xScale(0))
       .attr('y', (height / 2) + (halfBarHeight * 1.1) + 20)
       .style('fill', (d, i) => colors[i])
-      .text(d => d.label);
+      .text(d => d.label)
+
+      .transition()
+      .duration(delay)
+      .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
 
       
 
@@ -172,18 +185,23 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
   /* * * * * * * * * *
      * Update on hover *
      * * * * * * * * * */
+  const [data, setData] = useState(null);
+
+  d3.csv(data2).then(d => { 
+    setData(d);
+  })
   useEffect(() => {
     if (svg && (!updateLock)) {
   
-        if (hoveredCountry.length != 0) {
-          d3.csv(data2).then(data => { 
+        if (hoveredCountry.length > 0) {
+     
             selectCountries(hoveredCountry, data);
-          })
+        
         } else {
           colorAll();
         }
     }
-  }, [svg, hoveredCountry, updateLock])
+  }, [svg, hoveredCountry, updateLock, data])
 
 
 
