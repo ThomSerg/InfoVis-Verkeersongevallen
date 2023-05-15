@@ -40,6 +40,10 @@ function Map({setHoveredCountry, hoveredCountry}) {
       </MapContainer>
 )
 
+function offHover() {
+  setHoveredCountry("");
+}
+
 function drawPolygon(coordinates, country) {
     let color;
     hoveredCountry.includes(country) ? color = '#b5c2c7' : color = '#9d7463';
@@ -68,6 +72,7 @@ function drawPolygon(coordinates, country) {
           })
         },
         mouseout: (e) => {
+          offHover();
           const layer = e.target;
           layer.setStyle({
             fillOpacity: 0.7,
