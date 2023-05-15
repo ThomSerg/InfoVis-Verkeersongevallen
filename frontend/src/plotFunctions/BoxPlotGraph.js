@@ -38,7 +38,7 @@ const sumstat = Array.from(d3.group(data, d => d[cat1]), ([key, values]) => {
   return { key, values, q1, median, q3, interQuantileRange, min, max };
 }).filter(({ key }) => key !== "");
 
-console.log(sumstat);
+//console.log(sumstat);
 
 const driverValues = data.reduce((acc, cur) => {
   if (!acc.includes(cur[cat1])) {

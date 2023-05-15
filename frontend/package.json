@@ -9,6 +9,8 @@
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.4.0",
     "d3": "^7.8.4",
+    "d3-tip": "^0.9.1",
+    "data": "file:../db/Europe/europe_gov.csv",
     "file-system": "^2.2.2",
     "fs": "^0.0.1-security",
     "leaflet": "^1.9.3",
@@ -16,8 +18,8 @@
     "react-dom": "^18.2.0",
     "react-leaflet": "^4.2.1",
     "react-scripts": "5.0.1",
-    "web-vitals": "^2.1.4",
-    "data": "file:../db/Europe/europe_gov.csv"
+    "simple-statistics": "^7.8.3",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",

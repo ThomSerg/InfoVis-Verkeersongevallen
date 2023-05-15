@@ -10,6 +10,9 @@ import BarChartHorz from "./plotFunctions/barchart_horz";
 import PieChart from "./plotFunctions/piechart";
 import BoxPlotGraph from "./plotFunctions/BoxPlotGraph";
 import { select } from "d3";
+import Wegkwaliteit from './Wegkwaliteit/WegKwaliteit';
+
+import StackedBarChart from "./plotFunctions/StackedBarChart";
 
 
 function App() {
@@ -33,6 +36,18 @@ function App() {
   function handleNestedButtonClick(id) {
     setSelectedNestedButton(id);
   }
+/*
+
+
+/*
+
+No idea why this doesn't work, but it doesn't.
+
+<Card style={{  display: "flex", marginBottom: "20px",width: "100%", backgroundColor: "lightgray" }}> 
+             <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
+          </Card>
+*/
+
 
   return (
     <div className="App">
@@ -55,10 +70,13 @@ function App() {
 
       <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
         <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
+
+        
       {selectedButton === 'button1' && (
-        <div class="scatterplot">
-        <Scatter2 setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry} class="scatterplot" />
-      </div>
+        <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
+          <Wegkwaliteit />
+          
+        </div>
       ) }
 
       {selectedButton === 'button2' && (
@@ -67,18 +85,25 @@ function App() {
                 <button id="nestedButton1" onClick={(e) => handleNestedButtonClick(e.target.id)}>Alle bestuurders</button>
                 <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(e.target.id)}>Jonge bestuurders</button>
             </div>
-            {selectedNestedButton === 'nestedButton1' && (
+            {selectedNestedButton === 'nestedButton1' && (  
+              <div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <PieChart cat="standard_driver" />
-                <BoxPlotGraph cat1="standard_driver" cat2="beh_alchohol" />
-                
+              <StackedBarChart cat="standard_driver" />
               </div>
+              <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+              <BoxPlotGraph cat1="standard_driver" cat2="beh_alchohol" />
+              </div>
+              </div> 
             )}
             {selectedNestedButton === 'nestedButton2' && (
+              <div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <PieChart cat="standard_minus_novice" />
+                <StackedBarChart cat="standard_minus_novice" />
+              </div>
+              <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
                 <BoxPlotGraph cat1="standard_minus_novice" cat2="beh_alchohol" />
               </div>
+              </div>           
             )}
             </div>
             )}
