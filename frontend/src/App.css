@@ -40,4 +40,15 @@ body {
   background-color: #dfdbd8;
 }
 
+div.tooltip-hover {
+  position: absolute;
+  text-align: center;
+  padding: .25rem;
+  background: #FFFFFF;
+  color: #313639;
+  border: 1px solid #313639;
+  border-radius: 8px;
+  pointer-events: none;
+  font-size: 1rem;
+}
 

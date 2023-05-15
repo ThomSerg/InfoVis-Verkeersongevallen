@@ -9,6 +9,7 @@ import Map from "./map_europe/map"
 import BarChartHorz from "./plotFunctions/barchart_horz";
 import PieChart from "./plotFunctions/piechart";
 import BoxPlotGraph from "./plotFunctions/BoxPlotGraph";
+import ViolinGraph from "./plotFunctions/violin";
 import { select } from "d3";
 import Wegkwaliteit from './Wegkwaliteit/WegKwaliteit';
 
@@ -91,17 +92,31 @@ No idea why this doesn't work, but it doesn't.
               <StackedBarChart cat="standard_driver" />
               </div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-              <BoxPlotGraph cat1="standard_driver" cat2="beh_alchohol" />
+              <ViolinGraph 
+                cat1="standard_driver" 
+                cat2="beh_alchohol" 
+                xLabel="standard driver"
+                yLabel="beh alchohol"
+                setHoveredCountry={setHoveredCountry} 
+                hoveredCountry={hoveredCountry}
+              />
               </div>
               </div> 
             )}
             {selectedNestedButton === 'nestedButton2' && (
               <div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+                <ViolinGraph 
+                  cat1="standard_minus_novice" 
+                  cat2="beh_alchohol" 
+                  xLabel="standard minus novice" 
+                  yLabel="beh alchohol" 
+                  setHoveredCountry={setHoveredCountry} 
+                  hoveredCountry={hoveredCountry}
+                />
                 <StackedBarChart cat="standard_minus_novice" />
               </div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <BoxPlotGraph cat1="standard_minus_novice" cat2="beh_alchohol" />
               </div>
               </div>           
             )}
