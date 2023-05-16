@@ -20,16 +20,16 @@ function App() {
 
   const [selectedButton, setSelectedButton] = useState('button1');
   const [hoveredCountry, setHoveredCountry] = useState([]);
-  const [selectedNestedButton, setSelectedNestedButton] = useState(null);
+  const [selectedNestedButton, setSelectedNestedButton] = useState(0);
 
   function handleOuterButtonClick(id) {
     if(id =="button2"){
       setSelectedButton(id);
-      setSelectedNestedButton("nestedButton1");
+      //setSelectedNestedButton("nestedButton1");
     }
     else{
       setSelectedButton(id);
-      setSelectedNestedButton(null); 
+      //setSelectedNestedButton(null); 
     }
     
   }
@@ -83,51 +83,43 @@ No idea why this doesn't work, but it doesn't.
       {selectedButton === 'button2' && (
           <div>
             <div className="buttonContainer">
-                <button id="nestedButton1" onClick={(e) => handleNestedButtonClick(e.target.id)}>Alle bestuurders</button>
-                <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(e.target.id)}>Jonge bestuurders</button>
+                <button id="nestedButton1" onClick={(e) => handleNestedButtonClick(0)}>Alle bestuurders</button>
+                <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(1)}>Jonge bestuurders</button>
             </div>
-            {selectedNestedButton === 'nestedButton1' && (  
-              <div>
-              <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-              <StackedBarChart 
-                cat="standard_driver" 
-                setHoveredCountry={setHoveredCountry} 
-                hoveredCountry={hoveredCountry}
-              />
-              </div>
-              <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-              <ViolinGraph 
-                cat1="standard_driver" 
-                cat2="beh_alchohol" 
-                xLabel="standard driver"
-                yLabel="beh alchohol"
-                setHoveredCountry={setHoveredCountry} 
-                hoveredCountry={hoveredCountry}
-              />
-              </div>
-              </div> 
-            )}
-            {selectedNestedButton === 'nestedButton2' && (
-              <div>
-              <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <ViolinGraph 
-                  cat1="standard_minus_novice" 
-                  cat2="beh_alchohol" 
-                  xLabel="standard minus novice" 
-                  yLabel="beh alchohol" 
-                  setHoveredCountry={setHoveredCountry} 
-                  hoveredCountry={hoveredCountry}
-                />
-                <StackedBarChart 
-                  cat="standard_minus_novice" 
-                  setHoveredCountry={setHoveredCountry} 
-                  hoveredCountry={hoveredCountry}
-                />
-              </div>
-              <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-              </div>
-              </div>           
-            )}
+            
+            <div>
+            <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <StackedBarChart 
+              cat="standard_driver" 
+              setHoveredCountry={setHoveredCountry} 
+              hoveredCountry={hoveredCountry}
+            />
+            </div>
+            <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+            <ViolinGraph 
+              cat1="standard_driver" 
+              cat2={["beh_alchohol", "standard_minus_novice"]} 
+              xLabel="standard driver"
+              yLabel={["beh alchohol", "standard minus novice"]}
+              setHoveredCountry={setHoveredCountry} 
+              hoveredCountry={hoveredCountry}
+              cat2_upper={[0.5, 0.5]}
+              cat2_selected={selectedNestedButton}
+            />
+            <ViolinGraph 
+              cat1="standard_driver" 
+              cat2={["cas", "cas_young"]} 
+              xLabel="standard driver"
+              yLabel={["casualties", "casualties young"]}
+              setHoveredCountry={setHoveredCountry} 
+              hoveredCountry={hoveredCountry}
+              cat2_upper={[10, 10]}
+              cat2_selected={selectedNestedButton}
+            />
+            </div>
+            </div> 
+           
+            
             </div>
             )}
             
