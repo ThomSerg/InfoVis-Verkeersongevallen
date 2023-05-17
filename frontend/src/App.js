@@ -108,8 +108,12 @@ No idea why this doesn't work, but it doesn't.
             
             <div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginLeft: "10px", marginRight: "0px" }}>            
-            <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}></Card>
-            <ChartCard> 
+            <ChartCard title="Allowed promille when driving" > 
+              <D3Card
+                hoveredCountry={hoveredCountry}
+              />  
+            </ChartCard>
+            <ChartCard title="Allowed promille when driving" > 
               <StackedBarChart 
                 cat="standard_driver" 
                 setHoveredCountry={setHoveredCountry} 
@@ -156,13 +160,12 @@ No idea why this doesn't work, but it doesn't.
 
       {selectedButton === 'button3' && (
           <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
-            <Fines />   
-                
-              <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
-                <D3Card
+            <Fines />      
+            <ChartCard title="Information" > 
+              <D3Card
                 hoveredCountry={hoveredCountry}
-                />             
-              </Card>
+              />  
+            </ChartCard> 
           </div>
 
       )}

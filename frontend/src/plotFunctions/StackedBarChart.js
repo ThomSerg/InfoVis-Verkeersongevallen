@@ -4,7 +4,7 @@ import data2 from "../europe_gov.csv";
 
 import './StackedBarChart.css'
 
-function StackedBarChart({cat, setHoveredCountry, hoveredCountry, title}) {
+function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
   // Reference to the SVG
   const svgRef = useRef(null);
@@ -168,21 +168,6 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry, title}) {
       .transition()
       .duration(delay)
       .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
-
-    join.append('text')
-      .attr('class', 'text-label')
-      .attr('text-anchor', 'middle')
-      .attr('x', d => xScale(0))
-      .attr('y', function(d,i) {return i%2 == 0 ? (height/2) - halfBarHeight*1.1 : (height/2) + halfBarHeight*1.3})
-      .text(d => d3.format('.1f')(d.label) + ' \u2030')
-      .style('fill', (d,i) => colors[i])
-
-      .transition()
-      .duration(delay)
-      .attr('x', d => xScale(d.cumulative) + xScale(d.value) / 2)
-
-      
-
     });
   }
   }, [cat, svg]);
@@ -213,7 +198,6 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry, title}) {
 
   return (
     <div>
-    <div style={{ width: width }} className="scatterTitle">{title}</div>
     <svg ref={svgRef} width="600" height="200"/>
     </div>
   );
