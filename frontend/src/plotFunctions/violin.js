@@ -2,15 +2,17 @@ import React, { useState, useRef, useEffect } from "react";
 import * as d3 from "d3";
 import data2 from "../europe_gov.csv";
 
-function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry}) {
+function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, cat2_upper, cat2_selected}) {
     
     // Reference to the SVG
     const svgRef = useRef(null);
     // State holding the initialised SVG
     const [svg, setSvg] = useState(null);
-
     // State holding a lock for graph updates
     const [updateLock, setUpdateLock] = useState(false);
+
+    const transitionDuration = 1000;
+    const histogramTicks = 30;
 
     // Dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 30, left: 40},
@@ -18,7 +20,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     height = 400 - margin.top - margin.bottom;
 
     // Upper value for cat2 range
-    const cat2_upper = 0.5;
+    //const cat2_upper = 0.5;
     // The space between 2 groups. 0 means no padding. 1 is the maximum.
     const xLabelPadding = 0.05;
     // Amount of jitter within the scatterplot
@@ -27,7 +29,15 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     // Color scale for the scatter plot
     var myColor = d3.scaleSequential()
                     .interpolator(d3.interpolateInferno)
-                    .domain([0,cat2_upper])
+                    .domain([0,cat2_upper[cat2_selected]])
+
+    const [data, setData] = useState(null);
+
+    d3.csv(data2).then(d => { 
+        setData(d);
+    })
+
+    //const [sumstat, setSumstat] = useState(null);
 
     /* * * * * * * * * * 
      * Create the SVG  *
@@ -44,6 +54,104 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }, [])
     
 
+    function createScatterPlot(circles, x, y, sumstat2) {
+        var mapp = d3.map(sumstat2, function(d) { return d.key; });
+
+        console.log(mapp)
+
+        circles.attr("cx", function(d){return(x(d[cat1]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth )})
+                .attr("cy", function(d){
+                    return d[cat2[cat2_selected]] != "" ?
+                    
+                    (y(d[cat2[cat2_selected]])) : 
+                    y(d3.index(sumstat2, d => d.key).get(d[cat1]).median)
+                    //sumstat2[0].median
+                })
+                .attr("r", 5)
+                .style("fill", function(d){ return(myColor(d[cat2[cat2_selected]]))})
+                .attr("stroke", "white")
+                .style("visibility", function(d) {
+                    return d[cat2[cat2_selected]] != "" ? "visible" : "hidden";})
+
+                
+
+                
+    }
+
+    function createHistogram(y) {
+        return d3.bin()
+        .domain(y.domain())
+        .thresholds(y.ticks(histogramTicks))    // Important: how many bins approx are going to be made? It is the 'resolution' of the violin plot
+        .value(d => d)
+    }
+
+    function createSumstat(data, histogram) {
+        return d3.rollup(data, 
+            function(d) {   // For each key..
+                var input = d.filter((g) => g[cat2[cat2_selected]] !== "").map(function(g) { return g[cat2[cat2_selected]] })    // Keep the variable called Sepal_Length
+                var bins = histogram(input)   // And compute the binning on it.
+                return(bins)
+            },
+            d => d[cat1])  // nest function allows to group the calculation per level of a factor
+    }
+
+    function createViolin(data, violin,x, y) {
+        // Features of the histogram
+        var histogram = createHistogram(y)
+
+        // Compute the binning for each group of the dataset
+        var sumstat = createSumstat(data, histogram);
+
+        
+
+        // Highest number of items in a bin
+        var maxNum = 0;
+        for (const [key, value] of sumstat.entries()) {
+        var allBins = value
+        var lengths = allBins.map(function(a){return a.length;})
+        var longuest = d3.max(lengths)
+        if (longuest > maxNum) { maxNum = longuest }
+        }
+
+        // The maximum width of a violin must be x.bandwidth = the width dedicated to a group
+        var xNum = d3.scaleLinear()
+            .range([0, x.bandwidth()])
+            .domain([-maxNum,maxNum])
+
+        violin
+        .transition()
+        .on('start', function(e) {
+            //d3.select(this).select("#d").attr("x1", function(d){ return(xNum(d.length)) } )
+            console.log(d3.select(this))
+            d3.select(this)
+            .transition()
+            .duration(transitionDuration/2)
+            .attr("d", d3.area()
+                    .x0( xNum(0) )
+                    .x1(function(d){ return(xNum(d.length)) } )
+                    .y(function(d){ return(y(d.x0)) } )
+                    .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
+                )
+        })
+
+
+        .transition()
+        .on('end', function(e) {
+            //d3.select(this).select("#d").attr("x1", function(d){ return(xNum(d.length)) } )
+            console.log(d3.select(this))
+            d3.select(this)
+            .transition()
+            .duration(transitionDuration/2)
+            .attr("d", d3.area()
+                    .x0( xNum(0) )
+                    .x1(function(d){ return(xNum(0)) } )
+                    .y(function(d){ return(y(d.x0)) } )
+                    .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
+                )
+        })
+        
+    }
+
     /* * * * * * * * *
      * Populate SVG  *
      * * * * * * * * */
@@ -52,21 +160,13 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         if (svg) {
 
         // Read the data and compute summary statistics for each specie
-        d3.csv(data2).then(data => {     
+        d3.csv(data2).then(data => {  
 
             // Get x-axis labels, sorted
-            const xValues = data.filter(function(d) {return d[cat2] != ""}).reduce((acc, cur) => {
-                if (!acc.includes(cur[cat1])) {
-                acc.push(cur[cat1]);
-                }
-                return acc;
-            }, []).sort(d3.ascending).filter(d => d !== "");
+            const x_values = xValues(data)
                 
-
             // Build and Show the Y scale
-            var y = d3.scaleLinear()
-                        .domain([ 0,cat2_upper ])
-                        .range([height, 0])
+            var y = yScale();
             svg.append("g").call( d3.axisLeft(y) )
             svg.append("text")
                 .attr("class", "y label")
@@ -77,10 +177,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 .text(yLabel);
 
             // Build and Show the X scale. It is a band scale like for a boxplot: each group has an dedicated RANGE on the axis. This range has a length of x.bandwidth
-            var x = d3.scaleBand()
-                        .range([ 0, width ])
-                        .domain(xValues)
-                        .padding(xLabelPadding)     // This is important: it is the space between 2 groups. 0 means no padding. 1 is the maximum.
+            var x = xScale(x_values)  
             svg.append("g")
                 .attr("class", "x-axis")
                 .attr("id", "my-x-axis")
@@ -93,50 +190,13 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 .attr("y", height - 6)
                 .text(xLabel);
 
+            var histogram = createHistogram(y)
+            var sumstat = createSumstat(data, histogram);
             
-            // Features of the histogram
-            var histogram = d3.bin()
-                                .domain(y.domain())
-                                .thresholds(y.ticks(20))    // Important: how many bins approx are going to be made? It is the 'resolution' of the violin plot
-                                .value(d => d)
-
-            // Compute the binning for each group of the dataset
-            var sumstat = d3.rollup(data, 
-                                    function(d) {   // For each key..
-                                        var input = d.filter((g) => g[cat2] !== "").map(function(g) { return g[cat2] })    // Keep the variable called Sepal_Length
-                                        var bins = histogram(input)   // And compute the binning on it.
-                                        return(bins)
-                                    },
-                                    d => d[cat1])  // nest function allows to group the calculation per level of a factor
-
-            // Data statistics
-            var sumstat2 = Array.from(d3.group(data, d => d[cat1]), ([key, values]) => {
-                                    const q1 = d3.quantile(values.map(d => d[cat2]).sort(d3.ascending), 0.25);
-                                    const median = d3.quantile(values.map(d => d[cat2]).sort(d3.ascending), 0.5);
-                                    const q3 = d3.quantile(values.map(d => d[cat2]).sort(d3.ascending), 0.75);
-                                    const interQuantileRange = q3 - q1;
-                                    const min = q1 - 1.5 * interQuantileRange;
-                                    const max = q3 + 1.5 * interQuantileRange;
-                                    return { key, values, q1, median, q3, interQuantileRange, min, max };
-                                }).filter(({ key }) => key !== "")
-
-            // Highest number of items in a bin
-            var maxNum = 0;
-            for (const [key, value] of sumstat.entries()) {
-                var allBins = value
-                var lengths = allBins.map(function(a){return a.length;})
-                var longuest = d3.max(lengths)
-                if (longuest > maxNum) { maxNum = longuest }
-            }
-
-            // The maximum width of a violin must be x.bandwidth = the width dedicated to a group
-            var xNum = d3.scaleLinear()
-                            .range([0, x.bandwidth()])
-                            .domain([-maxNum,maxNum])
 
       
             // Create violin shape
-            svg
+            const violin = svg
             .selectAll("myViolin")
             .data(sumstat)
             .enter()        // So now we are working group per group
@@ -147,12 +207,47 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 .datum(function(d){ return(d[1])})     // So now we are working bin per bin
                 .style("stroke", "none")
                 .style("fill","grey")
-                .attr("d", d3.area()
-                    .x0( xNum(0) )
-                    .x1(function(d){ return(xNum(d.length)) } )
-                    .y(function(d){ return(y(d.x0)) } )
-                    .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
-                )
+
+                .attr("class", "data-path")
+                //.attr("id", function(d) {return d["Country"].replace(/\s/g, '')})
+
+            // Highest number of items in a bin
+            var maxNum = 0;
+            for (const [key, value] of sumstat.entries()) {
+            var allBins = value
+            var lengths = allBins.map(function(a){return a.length;})
+            var longuest = d3.max(lengths)
+            if (longuest > maxNum) { maxNum = longuest }
+            }
+
+            // The maximum width of a violin must be x.bandwidth = the width dedicated to a group
+            var xNum = d3.scaleLinear()
+                .range([0, x.bandwidth()])
+                .domain([-maxNum,maxNum])
+
+            violin.attr("d", d3.area()
+                .x0( xNum(0) )
+                .x1(function(d){ return(xNum(0)) } )
+                .y(function(d){ return(y(d.x0)) } )
+                .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
+            )
+                       
+            createViolin(data, violin.transition().duration(transitionDuration) ,x, y)
+
+
+
+            // Data statistics
+            var sumstat2 = Array.from(d3.group(data, d => d[cat1]), ([key, values]) => {
+                const q1 = d3.quantile(values.map(d => d[cat2[cat2_selected]]).sort(d3.ascending), 0.25);
+                const median = d3.quantile(values.map(d => d[cat2[cat2_selected]]).sort(d3.ascending), 0.5);
+                const q3 = d3.quantile(values.map(d => d[cat2[cat2_selected]]).sort(d3.ascending), 0.75);
+                const interQuantileRange = q3 - q1;
+                const min = q1 - 1.5 * interQuantileRange;
+                const max = q3 + 1.5 * interQuantileRange;
+                return { key, values, q1, median, q3, interQuantileRange, min, max };
+            }).filter(({ key }) => key !== "")
+
+                
 
             // Hover tooltip
             var div = d3.select("body").append("div")
@@ -160,76 +255,96 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 .style("opacity", 0)
                 .style("position", "absolute");
 
+            console.log("selected")
+            console.log(cat2_selected);
+
             // Add individual points with jitter
-            svg
+            const circles = svg
                 .selectAll("indPoints")
                 .data(data)
                 .enter()
                 .filter(d => d[cat1] !== "")
-                .filter(d => d[cat2] !== "")
+                //.filter(d => d[cat2[cat2_selected]] !== "")
                 .append("circle")
-                .attr("cx", function(d){return(x(d[cat1]) + x.bandwidth()/2 - Math.random()*jitterWidth )})
-                .attr("cy", function(d){return(y(d[cat2]))})
-                .attr("r", 5)
-                .style("fill", function(d){ return(myColor(d[cat2]))})
-                .attr("stroke", "white")
 
                 .attr("class", "data-point")
                 .attr("id", function(d) {return d["Country"].replace(/\s/g, '')})
 
-                .on('mouseover', function(event, d) {
-                    setUpdateLock(true);
 
-                    d3.select(this).transition().duration('50').attr('opacity', '.85');
-                    div.transition().duration('50').style('opacity', 1);
+            createScatterPlot(circles, x, y, sumstat2)
 
-                    div.html(d["Country"] + " : " + d[cat2])
-                        .style("left", (event.pageX + 10) + "px")
-                        .style("top", (event.pageY - 15) + "px");
+            circles.on('mouseover', function(event, d) {
+                setUpdateLock(true);
 
-                    setHoveredCountry([d["Country"]])
+                d3.select(this).transition().duration('50').attr('opacity', '.85');
+                div.transition().duration('50').style('opacity', 1);
 
-                })
-                .on('mouseout', function(d,i) {
-                    d3.select(this).transition().duration('50').attr('opacity', '1')
-                    div.transition().duration('50').style('opacity', 0)
+                div.html(d["Country"] + " : " + d[cat2[cat2_selected]])
+                    .style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 15) + "px");
 
-                    setHoveredCountry([])
+                setHoveredCountry([d["Country"]])
 
-                    setUpdateLock(false);
-                })
+            })
+            .on('mouseout', function(d,i) {
+                d3.select(this).transition().duration('50').attr('opacity', '1')
+                div.transition().duration('50').style('opacity', 0)
 
+                setHoveredCountry([])
+
+                setUpdateLock(false);
+            })
 
                 
+
             
-            // var x_data = sumstat2.map(function(d) { return d.key; })
-            // var y_data = sumstat2.map(function(d) { return d.median; })
+            const dataArray = sumstat2.map(d => [Number(d.key), Number(d.median)]).sort(function(x,y){return d3.ascending(x[0], y[0]);});
+            console.log(dataArray);
+                
+            
+            var x_data = sumstat2.map(function(d) { return d.key; })
+            var y_data = sumstat2.map(function(d) { return d.median; })
 
 
-            // var meanLine = d3.line()
-            //     .x(function(d) {
-            //         return x(d.key) + x.bandwidth()/2;
-            //     })
-            //     .y(function(d) {
-            //         return y(d.median);
-            //     });
+            var meanLine = d3.line()
+                .x(function(d) {
+                    console.log(d[0]);
+                    return x(d[0]) + x.bandwidth()/2
+                })
+                .y(function(d) {
+                    console.log(d[1]);
+                    return y(d[1])
+                });
 
-            // svg
-            // .selectAll("meanLine")
-            // .data([sumstat2.sort(function(x,y){return d3.ascending(x.key, y.key);})])
-            // .join("path")
-            //     //.attr("class", "line")
-            //     .attr("d", meanLine);
-            //     // .attr("d", d => d3.line()
-            //     //                     .x(function(s) {return s.map(function(g) { return g.key; })})
-            //     //                     .y(function(s) {return s.map(function(g) { return g.median; })})
-            //     // )
+            // console.log(sumstat2.sort(function(x,y){return d3.ascending(x.key, y.key);}))
+            // console.log(meanLine(sumstat2.sort(function(x,y){return d3.ascending(x.key, y.key);})))
+            console.log(sumstat2)
+            svg
+            .selectAll("meanLine")
+            .datum(dataArray)
+            .join("path")
+            //.sort(function(x,y){return d3.ascending(x.key, y.key);}))
+            //.join("path")
+                //.attr("class", "line")
+                //.attr("fill", "none")
+                .attr("stroke", "black")
+                .attr("stroke-width", 2)
+                .attr("d", meanLine);
+                
+                // .attr("d", d => d3.line()
+                //                     .x(function(s) {return s.map(function(g) { return g.key; })})
+                //                     .y(function(s) {return s.map(function(g) { return g.median; })})
+                // )
 
 
             // Show the median
             svg.selectAll("medianLines")
                 .data(sumstat2)
                 .join("line")
+
+                .attr("class", "data-median-line")
+                //.attr("id", function(d) {return d["Country"].replace(/\s/g, '')})
+
                 .attr("x1", d => x(d.key) + x.bandwidth()/2 - x.bandwidth() / 4)
                 .attr("x2", d => x(d.key) + x.bandwidth()/2 + x.bandwidth() / 4)
                 .attr("y1", d => y(d.median))
@@ -277,7 +392,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         });
     }
 
-        }, [svg,cat1,cat2]);
+        }, [svg]);
     
     function grayout(svg) {
         svg.selectAll(".data-point")
@@ -285,33 +400,191 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }
 
     function selectSingle(hc) {
-        d3
+        svg
             .select(("#" + hc).replace(/\s/g, ''))
             .style("fill", "red");
     }
 
     function selectMulti(hcs) {
         hcs.forEach(hc => {
-            d3
+            svg
             .select(("#" + hc).replace(/\s/g, ''))
-            .style("fill", function(d){ return(myColor(d[cat2])) });
+            .style("fill", function(d){ return(myColor(d[cat2[cat2_selected]])) });
         })
     }
 
     function colorMulti(hcs) {
         hcs.forEach(hc => {
-            d3
+            svg
             .select(("#" + hc).replace(/\s/g, ''))
-            .style("fill", function(d){ return(myColor(d[cat2])) });
+            .style("fill", function(d){ return(myColor(d[cat2[cat2_selected]])) });
         })
     }
 
     function colorAll(svg) {
         svg.selectAll(".data-point")
-                    .style("fill", function(d){ return(myColor(d[cat2])) })
+                    .style("fill", function(d){ return(myColor(d[cat2[cat2_selected]])) })
     }
 
-    
+    function yScale() {
+        return d3.scaleLinear()
+                    .domain([ 0,cat2_upper[cat2_selected] ])
+                    .range([height, 0]);
+    }
+
+    function xValues(data) {
+        return data.filter(function(d) {return d[cat2[cat2_selected]] != ""}).reduce((acc, cur) => {
+                    if (!acc.includes(cur[cat1])) {
+                        acc.push(cur[cat1]);
+                    }
+                    return acc;
+                }, []).sort(d3.ascending).filter(d => d !== "");
+    }
+
+    function xScale(x_values) {
+        return d3.scaleBand()
+                    .range([ 0, width ])
+                    .domain(x_values)
+                    .padding(xLabelPadding);
+    }
+
+    useEffect(() => {
+        
+
+        if (data) {
+            console.log("switch")
+            console.log(cat2_selected)
+        // Build and Show the Y scale
+        var y = yScale();
+
+        // Get x-axis labels, sorted
+        const x_values = xValues(data)
+        // Build and Show the X scale. It is a band scale like for a boxplot: each group has an dedicated RANGE on the axis. This range has a length of x.bandwidth
+        var x = xScale(x_values)
+                
+        const circles = svg.selectAll(".data-point").transition().duration(transitionDuration);
+
+        var sumstat2 = Array.from(d3.group(data, d => d[cat1]), ([key, values]) => {
+            const q1 = d3.quantile(values.map(d => d[cat2[cat2_selected]]).sort(d3.ascending), 0.25);
+            const median = d3.quantile(values.map(d => d[cat2[cat2_selected]]).sort(d3.ascending), 0.5);
+            const q3 = d3.quantile(values.map(d => d[cat2[cat2_selected]]).sort(d3.ascending), 0.75);
+            const interQuantileRange = q3 - q1;
+            const min = q1 - 1.5 * interQuantileRange;
+            const max = q3 + 1.5 * interQuantileRange;
+            return { key, values, q1, median, q3, interQuantileRange, min, max };
+        }).filter(({ key }) => key !== "")
+        
+        createScatterPlot(circles, x, y, sumstat2)
+
+
+
+
+
+        var histogram = createHistogram(y)
+        var sumstat = createSumstat(data, histogram);
+
+
+        // Highest number of items in a bin
+        var maxNum = 0;
+        for (const [key, value] of sumstat.entries()) {
+        var allBins = value
+        var lengths = allBins.map(function(a){return a.length;})
+        var longuest = d3.max(lengths)
+        if (longuest > maxNum) { maxNum = longuest }
+        }
+
+        // The maximum width of a violin must be x.bandwidth = the width dedicated to a group
+        var xNum = d3.scaleLinear()
+            .range([0, x.bandwidth()])
+            .domain([-maxNum,maxNum])
+
+        
+        var violin = svg.selectAll(".data-path").transition().duration(transitionDuration/2)
+        
+        violin
+        .attr("d", d3.area()
+                .x0( xNum(0) )
+                .x1(function(d){ return(xNum(0)) } )
+                .y(function(d){ return(y(d.x0)) } )
+                .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
+            )
+
+        violin
+        .remove()
+
+        violin = svg.selectAll(".myViolin")
+        .data(sumstat)
+            .enter()        // So now we are working group per group
+            .filter(d => d[0] !== "")
+            .append("g")
+                .attr("transform", function(d){ return("translate(" + x(d[0]) +" ,0)") } ) // Translation on the right to be at the group position
+            .append("path")
+                .datum(function(d){ return(d[1])})     // So now we are working bin per bin
+                .style("stroke", "none")
+                .style("fill","grey")
+
+                .attr("class", "data-path")
+                .transition().delay(transitionDuration/2).duration(0)
+        
+        
+        //.data(sumstat).transition().duration(transitionDuration)
+
+        //const violin = svg.selectAll(".myViolin").datum(sumstat).transition().duration(transitionDuration)
+
+        violin
+        
+        .attr("d", d3.area()
+                .x0( xNum(0) )
+                .x1(function(d){ return(xNum(0)) } )
+                .y(function(d){ return(y(d.x0)) } )
+                .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
+            )
+            .transition()
+        .on('start', function(e) {
+            //d3.select(this).select("#d").attr("x1", function(d){ return(xNum(d.length)) } )
+            console.log(d3.select(this))
+            d3.select(this)
+            .transition()
+            .duration(transitionDuration/2)
+            .attr("d", d3.area()
+                    .x0( xNum(0) )
+                    .x1(function(d){ return(xNum(d.length)) } )
+                    .y(function(d){ return(y(d.x0)) } )
+                    .curve(d3.curveCatmullRom)    // This makes the line smoother to give the violin appearance. Try d3.curveStep to see the difference
+                )
+        })
+
+        // svg.selectAll(".medianLines")
+        //         .data(sumstat2)
+        //         .transition()
+        //         .delay(transitionDuration)
+        //         .select("line")
+        //         .attr("x1", d => x(d.key) + x.bandwidth()/2 - x.bandwidth() / 4)
+        //         .attr("x2", d => x(d.key) + x.bandwidth()/2 + x.bandwidth() / 4)
+        //         .attr("y1", d => y(d.median))
+        //         .attr("y2", d => y(d.median))
+        //         .attr("stroke", "black")
+        //         .attr("stroke-width", 2);
+
+        svg.selectAll(".data-median-line")
+                .data(sumstat2)
+                .transition()
+                .duration(transitionDuration)
+                // .select("line")
+                .attr("x1", d => x(d.key) + x.bandwidth()/2 - x.bandwidth() / 4)
+                .attr("x2", d => x(d.key) + x.bandwidth()/2 + x.bandwidth() / 4)
+                .attr("y1", d => y(d.median))
+                .attr("y2", d => y(d.median))
+                .attr("stroke", "black")
+                .attr("stroke-width", 2);
+
+
+                
+
+        //createViolin(data, violin, x, y)
+    }
+        
+    }, [cat2_selected])
 
     /* * * * * * * * * *
      * Update on hover *
@@ -321,7 +594,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
       
             if (hoveredCountry.length == 1) {
                 grayout(svg);
-                selectSingle(hoveredCountry[0])
+                selectMulti(hoveredCountry)
             } else if (hoveredCountry.length > 1) {
                 grayout(svg);
                 selectMulti(hoveredCountry)
