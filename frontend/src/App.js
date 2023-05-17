@@ -24,7 +24,23 @@ function App() {
   const [hoveredCountry, setHoveredCountry] = useState([]);
   const [selectedNestedButton, setSelectedNestedButton] = useState(0);
 
-  function handleOuterButtonClick(id) {
+  function handleOuterButtonClick(event, id) {
+
+    // Remove the 'active' class from all buttons
+    const buttons = document.querySelectorAll('.buttonContainer button');
+    console.log("Buttons are " + buttons.size);
+    buttons.forEach(button => {
+      console.log("Button is " + button.id);
+      button.classList.remove('active')
+    }
+      );
+
+    // Add the 'active' class to the clicked button
+    const clickedButton = document.getElementById(id);
+    clickedButton.classList.add('active');
+
+    console.log("Clicked button is " + clickedButton.id);
+
     if(id =="button2"){
       setSelectedButton(id);
       //setSelectedNestedButton("nestedButton1");
@@ -66,10 +82,11 @@ No idea why this doesn't work, but it doesn't.
       <h1>Road accidents in Europe</h1>
 
       <div class="buttonContainer" >
-          <button id="button1" onClick={(e) => handleOuterButtonClick(e.target.id)}>Road Quality</button>
-          <button id="button2" onClick={(e) => handleOuterButtonClick(e.target.id)}>Alcohol</button>
-          <button id="button3" onClick={(e) => handleOuterButtonClick(e.target.id)}>Fines</button>
-        </div>
+        <button id="button1" class="active" onClick={(e) => handleOuterButtonClick(e, e.target.id)}>Road Quality</button>
+        <button id="button2" onClick={(e) => handleOuterButtonClick(e, e.target.id)}>Alcohol</button>
+        <button id="button3" onClick={(e) => handleOuterButtonClick(e, e.target.id)}>Fines</button>
+    </div>
+
 
       <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
         <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>

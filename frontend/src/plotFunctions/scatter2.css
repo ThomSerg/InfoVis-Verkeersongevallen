@@ -18,15 +18,36 @@
     font-size: 1.3rem;
 }
 
-button.zoom-button{
+g.zoom-button{
   background-color:#f2f2f2;
   text-align:center;
-  border-radius: 5px;
-  font-size: 20px;
   font-weight: bold;
 }
 
-button.zoom-button:hover{
+g.zoom-button:hover{
   background-color: #b3b3b3;
+}
+
+.zoom-button:hover rect{
+  fill: #b3b3b3;
+}
+
+.zoom-button:active rect{
+  fill: #808080;
+}
+
+.zoom-button rect {
+  /* CSS styling for the rect elements */
+  fill: grey;
+  cursor: pointer;
+  /* Add more styles as needed */
+}
+
+.zoom-button text {
+  /* CSS styling for the text elements */
+  fill: white;
+  font-size: 20px;
+  pointer-events: none;
+  /* Add more styles as needed */
 }
 

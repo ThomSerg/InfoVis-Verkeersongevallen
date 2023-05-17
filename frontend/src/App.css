@@ -5,7 +5,7 @@
 
 
 button {
-  background-color: #565c5e ;
+  background-color: #565c5e;
   color: #dfdbd8;
   padding: 10px;
   border-radius: 20px;
@@ -14,21 +14,32 @@ button {
   margin-right: 5px;
   width: 100px;
   transition-duration: 400ms;
+  /* Add box-shadow for a 3D effect */
+  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
 }
 
 button:hover {
-  color: #565c5e ;
-  background-color: #dfdbd8 ;
+  color: #565c5e;
+  background-color: #dfdbd8;
   transition-duration: 400ms;
 }
 
+/* Define the button style when it is pressed */
+.buttonContainer button.active {
+  background-color: #292929;
+  transition-duration: 400ms;
+  /* Add a lower opacity to create a background effect */
+  opacity: 0.8;
+  box-shadow: none;
+}
 
 .buttonContainer {
-   justify-content: "space-between";
-   margin-bottom: 15px;
-   border-bottom: 10px solid #565c5e ;
-   padding-bottom: 15px;
+  justify-content: space-between;
+  margin-bottom: 15px;
+  border-bottom: 10px solid #565c5e;
+  padding-bottom: 15px;
 }
+
 
 h1 {
   font-weight: 1000;
