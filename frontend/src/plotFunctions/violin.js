@@ -2,7 +2,9 @@ import React, { useState, useRef, useEffect } from "react";
 import * as d3 from "d3";
 import data2 from "../europe_gov.csv";
 
-function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, cat2_upper, cat2_selected}) {
+import './violin.css'
+
+function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, cat2_upper, cat2_selected, title="Unknown title"}) {
     
     // Reference to the SVG
     const svgRef = useRef(null);
@@ -15,8 +17,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     const histogramTicks = 30;
 
     // Dimensions and margins of the graph
-    var margin = {top: 10, right: 30, bottom: 30, left: 40},
-    width = 460 - margin.left - margin.right,
+    var margin = {top: 10, right: 30, bottom: 40, left: 50},
+    width = 500 - margin.left - margin.right,
     height = 400 - margin.top - margin.bottom;
 
     // Upper value for cat2 range
@@ -169,9 +171,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             var y = yScale();
             svg.append("g").call( d3.axisLeft(y) )
             svg.append("text")
-                .attr("class", "y label")
+                .attr("class", "y-label")
+                //.style("font", legend_font_size+"px times")
                 .attr("text-anchor", "end")
-                .attr("y", 6)
+                .attr("y", -45)
                 .attr("dy", ".75em")
                 .attr("transform", "rotate(-90)")
                 .text(yLabel);
@@ -184,10 +187,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 .attr("transform", "translate(0," + height + ")")
                 .call(d3.axisBottom(x))
             svg.append("text")
-                .attr("class", "x label")
+                .attr("class", "x-label")
                 .attr("text-anchor", "end")
                 .attr("x", width)
-                .attr("y", height - 6)
+                .attr("y", height + 30)
                 .text(xLabel);
 
             var histogram = createHistogram(y)

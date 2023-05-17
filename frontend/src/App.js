@@ -14,6 +14,7 @@ import { select } from "d3";
 import Wegkwaliteit from './Wegkwaliteit/WegKwaliteit';
 
 import StackedBarChart from "./plotFunctions/StackedBarChart";
+import ChartCard from "./plotFunctions/ChartCard";
 
 
 function App() {
@@ -88,34 +89,39 @@ No idea why this doesn't work, but it doesn't.
             </div>
             
             <div>
-            <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-            <StackedBarChart 
-              cat="standard_driver" 
-              setHoveredCountry={setHoveredCountry} 
-              hoveredCountry={hoveredCountry}
-            />
-            </div>
-            <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-            <ViolinGraph 
-              cat1="standard_driver" 
-              cat2={["beh_alchohol", "standard_minus_novice"]} 
-              xLabel="standard driver"
-              yLabel={["beh alchohol", "standard minus novice"]}
-              setHoveredCountry={setHoveredCountry} 
-              hoveredCountry={hoveredCountry}
-              cat2_upper={[0.5, 0.5]}
-              cat2_selected={selectedNestedButton}
-            />
-            <ViolinGraph 
-              cat1="standard_driver" 
-              cat2={["cas", "cas_young"]} 
-              xLabel="standard driver"
-              yLabel={["casualties", "casualties young"]}
-              setHoveredCountry={setHoveredCountry} 
-              hoveredCountry={hoveredCountry}
-              cat2_upper={[10, 10]}
-              cat2_selected={selectedNestedButton}
-            />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginLeft: "10px", marginRight: "0px" }}>            
+            <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}></Card>
+            <ChartCard> 
+              <StackedBarChart 
+                cat="standard_driver" 
+                setHoveredCountry={setHoveredCountry} 
+                hoveredCountry={hoveredCountry}
+              />
+            </ChartCard>
+            <ChartCard title="Drink driving acceptance">
+              <ViolinGraph 
+                cat1="standard_driver" 
+                cat2={["beh_alchohol", "standard_minus_novice"]} 
+                xLabel="standard driver"
+                yLabel={["beh alchohol", "standard minus novice"]}
+                setHoveredCountry={setHoveredCountry} 
+                hoveredCountry={hoveredCountry}
+                cat2_upper={[0.5, 0.5]}
+                cat2_selected={selectedNestedButton}
+              />
+            </ChartCard>
+            <ChartCard title="Casualities with respect to drink driving limits">
+              <ViolinGraph 
+                cat1="standard_driver" 
+                cat2={["cas", "cas_young"]} 
+                xLabel="standard driver"
+                yLabel={["casualties", "casualties young"]}
+                setHoveredCountry={setHoveredCountry} 
+                hoveredCountry={hoveredCountry}
+                cat2_upper={[10, 10]}
+                cat2_selected={selectedNestedButton}
+              />
+            </ChartCard>
             </div>
             </div> 
            
