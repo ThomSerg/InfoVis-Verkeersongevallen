@@ -13,7 +13,7 @@ import ViolinGraph from "./plotFunctions/violin";
 import { select } from "d3";
 import Wegkwaliteit from './Wegkwaliteit/WegKwaliteit';
 import Fines from "./Wegkwaliteit/Fines";
-
+import D3Card from "./plotFunctions/D3Card";
 import StackedBarChart from "./plotFunctions/StackedBarChart";
 import ChartCard from "./plotFunctions/ChartCard";
 
@@ -114,18 +114,23 @@ No idea why this doesn't work, but it doesn't.
       {selectedButton === 'button2' && (
           <div>
             <div className="buttonContainer">
-                <button id="nestedButton1" class="active" onClick={(e) => handleNestedButtonClick(e,e.target.id)}>Alle bestuurders</button>
-                <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(e,e.target.id)}>Jonge bestuurders</button>
+                <button id="nestedButton1" class="active" onClick={(e) => handleNestedButtonClick(e,e.target.id)}>All Drivers</button>
+                <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(e,e.target.id)}>Young Drivers</button>
             </div>
             
             <div>
             <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginLeft: "10px", marginRight: "0px" }}>            
-            <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}></Card>
-            <ChartCard> 
+            <ChartCard title="Allowed promille when driving" > 
+              <D3Card
+                hoveredCountry={hoveredCountry}
+              />  
+            </ChartCard>
+            <ChartCard title="Allowed promille when driving" > 
               <StackedBarChart 
                 cat="standard_driver" 
                 setHoveredCountry={setHoveredCountry} 
                 hoveredCountry={hoveredCountry}
+                title = "Allowed promille in blood"
               />
             </ChartCard>
             <ChartCard title="Drink driving acceptance">
@@ -166,10 +171,15 @@ No idea why this doesn't work, but it doesn't.
               
 
       {selectedButton === 'button3' && (
-        <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
-        <Fines />
-        
-      </div>
+          <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
+            <Fines />      
+            <ChartCard title="Information" > 
+              <D3Card
+                hoveredCountry={hoveredCountry}
+              />  
+            </ChartCard> 
+          </div>
+
       )}
       </div>
     </div>
