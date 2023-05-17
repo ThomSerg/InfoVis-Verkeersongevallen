@@ -2,6 +2,8 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import data2 from "../europe_gov.csv";
 
+import './StackedBarChart.css'
+
 function StackedBarChart({cat, setHoveredCountry, hoveredCountry, title}) {
 
   // Reference to the SVG
@@ -167,7 +169,17 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry, title}) {
       .duration(delay)
       .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
 
-   
+    join.append('text')
+      .attr('class', 'text-label')
+      .attr('text-anchor', 'middle')
+      .attr('x', d => xScale(0))
+      .attr('y', function(d,i) {return i%2 == 0 ? (height/2) - halfBarHeight*1.1 : (height/2) + halfBarHeight*1.3})
+      .text(d => d3.format('.1f')(d.label) + ' \u2030')
+      .style('fill', (d,i) => colors[i])
+
+      .transition()
+      .duration(delay)
+      .attr('x', d => xScale(d.cumulative) + xScale(d.value) / 2)
 
       
 
