@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import data2 from "../europe_gov.csv";
 
-function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
+function StackedBarChart({cat, setHoveredCountry, hoveredCountry, title}) {
 
   // Reference to the SVG
   const svgRef = useRef(null);
@@ -56,10 +56,9 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
 
   useEffect(() => {
-    
     if (svg) {
 
-    const colors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33"];
+    const colors = ["#724d3d ", "#916e54", "#b0886b", "#d0a281", "#e9b897", "#fdc4ac"];
     
     d3.csv(data2).then(data => { 
       
@@ -201,7 +200,10 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
 
   return (
-    <svg ref={svgRef} width="600" height="500"/>
+    <div>
+    <div style={{ width: width }} className="scatterTitle">{title}</div>
+    <svg ref={svgRef} width="600" height="200"/>
+    </div>
   );
 }
 

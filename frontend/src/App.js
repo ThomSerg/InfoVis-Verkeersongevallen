@@ -13,7 +13,7 @@ import ViolinGraph from "./plotFunctions/violin";
 import { select } from "d3";
 import Wegkwaliteit from './Wegkwaliteit/WegKwaliteit';
 import Fines from "./Wegkwaliteit/Fines";
-
+import D3Card from "./plotFunctions/D3Card";
 import StackedBarChart from "./plotFunctions/StackedBarChart";
 
 
@@ -84,8 +84,8 @@ No idea why this doesn't work, but it doesn't.
       {selectedButton === 'button2' && (
           <div>
             <div className="buttonContainer">
-                <button id="nestedButton1" onClick={(e) => handleNestedButtonClick(0)}>Alle bestuurders</button>
-                <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(1)}>Jonge bestuurders</button>
+                <button id="nestedButton1" onClick={(e) => handleNestedButtonClick(0)}>All Drivers</button>
+                <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(1)}>Young Drivers</button>
             </div>
             
             <div>
@@ -94,7 +94,8 @@ No idea why this doesn't work, but it doesn't.
               cat="standard_driver" 
               setHoveredCountry={setHoveredCountry} 
               hoveredCountry={hoveredCountry}
-            />
+              title = "Allowed promille in blood"
+              />
             </div>
             <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
             <ViolinGraph 
@@ -127,10 +128,16 @@ No idea why this doesn't work, but it doesn't.
               
 
       {selectedButton === 'button3' && (
-        <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
-        <Fines />
-        
-      </div>
+          <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
+            <Fines />   
+                
+              <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+                <D3Card
+                hoveredCountry={hoveredCountry}
+                />             
+              </Card>
+          </div>
+
       )}
       </div>
     </div>
