@@ -4,7 +4,7 @@ import data2 from "../europe_gov.csv";
 
 import './violin.css'
 
-function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, cat2_upper, cat2_selected, title="Unknown title"}) {
+function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, cat2_upper, cat2_selected, title="Unknown title", xLabelElement = xLabel, yLabelElement = yLabel}) {
     
     // Reference to the SVG
     const svgRef = useRef(null);
@@ -282,7 +282,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 d3.select(this).transition().duration('50').attr('opacity', '.85');
                 div.transition().duration('50').style('opacity', 1);
 
-                div.html(d["Country"] + " : " + d[cat2[cat2_selected]])
+                div.html(`<strong><u> ${d.Country}</u></strong><br/>${xLabelElement}: ${Math.round(d[cat1] * 100)/100}<br/>${yLabelElement}: ${Math.round(d[cat2[cat2_selected]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
                     .style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 15) + "px");
 

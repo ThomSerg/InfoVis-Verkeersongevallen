@@ -126,6 +126,8 @@ No idea why this doesn't work, but it doesn't.
                 hoveredCountry={hoveredCountry}
                 cat2_upper={[0.5, 0.5]}
                 cat2_selected={selectedNestedButton}
+                xLabelElement={"Max promille"}
+                yLabelElement={"Acceptance of drunk driving"}
               />
             </ChartCard>
             <ChartCard title="Casualities with respect to drink driving limits">
@@ -138,6 +140,8 @@ No idea why this doesn't work, but it doesn't.
                 hoveredCountry={hoveredCountry}
                 cat2_upper={[10, 10]}
                 cat2_selected={selectedNestedButton}
+                xLabelElement={"Max promille"}
+                yLabelElement={"Casualties young drivers"}
               />
             </ChartCard>
             </div>
