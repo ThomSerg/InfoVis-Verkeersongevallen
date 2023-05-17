@@ -101,12 +101,25 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
       .domain([0, total])
       .range([0, width]);
 
+      var div = d3.select("body").append("div")
+                .attr("class", "tooltip-hover")
+                .style("opacity", 0)
+                .style("position", "absolute");
+
     const join = svg.selectAll('g')
       .data(groupData)
       .join('g')
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
       .on('mouseover', function(event, d) {
+        div.transition()
+        .duration(50)
+        .style("opacity", 1);
+
+        div.html(`${d.label} promille<br>${d.percent.toFixed(2)}%`)     
+          .style("left", (event.pageX + 10) + "px")
+          .style("top", (event.pageY - 15) + "px");
+
         setUpdateLock(true);
 
         selectLabels([d.label]);        
@@ -116,7 +129,10 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
       })
 
       .on('mouseout', function(event, d) {
-        
+        div.transition()
+                .duration('50')
+                .style("opacity", 0);
+
         colorAll();
 
         setHoveredCountry([])
@@ -152,28 +168,7 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
       .duration(delay)
       .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
 
-    join.append('text')
-      .attr('class', 'text-percent')
-      .attr('text-anchor', 'middle')
-      .attr('x', d => xScale(0))
-      .attr('y', (height / 2) - (halfBarHeight * 1.1))
-      .text(d => d3.format('.1f')(d.percent) + ' %')
-
-      .transition()
-      .duration(delay)
-      .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
-
-    join.append('text')
-      .attr('class', 'text-label')
-      .attr('text-anchor', 'middle')
-      .attr('x', d => xScale(0))
-      .attr('y', (height / 2) + (halfBarHeight * 1.1) + 20)
-      .style('fill', (d, i) => colors[i])
-      .text(d => d.label)
-
-      .transition()
-      .duration(delay)
-      .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
+   
 
       
 

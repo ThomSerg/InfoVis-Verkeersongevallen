@@ -1,12 +1,11 @@
 import React, { Component, useState, useRef, useEffect } from "react";
 import * as d3 from 'd3';
 import Scatter2 from "../plotFunctions/scatter2";
-import BoxPlotGraph from "../plotFunctions/BoxPlotGraph";
 import Map from "../map_europe/map"
 import { Card, Layout, Space } from 'antd';
 
 
-class Wegkwaliteit extends Component {
+class Fines extends Component {
     
 
     constructor(props) {
@@ -41,13 +40,13 @@ class Wegkwaliteit extends Component {
           <div >
           <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginLeft: "10px", marginRight: "0px" }}>
             <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
-              <Scatter2 cat1="RoadQuality" cat2="cas" varXAxis='Road quality (score on 7)' varYaxis='Road fatalities (per 100000 inhabitants)' title='Road quality Europe'/>
+              <Scatter2 cat1="fine_city" cat2="cas" varXAxis='Speed fine on city roads' varYaxis='Road fatalities (per 100000 inhabitants)' title='Speed fines on city roads'/>
             </Card>
             <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
-              <Scatter2 cat1="RoadQuality" cat2="log(GDP(2019))" varXAxis='Road quality (score on 7)' varYaxis='log(GDP) (€)' title='GDP Europe'/>
+              <Scatter2 cat1="fine_rural" cat2="cas" varXAxis='Speed fine on rural roads' varYaxis='Road fatalities (per 100000 residents)' title='Speed fines on rural roads'/>
             </Card>
             <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
-              <Scatter2 cat1="Invest per capita" cat2="cas" varXAxis='Invested per capita (€ per resident)' varYaxis='Road fatalities (per 100000 residents)' title='Investments in roads Europe'/>
+              <Scatter2 cat1="fine_highway" cat2="cas" varXAxis='Speed fine on highway roads' varYaxis='Road fatalities (per 100000 residents)' title='Speed fines on highway roads'/>
             </Card>
             </div>
 
@@ -56,4 +55,4 @@ class Wegkwaliteit extends Component {
       }
 }
 
-export default Wegkwaliteit;
+export default Fines;

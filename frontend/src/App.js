@@ -12,6 +12,7 @@ import BoxPlotGraph from "./plotFunctions/BoxPlotGraph";
 import ViolinGraph from "./plotFunctions/violin";
 import { select } from "d3";
 import Wegkwaliteit from './Wegkwaliteit/WegKwaliteit';
+import Fines from "./Wegkwaliteit/Fines";
 
 import StackedBarChart from "./plotFunctions/StackedBarChart";
 
@@ -61,12 +62,12 @@ No idea why this doesn't work, but it doesn't.
         size={[0, 48]}
       ></Space>
 
-      <h1>Verkeersongevallen in Europa</h1>
+      <h1>Road accidents in Europe</h1>
 
       <div class="buttonContainer" >
-          <button id="button1" onClick={(e) => handleOuterButtonClick(e.target.id)}>Wegkwaliteit</button>
-          <button id="button2" onClick={(e) => handleOuterButtonClick(e.target.id)}>Alchohol</button>
-          <button id="button3" onClick={(e) => handleOuterButtonClick(e.target.id)}>Controles</button>
+          <button id="button1" onClick={(e) => handleOuterButtonClick(e.target.id)}>Road Quality</button>
+          <button id="button2" onClick={(e) => handleOuterButtonClick(e.target.id)}>Alcohol</button>
+          <button id="button3" onClick={(e) => handleOuterButtonClick(e.target.id)}>Fines</button>
         </div>
 
       <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
@@ -110,14 +111,7 @@ No idea why this doesn't work, but it doesn't.
             {selectedNestedButton === 'nestedButton2' && (
               <div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-                <ViolinGraph 
-                  cat1="standard_minus_novice" 
-                  cat2="beh_alchohol" 
-                  xLabel="standard minus novice" 
-                  yLabel="beh alchohol" 
-                  setHoveredCountry={setHoveredCountry} 
-                  hoveredCountry={hoveredCountry}
-                />
+                
                 <StackedBarChart 
                   cat="standard_minus_novice" 
                   setHoveredCountry={setHoveredCountry} 
@@ -125,6 +119,14 @@ No idea why this doesn't work, but it doesn't.
                 />
               </div>
               <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
+              <ViolinGraph 
+                  cat1="standard_minus_novice" 
+                  cat2="beh_alchohol" 
+                  xLabel="standard minus novice" 
+                  yLabel="beh alchohol" 
+                  setHoveredCountry={setHoveredCountry} 
+                  hoveredCountry={hoveredCountry}
+                />
               </div>
               </div>           
             )}
@@ -134,11 +136,10 @@ No idea why this doesn't work, but it doesn't.
               
 
       {selectedButton === 'button3' && (
-        <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <Scatter2 class="scatterplot" cat1="control_alchohol" cat2="beh_alchohol"/>
-          <Scatter2 class="scatterplot" cat1="control_seatbelt" cat2="beh_seatbelt"/>
-          <Scatter2 class="scatterplot" cat1="control_texting" cat2="beh_texting"/>
-        </div>
+        <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
+        <Fines />
+        
+      </div>
       )}
       </div>
     </div>
