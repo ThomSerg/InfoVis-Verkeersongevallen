@@ -74,7 +74,7 @@ No idea why this doesn't work, but it doesn't.
         
       {selectedButton === 'button1' && (
         <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
-          <Wegkwaliteit />
+          <Wegkwaliteit setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
           
         </div>
       ) }

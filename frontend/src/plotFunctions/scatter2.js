@@ -16,7 +16,6 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     //const width = 800 - margin.left - margin.right;
     //const height = 600 - margin.top - margin.bottom;
 
-
         // Set the dimensions and margins of the graph
     const margin = { top: 10, right: 30, bottom: 60, left: 60 };
     const widthPlot = width - margin.left - margin.right;
@@ -173,23 +172,6 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
         .on("click", function (event, d){
             d3.select(this).transition().duration(200).style("stroke", "red");
         });
-
- 
-
-
-      svg.selectAll('dot')
-        .data(data)
-        .enter()
-        .filter((d) => {
-          return d.Country == hoveredCountry})
-        .append('circle')
-        .attr('cx', d => x(d[cat1]))
-        .attr('cy', d => y(d[cat2]))
-        .attr('r', 4)
-        .style('fill', '#FFFF00')
-        .on("click", function (event, d){
-            d3.select(this).transition().duration(200).style("stroke", "red");  
-        });
       
       svg.append("path")
       .datum(dataArray)
@@ -205,6 +187,96 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     });
   }, [cat1,cat2]);
 
+  useEffect(() => {
+    const margin = { top: 10, right: 30, bottom: 60, left: 60 };
+    const widthPlot = width - margin.left - margin.right;
+    const heightPlot = height - margin.top - margin.bottom;
+
+
+    // Append the SVG object to the body of the pageheight: "550px"
+    const svg = d3.select(svgRef.current)
+      .attr('width', widthPlot + margin.left + margin.right)
+      .attr('height', heightPlot + margin.top + margin.bottom)
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    d3.csv(data).then(data => {
+
+    data = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
+
+    const xname = varXAxis.split(" (")[0];
+    const yname = varYaxis.split(" (")[0];
+
+
+    // x values never on the axis itself
+    const xDiff = d3.max(data, d => parseFloat(d[cat1])) - d3.min(data, d => d[cat1]);
+    const xMin = d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff;
+    const xMax = d3.max(data, d => parseFloat(d[cat1])) + 0.05 * xDiff;
+
+
+    // Compute the domain dynamically based on the data
+    const x = d3.scaleLinear()
+      //.domain(d3.extent(data, d => d[cat1]))
+      .domain([xMin, xMax])
+      .range([0, widthPlot]);
+
+    // y values never on the axis itself
+    const yDiff = d3.max(data, d => parseFloat(d[cat2])) - d3.min(data, d => d[cat2]);
+    const yMin = d3.min(data, d => parseFloat(d[cat2])) - 0.05 * yDiff;
+    const yMax = d3.max(data, d => parseFloat(d[cat2])) + 0.05 * yDiff;
+
+    const y = d3.scaleLinear()
+    .domain([yMin, yMax])
+    .range([heightPlot , 0]);
+    
+    svg.selectAll('circle')
+    .data(data)
+    .enter()
+    .filter((d) => {
+      return d.Country == hoveredCountry})
+    
+    .join(
+      function(enter) {
+        return enter.append('circle')
+        .attr('cx', d => x(d[cat1]))
+        .attr('cy', d => y(d[cat2]))
+        .attr('r', 4)
+        .style('fill', '#FFFF00')
+        .on("click", function (event, d){
+            d3.select(this).transition().duration(200).style("stroke", "red");  
+        })
+      },
+      function(update) {
+        
+        return update.append('circle')
+        .attr('cx', d => x(d[cat1]))
+        .attr('cy', d => y(d[cat2]))
+        .attr('r', 4)
+        .style('fill', '#FFFF00')
+        .on("click", function (event, d){
+            d3.select(this).transition().duration(200).style("stroke", "red");  
+        
+        })
+      },
+      function(exit) {
+        console.log("exit");
+        // return exit.append('circle').remove();
+        // // .style('opacity', 0)
+        // return exit.append('circle').remove()
+        // .append('circle')
+        // .attr('cx', d => x(d[cat1]))
+        // .attr('cy', d => y(d[cat2]))
+        // .attr('r', 4)
+        // .style('fill', '#9d7463')
+        // .on("click", function (event, d){
+        //     d3.select(this).transition().duration(200).style("stroke", "red");  
+        
+        // })
+      });
+    })
+    },
+    [hoveredCountry]);
+
+
   return (
     <>
     <div style={{ width: width }} className="scatterTitle">{title}</div>
@@ -212,6 +284,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     </>
   );
 
+  
 }
 
 export default Scatter2;
