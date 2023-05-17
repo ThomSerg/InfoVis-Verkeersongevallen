@@ -12,8 +12,10 @@ import BoxPlotGraph from "./plotFunctions/BoxPlotGraph";
 import ViolinGraph from "./plotFunctions/violin";
 import { select } from "d3";
 import Wegkwaliteit from './Wegkwaliteit/WegKwaliteit';
+import Fines from "./Wegkwaliteit/Fines";
 
 import StackedBarChart from "./plotFunctions/StackedBarChart";
+import ChartCard from "./plotFunctions/ChartCard";
 
 
 function App() {
@@ -61,12 +63,12 @@ No idea why this doesn't work, but it doesn't.
         size={[0, 48]}
       ></Space>
 
-      <h1>Verkeersongevallen in Europa</h1>
+      <h1>Road accidents in Europe</h1>
 
       <div class="buttonContainer" >
-          <button id="button1" onClick={(e) => handleOuterButtonClick(e.target.id)}>Wegkwaliteit</button>
-          <button id="button2" onClick={(e) => handleOuterButtonClick(e.target.id)}>Alchohol</button>
-          <button id="button3" onClick={(e) => handleOuterButtonClick(e.target.id)}>Controles</button>
+          <button id="button1" onClick={(e) => handleOuterButtonClick(e.target.id)}>Road Quality</button>
+          <button id="button2" onClick={(e) => handleOuterButtonClick(e.target.id)}>Alcohol</button>
+          <button id="button3" onClick={(e) => handleOuterButtonClick(e.target.id)}>Fines</button>
         </div>
 
       <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
@@ -88,34 +90,39 @@ No idea why this doesn't work, but it doesn't.
             </div>
             
             <div>
-            <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-            <StackedBarChart 
-              cat="standard_driver" 
-              setHoveredCountry={setHoveredCountry} 
-              hoveredCountry={hoveredCountry}
-            />
-            </div>
-            <div style={{ flex: 1, height: "300px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-            <ViolinGraph 
-              cat1="standard_driver" 
-              cat2={["beh_alchohol", "standard_minus_novice"]} 
-              xLabel="standard driver"
-              yLabel={["beh alchohol", "standard minus novice"]}
-              setHoveredCountry={setHoveredCountry} 
-              hoveredCountry={hoveredCountry}
-              cat2_upper={[0.5, 0.5]}
-              cat2_selected={selectedNestedButton}
-            />
-            <ViolinGraph 
-              cat1="standard_driver" 
-              cat2={["cas", "cas_young"]} 
-              xLabel="standard driver"
-              yLabel={["casualties", "casualties young"]}
-              setHoveredCountry={setHoveredCountry} 
-              hoveredCountry={hoveredCountry}
-              cat2_upper={[10, 10]}
-              cat2_selected={selectedNestedButton}
-            />
+            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "10px", marginLeft: "10px", marginRight: "0px" }}>            
+            <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}></Card>
+            <ChartCard> 
+              <StackedBarChart 
+                cat="standard_driver" 
+                setHoveredCountry={setHoveredCountry} 
+                hoveredCountry={hoveredCountry}
+              />
+            </ChartCard>
+            <ChartCard title="Drink driving acceptance">
+              <ViolinGraph 
+                cat1="standard_driver" 
+                cat2={["beh_alchohol", "standard_minus_novice"]} 
+                xLabel="standard driver"
+                yLabel={["beh alchohol", "standard minus novice"]}
+                setHoveredCountry={setHoveredCountry} 
+                hoveredCountry={hoveredCountry}
+                cat2_upper={[0.5, 0.5]}
+                cat2_selected={selectedNestedButton}
+              />
+            </ChartCard>
+            <ChartCard title="Casualities with respect to drink driving limits">
+              <ViolinGraph 
+                cat1="standard_driver" 
+                cat2={["cas", "cas_young"]} 
+                xLabel="standard driver"
+                yLabel={["casualties", "casualties young"]}
+                setHoveredCountry={setHoveredCountry} 
+                hoveredCountry={hoveredCountry}
+                cat2_upper={[10, 10]}
+                cat2_selected={selectedNestedButton}
+              />
+            </ChartCard>
             </div>
             </div> 
            
@@ -126,11 +133,10 @@ No idea why this doesn't work, but it doesn't.
               
 
       {selectedButton === 'button3' && (
-        <div style={{ flex: 1, height: "400px", display: "flex", justifyContent: "space-between", width: "100%" }}>
-          <Scatter2 class="scatterplot" cat1="control_alchohol" cat2="beh_alchohol"/>
-          <Scatter2 class="scatterplot" cat1="control_seatbelt" cat2="beh_seatbelt"/>
-          <Scatter2 class="scatterplot" cat1="control_texting" cat2="beh_texting"/>
-        </div>
+        <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
+        <Fines />
+        
+      </div>
       )}
       </div>
     </div>
