@@ -22,18 +22,16 @@ function App() {
 
   const [selectedButton, setSelectedButton] = useState('button1');
   const [hoveredCountry, setHoveredCountry] = useState([]);
-  const [selectedNestedButton, setSelectedNestedButton] = useState(0);
+  const [selectedNestedButton, setSelectedNestedButton] = useState("nestedButton1");
 
   function handleOuterButtonClick(event, id) {
 
-    // Remove the 'active' class from all buttons
-    const buttons = document.querySelectorAll('.buttonContainer button');
-    console.log("Buttons are " + buttons.size);
-    buttons.forEach(button => {
-      console.log("Button is " + button.id);
-      button.classList.remove('active')
-    }
-      );
+    // Get the button container of the clicked button
+    const buttonContainer = event.target.parentNode;
+
+    // Remove the 'active' class from all buttons within the container
+    const buttons = buttonContainer.querySelectorAll('button');
+    buttons.forEach(button => button.classList.remove('active'));
 
     // Add the 'active' class to the clicked button
     const clickedButton = document.getElementById(id);
@@ -52,7 +50,21 @@ function App() {
     
   }
 
-  function handleNestedButtonClick(id) {
+  function handleNestedButtonClick(event,id) {
+
+    // Get the button container of the clicked button
+    const buttonContainer = event.target.parentNode;
+
+    // Remove the 'active' class from all buttons within the container
+    const buttons = buttonContainer.querySelectorAll('button');
+    buttons.forEach(button => button.classList.remove('active'));
+
+    // Add the 'active' class to the clicked button
+    const clickedButton = document.getElementById(id);
+    clickedButton.classList.add('active');
+
+    console.log("Clicked button is " + clickedButton.id);
+
     setSelectedNestedButton(id);
   }
 /*
@@ -102,8 +114,8 @@ No idea why this doesn't work, but it doesn't.
       {selectedButton === 'button2' && (
           <div>
             <div className="buttonContainer">
-                <button id="nestedButton1" onClick={(e) => handleNestedButtonClick(0)}>Alle bestuurders</button>
-                <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(1)}>Jonge bestuurders</button>
+                <button id="nestedButton1" class="active" onClick={(e) => handleNestedButtonClick(e,e.target.id)}>Alle bestuurders</button>
+                <button id="nestedButton2" onClick={(e) => handleNestedButtonClick(e,e.target.id)}>Jonge bestuurders</button>
             </div>
             
             <div>
