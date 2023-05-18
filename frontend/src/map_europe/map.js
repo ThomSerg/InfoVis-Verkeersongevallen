@@ -1,8 +1,98 @@
+import { useEffect, useRef } from 'react';
+import * as d3 from 'd3-geo';
+import { select } from 'd3-selection';
+import { landData } from './europe';
+import data from '../europe_gov.csv';
 import {MapContainer, Polygon, TileLayer} from 'react-leaflet'
-import {landData} from './europe'
+
+
+/*
+function Map({ setHoveredCountry, hoveredCountry }) {
+  const mapRef = useRef(null);
+
+  useEffect(() => {
+    const svg = select(mapRef.current);
+
+    const width = 500; // Example width value
+    const height = 400; // Example height value
+
+    const projection = d3.geoMercator()
+      .fitSize([width, height], landData);
+
+    const onHover=(country)=> {
+      setHoveredCountry([country]);
+    }
+
+    function offHover() {
+      setHoveredCountry("");
+    }
+    
+
+    const path = d3.geoPath().projection(projection);
+
+    svg.selectAll("path")
+      .data(landData.features)
+      .enter()
+      .append("path")
+      .attr("d", path)
+      .style("fill", d => {
+        const country = d.properties.NAME;
+        let color;
+        if (country.startsWith("S")) {
+          color = "green";
+        } else {
+          color = hoveredCountry.includes(country) ? "#b5c2c7" : "#9d7463";
+        }
+        return color;
+      })
+      .style("fill-opacity", 0.7)
+      .style("stroke", "white")
+      .style("stroke-width", 1)
+      //.style("stroke-dasharray", 3)
+      .on("mouseover", (e, d) => {
+        const country = d.properties.NAME;
+        onHover(country);
+        select(e.target)
+          .style("fill", "#b5c2c7")
+          //.style("stroke-dasharray", "")
+          //.style("stroke-width", 2);
+      })
+      .on("mouseout", (e, d) => {
+        offHover();
+        select(e.target)
+          .style("fill-opacity", 0.7)
+          //.style("stroke-dasharray", "3")
+          .style("stroke-width", 1)
+          .style("fill", d => {
+            const country = d.properties.NAME;
+            return hoveredCountry.includes(country) ? "#b5c2c7" : "#9d7463";
+          });
+      });
+
+  }, [hoveredCountry]);
+
+  return (
+    <svg
+      ref={mapRef}
+      style={{
+        width: '30%',
+        height: '65vh',
+        background: 'lightgray',
+        border: '1px solid #F0F0F0',
+        borderRadius: '8px'
+      }}
+    />
+  );
+}
+*/
+
+//export default Map;
 
 
 function Map({setHoveredCountry, hoveredCountry}) {
+
+  const countryNames = landData.features.map(land => land.properties.NAME);
+  console.log("Country names are: " + countryNames);
 
   const onHover=(country)=> {
     setHoveredCountry([country]);
@@ -15,10 +105,6 @@ function Map({setHoveredCountry, hoveredCountry}) {
         minZoom={3.2}
         zoomControl={false}
         style={{ width: '30%', height: '65vh', background: 'lightgray', border: '1px solid #F0F0F0', borderRadius: '8px' }}>
-      {/* <TileLayer 
-        url="https://api.maptiler.com/maps/basic-v2/256/{z}/{x}/{y}.png?key=eSTvidUJfgEQsuinQFfC"
-        attribution='<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> <a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>'
-      /> */}
       {
         
         landData.features.map((land) => {
@@ -45,16 +131,22 @@ function offHover() {
 }
 
 function drawPolygon(coordinates, country) {
-    let color;
-    hoveredCountry.includes(country) ? color = '#b5c2c7' : color = '#9d7463';
-    return(<Polygon
+  let color;
+  if (country.startsWith("S")) {
+    color = "green"; // Set green color for countries starting with "S"
+  } else {
+    color = hoveredCountry.includes(country) ? "#b5c2c7" : "#9d7463";
+  }
+
+  return (
+    <Polygon
       pathOptions={{
         fillColor: color,
         fillOpacity: 0.7,
         weight: 2,
         opacity: 1,
         dashArray: 3,
-        color: 'white',
+        color: "white",
       }}
       country={country}
       positions={coordinates}
@@ -69,7 +161,7 @@ function drawPolygon(coordinates, country) {
             weight: 2,
             opacity: 1,
             color: "white",
-          })
+          });
         },
         mouseout: (e) => {
           offHover();
@@ -78,16 +170,16 @@ function drawPolygon(coordinates, country) {
             fillOpacity: 0.7,
             weight: 2,
             dashArray: "3",
-            color: 'white',
-            fillColor: '#9d7463',
+            color: "white",
+            fillColor: "#9d7463",
           });
         },
-        click: (e) => {
-
-        }
+        click: (e) => {},
       }}
-    />)
-  }
+    />
+  );
+}
+
 }
 
 
