@@ -4,7 +4,7 @@ import data2 from "../europe_gov.csv";
 
 import './violin.css'
 
-function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, cat2_upper, cat2_selected, title="Unknown title"}) {
+function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry, cat2_upper, cat2_selected, title="Unknown title"}) {
     
     // Reference to the SVG
     const svgRef = useRef(null);
@@ -161,6 +161,14 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         
         if (svg) {
 
+            svg.append('rect')
+            .attr('width', '100%')
+            .attr('height', '100%')
+            .style('fill', 'transparent').on('click', function(event, d) {
+                setSelectedCountry([])
+                
+            })
+
         // Read the data and compute summary statistics for each specie
         d3.csv(data2).then(data => {  
 
@@ -277,10 +285,12 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             createScatterPlot(circles, x, y, sumstat2)
 
             circles.on('mouseover', function(event, d) {
-                setUpdateLock(true);
+                if (selectCountry.length == 0) {
+                //setUpdateLock(true);
+                }
 
-                d3.select(this).transition().duration('50').attr('opacity', '.85');
-                div.transition().duration('50').style('opacity', 1);
+                // d3.select(this).transition().duration('50').attr('opacity', '.85');
+                // div.transition().duration('50').style('opacity', 1);
 
                 div.html(d["Country"] + " : " + d[cat2[cat2_selected]])
                     .style("left", (event.pageX + 10) + "px")
@@ -290,12 +300,18 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
             })
             .on('mouseout', function(d,i) {
-                d3.select(this).transition().duration('50').attr('opacity', '1')
-                div.transition().duration('50').style('opacity', 0)
+                // d3.select(this).transition().duration('50').attr('opacity', '1')
+                // div.transition().duration('50').style('opacity', 0)
 
                 setHoveredCountry([])
 
                 setUpdateLock(false);
+            })
+
+            .on('click', function(event, d) {
+                console.log(d)
+                setSelectedCountry([d["Country"]])
+                console.log(selectedCountry)
             })
 
                 
@@ -360,7 +376,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             var xAxisTicks = svg.selectAll(".x-axis .tick")
 
             function SelectColumn(cat1value) {
-                setUpdateLock(true);
+                //setUpdateLock(true);
 
                 var a = data.filter(function(d){return d[cat1] == cat1value})
                 var b = d3.map(a, function(d){return(d["Country"])})
@@ -368,8 +384,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
                 console.log(c)
 
-                grayout(svg);
-                colorMulti(c);                
+                // grayout(svg);
+                // colorMulti(c);                
 
                 setHoveredCountry(b);
             }
@@ -377,9 +393,9 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             function UnSelectColumn() {
                 setHoveredCountry([]);
 
-                colorAll(svg);
+                //colorAll(svg);
 
-                setUpdateLock(false);
+                //setUpdateLock(false);
             }
 
             xAxisTicks.each(function(d, i) {      
@@ -392,6 +408,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             })
         
 
+            
+
         });
     }
 
@@ -400,6 +418,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     function grayout(svg) {
         svg.selectAll(".data-point")
                 .style("fill", "#ABACAD")
+                .attr("r", 5);
     }
 
     function selectSingle(hc) {
@@ -425,8 +444,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }
 
     function colorAll(svg) {
+        console.log("color all")
         svg.selectAll(".data-point")
                     .style("fill", function(d){ return(myColor(d[cat2[cat2_selected]])) })
+                    .attr("r", 5);
     }
 
     function yScale() {
@@ -589,23 +610,65 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         
     }, [cat2_selected])
 
+
+    function hoverCountry(country) {
+        country.filter((c) => !selectedCountry.includes(c))
+        .forEach(c => {
+            svg
+            .select(("#" + c).replace(/\s/g, ''))
+            .style("fill", function(d){ return('#4dbf7e') })
+            .attr("r", country.length == 1 ? 10 : 5);
+        })
+    }
+
+    function selectCountry(country) {
+        country.forEach(c => {
+            svg
+            .select(("#" + c).replace(/\s/g, ''))
+            .style("fill", function(d){ return('#bf584d') })
+            .attr("r", country.length == 1 ? 10 : 5);;
+        })
+    }
+
+    function setCountry(country) {
+        if (country.length == 1) {
+            grayout(svg);
+            selectMulti(country)
+        } else if (country.length > 1) {
+            grayout(svg);
+            selectMulti(country)
+        } else {
+            colorAll(svg);
+        }
+    }
+
     /* * * * * * * * * *
      * Update on hover *
      * * * * * * * * * */
+    // useEffect(() => {
+    //     if (svg && (!updateLock) && (selectedCountry.length == 0)) {
+    //         setCountry(hoveredCountry)
+    //     }
+    // }, [svg, hoveredCountry, updateLock])
+
+
+    // useEffect(() => {
+    //     if (svg && (!updateLock)) {
+    //         setCountry(selectedCountry)
+    //     }
+    // }, [svg, selectedCountry, updateLock])
+
     useEffect(() => {
         if (svg && (!updateLock)) {
-      
-            if (hoveredCountry.length == 1) {
-                grayout(svg);
-                selectMulti(hoveredCountry)
-            } else if (hoveredCountry.length > 1) {
-                grayout(svg);
-                selectMulti(hoveredCountry)
+            if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
+                grayout(svg)
+                selectCountry(selectedCountry)
+                hoverCountry(hoveredCountry)
             } else {
                 colorAll(svg);
             }
         }
-    }, [svg, hoveredCountry, updateLock])
+    }, [svg, hoveredCountry, selectedCountry, updateLock])
 
 return (
     <svg ref={svgRef} width="500" height="500"/>

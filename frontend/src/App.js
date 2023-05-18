@@ -113,6 +113,8 @@ No idea why this doesn't work, but it doesn't.
                 yLabel={["beh alchohol", "standard minus novice"]}
                 setHoveredCountry={setHoveredCountry} 
                 hoveredCountry={hoveredCountry}
+                setSelectedCountry={setSelectedCountry} 
+                selectedCountry={selectedCountry}
                 cat2_upper={[0.5, 0.5]}
                 cat2_selected={selectedNestedButton}
               />
@@ -125,6 +127,8 @@ No idea why this doesn't work, but it doesn't.
                 yLabel={["casualties", "casualties young"]}
                 setHoveredCountry={setHoveredCountry} 
                 hoveredCountry={hoveredCountry}
+                setSelectedCountry={setSelectedCountry} 
+                selectedCountry={selectedCountry}
                 cat2_upper={[10, 10]}
                 cat2_selected={selectedNestedButton}
               />
