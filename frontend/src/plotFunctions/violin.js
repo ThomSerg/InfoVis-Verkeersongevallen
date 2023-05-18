@@ -70,7 +70,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
         console.log(mapp)
 
-        circles.attr("cx", function(d){return(x(d[cat1]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth )})
+        var a = circles.attr("cx", function(d){return(x(d[cat1]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth )})
                 .attr("cy", function(d){
                     return d[cat2[cat2_index]] != "" ?
                     
@@ -83,8 +83,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 .style("visibility", function(d) {
                     return d[cat2[cat2_index]] != "" ? "visible" : "hidden";})
 
-        if (selectCountry.length == 0) {
-            circles.attr("r", 5)
+        if (selectedCountry.length == 0) {
+            a.attr("r", 5)
             .style("fill", function(d){ return(myColor(d[cat2[cat2_index]]))})
         }
 
