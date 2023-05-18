@@ -50,7 +50,6 @@ class Wegkwaliteit extends Component {
               <Scatter2 cat1="Invest per capita" cat2="cas" varXAxis='Invested per capita (€ per resident)' varYaxis='Road fatalities (per 100000 residents)' title='Investments in roads Europe'/>
             </Card>
             </div>
-
           </div>
         );
       }
