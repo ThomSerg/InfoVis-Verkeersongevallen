@@ -22,6 +22,7 @@ function App() {
 
   const [selectedButton, setSelectedButton] = useState('button1');
   const [hoveredCountry, setHoveredCountry] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState([]);
   const [selectedNestedButton, setSelectedNestedButton] = useState("nestedButton1");
 
   function handleOuterButtonClick(event, id) {
@@ -101,7 +102,12 @@ No idea why this doesn't work, but it doesn't.
 
 
       <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
-        <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
+        <Map 
+          setHoveredCountry={setHoveredCountry} 
+          hoveredCountry={hoveredCountry}
+          setSelectedCountry={setSelectedCountry} 
+          selectedCountry={selectedCountry}
+        />
 
         
       {selectedButton === 'button1' && (
@@ -141,6 +147,8 @@ No idea why this doesn't work, but it doesn't.
                 yLabel={["beh alchohol", "standard minus novice"]}
                 setHoveredCountry={setHoveredCountry} 
                 hoveredCountry={hoveredCountry}
+                setSelectedCountry={setSelectedCountry} 
+                selectedCountry={selectedCountry}
                 cat2_upper={[0.5, 0.5]}
                 cat2_selected={selectedNestedButton}
                 xLabelElement={"Max promille"}
@@ -155,6 +163,8 @@ No idea why this doesn't work, but it doesn't.
                 yLabel={["casualties", "casualties young"]}
                 setHoveredCountry={setHoveredCountry} 
                 hoveredCountry={hoveredCountry}
+                setSelectedCountry={setSelectedCountry} 
+                selectedCountry={selectedCountry}
                 cat2_upper={[10, 10]}
                 cat2_selected={selectedNestedButton}
                 xLabelElement={"Max promille"}
@@ -172,12 +182,8 @@ No idea why this doesn't work, but it doesn't.
 
       {selectedButton === 'button3' && (
           <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
-            <Fines />      
-            <ChartCard title="Information" > 
-              <D3Card
-                hoveredCountry={hoveredCountry}
-              />  
-            </ChartCard> 
+            <Fines hoveredCountry={hoveredCountry}/>  
+            
           </div>
 
       )}
