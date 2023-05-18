@@ -22,6 +22,7 @@ function App() {
 
   const [selectedButton, setSelectedButton] = useState('button1');
   const [hoveredCountry, setHoveredCountry] = useState([]);
+  const [selectedCountry, setSelectedCountry] = useState([]);
   const [selectedNestedButton, setSelectedNestedButton] = useState(0);
 
   function handleOuterButtonClick(id) {
@@ -72,7 +73,12 @@ No idea why this doesn't work, but it doesn't.
         </div>
 
       <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} >
-        <Map setHoveredCountry={setHoveredCountry} hoveredCountry={hoveredCountry}/>
+        <Map 
+          setHoveredCountry={setHoveredCountry} 
+          hoveredCountry={hoveredCountry}
+          setSelectedCountry={setSelectedCountry} 
+          selectedCountry={selectedCountry}
+        />
 
         
       {selectedButton === 'button1' && (
