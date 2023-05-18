@@ -182,12 +182,8 @@ No idea why this doesn't work, but it doesn't.
 
       {selectedButton === 'button3' && (
           <div style={{ display: "flex", marginBottom: "20px",width: "100%" }} id = "wegkwaliteit">
-            <Fines />      
-            <ChartCard title="Information" > 
-              <D3Card
-                hoveredCountry={hoveredCountry}
-              />  
-            </ChartCard> 
+            <Fines hoveredCountry={hoveredCountry}/>  
+            
           </div>
 
       )}
