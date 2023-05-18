@@ -4,13 +4,13 @@ import data2 from "../europe_gov.csv";
 
 import './violin.css'
 
-function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry, cat2_upper, cat2_selected, title="Unknown title"}) {
+function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry, cat2_upper, cat2_selected, title="Unknown title", xLabelElement = xLabel, yLabelElement = yLabel}) {
     let cat2_index= 0 ;
     if(cat2_selected === "nestedButton1") {
-        console.log("nestedButton1")
+        //console.log("nestedButton1")
         cat2_index = 0;
     } else if(cat2_selected === "nestedButton2") {
-        console.log("nestedButton2")
+        //console.log("nestedButton2")
         cat2_index = 1;
     }
     // Reference to the SVG
@@ -42,8 +42,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
     const [data, setData] = useState(null);
 
-    d3.csv(data2).then(d => { 
-        setData(d);
+    useEffect(() => { 
+        d3.csv(data2).then(d => { 
+            setData(d);
+        })
     })
 
     //const [sumstat, setSumstat] = useState(null);
@@ -76,11 +78,15 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                     y(d3.index(sumstat2, d => d.key).get(d[cat1]).median)
                     //sumstat2[0].median
                 })
-                .attr("r", 5)
-                .style("fill", function(d){ return(myColor(d[cat2[cat2_index]]))})
+                
                 .attr("stroke", "white")
                 .style("visibility", function(d) {
                     return d[cat2[cat2_index]] != "" ? "visible" : "hidden";})
+
+        if (selectCountry.length == 0) {
+            circles.attr("r", 5)
+            .style("fill", function(d){ return(myColor(d[cat2[cat2_index]]))})
+        }
 
                 
 
