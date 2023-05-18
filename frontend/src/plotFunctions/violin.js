@@ -303,7 +303,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 }
 
                 // d3.select(this).transition().duration('50').attr('opacity', '.85');
-                // div.transition().duration('50').style('opacity', 1);
+                div.transition().duration('50').style('opacity', 1);
 
                 div.html(`<strong><u> ${d.Country}</u></strong><br/>${xLabelElement}: ${Math.round(d[cat1] * 100)/100}<br/>${yLabelElement}: ${Math.round(d[cat2[cat2_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
                     .style("left", (event.pageX + 10) + "px")
@@ -314,7 +314,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             })
             .on('mouseout', function(d,i) {
                 // d3.select(this).transition().duration('50').attr('opacity', '1')
-                // div.transition().duration('50').style('opacity', 0)
+                div.transition().duration('50').style('opacity', 0)
 
                 setHoveredCountry([])
 
