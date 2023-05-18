@@ -25,7 +25,7 @@ function Map({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCou
     let path_options;
     selectedCountry.includes(country) ? 
       path_options = {
-        fillColor: '#9dc3d1',
+        fillColor: '#bf584d',
         fillOpacity: 0.7,
         weight: 2,
         opacity: 1,
