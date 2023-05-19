@@ -9,7 +9,7 @@ function ChartCard({children, title="Unknown title"}) {
 
     return (
         <div>
-        <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+        <Card className="card"> 
           
             <div className="chartTitle">{title}</div> 
             <div ></div>

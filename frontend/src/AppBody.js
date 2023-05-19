@@ -37,7 +37,7 @@ function AppBody({
   return (
     <div>
       
-      <Grid>
+      <Grid grow>
 
         <Grid.Col span={4} lg={4}>
           <EuropeMap
@@ -48,7 +48,7 @@ function AppBody({
           />
         </Grid.Col>
 
-        <Grid.Col span="auto">
+        <Grid.Col span={8}>
           <Tabs variant="pills" defaultValue="road_quality">
 
             <Tabs.List>

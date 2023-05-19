@@ -33,28 +33,14 @@ function Header() {
   return (
     <div>
       <Grid grow>
-        <Grid.Col span={4} lg={4}>1</Grid.Col>
+        <Grid.Col span={4} lg={4}>
+          <h1 class="font-mono">Road accidents in Europe</h1>
+        </Grid.Col>
         <Grid.Col span={4} offset={2}>
-          <NavigationButtons/>
         </Grid.Col>
 
       </Grid>
       
-      {/* <Container>
-          <Tabs
-            defaultValue="Home"
-            variant="pills">
-            
-            <Tabs.List>
-              <Tabs.Tab value="a">a</Tabs.Tab>
-            </Tabs.List>
-
-            <Tabs.Panel value="a">
-              a
-            </Tabs.Panel>
-          </Tabs>
-          
-      </Container> */}
     </div>
   )
 }

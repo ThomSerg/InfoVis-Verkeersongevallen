@@ -3,13 +3,36 @@
 @tailwind utilities; */
 
 :root {
-
-  --backgroundColor: #ce5900;
+  --backgroundColor: #F6F1F1;
+  --color1: #AFD3E2;
+  --color2: #19A7CE;
+  --color3: #146C94;
 }
-
 
 .App {
   text-align: center;
+}
+
+/* h1 {
+  font-weight: 1000;
+  text-decoration: underline;
+  color: #565c5e ;
+} */
+
+body {
+  background-color: var(--backgroundColor);
+}
+
+div.tooltip-hover {
+  position: absolute;
+  text-align: center;
+  padding: .25rem;
+  background: #FFFFFF;
+  color: #313639;
+  border: 1px solid #313639;
+  border-radius: 8px;
+  pointer-events: none;
+  font-size: 1rem;
 }
 
 .verticalLine {
@@ -19,6 +42,11 @@
 .filled {
   fill: url(#mygrad);
 }
+
+
+
+
+
 
 
 button {
@@ -58,25 +86,5 @@ button:hover {
 }
 
 
-h1 {
-  font-weight: 1000;
-  text-decoration: underline;
-  color: #565c5e ;
-}
 
-body {
-  background-color: var(--backgroundColor);
-}
-
-div.tooltip-hover {
-  position: absolute;
-  text-align: center;
-  padding: .25rem;
-  background: #FFFFFF;
-  color: #313639;
-  border: 1px solid #313639;
-  border-radius: 8px;
-  pointer-events: none;
-  font-size: 1rem;
-}
 

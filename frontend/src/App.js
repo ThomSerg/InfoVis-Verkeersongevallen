@@ -14,10 +14,9 @@ function App() {
     console.log(selectedCountry)
 
     return (
-        
-   
-        <Container fluid px={"xl"} py={"xl"}>
-            {Header()}
+    
+        <Container fluid px={"xl"} py={"xl"} >
+            <Header/>
             <AppBody 
                 hoveredCountry={hoveredCountry}
                 setHoveredCountry={setHoveredCountry}
@@ -25,6 +24,7 @@ function App() {
                 setSelectedCountry={setSelectedCountry}
             />
         </Container>
+
 
     )
 

@@ -355,10 +355,6 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
             initMap();
 
-            
-
-
-
         }
 
     }, [svg, dataLoaded, countryData])

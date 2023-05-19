@@ -6,3 +6,7 @@
     font-weight: bold;
     transform: translateY(5px);
   }
+
+.card {
+  background-color: var(--color1);
+}
