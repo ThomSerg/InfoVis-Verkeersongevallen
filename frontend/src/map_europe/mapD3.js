@@ -2,8 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 //import { useState } from 'react-usestateref'
 import * as d3 from "d3";
 import {landData} from './europe'
+import data from '../europe_gov.csv';
 
 import './mapD3.css'
+import { defaultConfig } from "antd/es/theme/internal";
 
 function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry}) {
 
@@ -15,6 +17,9 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     const updateLockRef = useRef(false);
     // Which country is selected, updates faster then setSelectedCountry
     const selectedCountryRef = useRef([]);
+
+    const [dataLoaded, setDataLoaded] = useState(false);
+    const [countryData, setCountryData] = useState({});
 
 
     // Dimensions and margins of the graph
@@ -29,6 +34,49 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                         .translate([0, 0])
                         .scale(scale*100)
                         .translate([margin.left + width*scale/3.4, margin.top + height*scale/3])
+
+    const countryDataRef = useRef(null);
+
+    useEffect(() => {
+        d3.csv(data).then((data) => {
+            const cData = {};
+            data.forEach((d) => {
+                const country = d.Country;
+                const cas = parseFloat(d.cas);
+                if (!isNaN(cas)) {
+                    cData[country.replace(/\s/g, '')] = cas;
+                }
+                });
+            setCountryData(cData);
+            setDataLoaded(true);
+            countryDataRef.current = cData
+        });
+
+    }, [])
+
+    function colorScale(c) {
+        d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])(c)
+    }
+
+
+    
+                        
+
+    // useEffect(() => {
+    //     // Read the CSV file
+    //     d3.csv(data).then((data) => {
+    //         const countryData = {};
+    //         data.forEach((d) => {
+    //         const country = d.Country;
+    //         const cas = parseFloat(d.cas);
+    //         if (!isNaN(cas)) {
+    //             countryData[country] = cas;
+    //         }
+    //         });
+    //         setCountryData(countryData);
+    //         setDataLoaded(true);
+    //     });
+    //     }, []);
 
     useEffect(() => {
 
@@ -50,6 +98,27 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
     }, [])
 
+
+    function fillMap() {
+        // d3.selectAll(".Country").each((c) => {
+        //     const cas = countryData[c.properties["NAME"]];
+        //     console.log(colorScale(cas))
+        //     d3.select(this).style("fill", "red")
+        //     //console.log(c.properties["NAME"])
+        //     //console.log(("#" + c.properties["NAME"]).replace(/\s/g, ''))
+        //     //svg.select(("#" + c.properties["NAME"]).replace(/\s/g, '')).style("fill", colorScale(cas))
+        // })
+        // console.log("fill")
+        //var cas = countryData[country];
+        //const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])
+
+        d3.selectAll(".Country").style("fill", function(c) {return colorScale(countryData[c.properties["NAME"]])})
+            //console.log(c.properties["NAME"])
+            //console.log(("#" + c.properties["NAME"]).replace(/\s/g, ''))
+            //svg.select(("#" + c.properties["NAME"]).replace(/\s/g, '')).style("fill", colorScale(cas))
+        
+        console.log("fill")
+    }
     
     function clearMap() {
         clearSelection(d3.selectAll(".Country"));
@@ -66,11 +135,20 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     // }
 
     function clearSelection(selection) {
+        const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])
         selection
-            .style("opacity", .5)
-            .style("fill","grey")
+            .style("fill", function(c) {
+                if (!colorScale(countryData[c.properties["NAME"].replace(/\s/g, '')])) {
+                   return "grey" 
+                }
+                return colorScale(countryData[c.properties["NAME"].replace(/\s/g, '')])
+            })
             .style("stroke", "white")
             .style("stroke-width", 1);
+            // .style("opacity", .5)
+            // .style("fill","grey")
+            // .style("stroke", "white")
+            // .style("stroke-width", 1);
     }
 
     function hoverCountryByName(countryName) {
@@ -86,9 +164,9 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     function hoverSelection(selection) {
         selection
             .style("opacity", 1)
-            .style("stroke", "black")
+            //.style("stroke", "black")
             .style("fill","blue")
-            .style("stroke-width", 3);
+            //.style("stroke-width", 2);
     }
 
     function selectCountryByName(countryName) {
@@ -104,14 +182,15 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     function selectSelection(selection) {
         selection
             .style("opacity", 1)
-            .style("stroke", "black")
+            //.style("stroke", "black")
             .style("fill","red")
-            .style("stroke-width", 3);
+            //.style("stroke-width", 3);
     }
 
     function initMap() {
+        //clearMap();
+        //hoverCountryByName(hoveredCountry);
         clearMap();
-        hoverCountryByName(hoveredCountry);
     }
 
 
@@ -123,7 +202,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     
     function offHover(d) {
         setHoveredCountry([]);
-        clearCountryByName([this.id])
+        clearCountryByName([d.properties["NAME"]])
         if (selectedCountry.length == 0) {
             updateLockRef.current = false
         }
@@ -137,10 +216,45 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         setSelectedCountry([d.properties["NAME"]])
         selectCountryByName([d.properties["NAME"]])
     }
+
+    function Legend({ colorScale }) {
+
+        const gradientColors = [];
+        const numColors = 20;
+    
+    
+        const xMin = 0;
+        const xMax = [0, d3.max(Object.values(countryData))];
+    
+        let x = d3.scaleLinear()
+          //.domain(d3.extent(data, d => d[cat1]))
+          .domain([xMin, xMax])
+          //.range([0, 10]);
+    
+        // Create the x-axis and y-axis groups
+    
+      
+        for (let i = 0; i < numColors; i++) {
+          const color = colorScale((i / (numColors - 1)) * colorScale.domain()[1]);
+          gradientColors.push(color);
+        }
+      
+        return (
+          <div className="legend" style={{ width: '100%', height: '200px' }}>
+            <div className="legend-title" style={{ marginTop:"20px", marginBottom: '10px' }}>Legend</div>
+            <div className="legend-bar" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+              
+              <div className="legend-gradient" style={{ backgroundImage: `linear-gradient(to right, ${gradientColors.join(',')})`, width: '80%', height: '20px' }}></div>
+            </div>
+          </div>
+        );
+      }
+
+    
     
 
     useEffect(() => {
-        if (svg) {
+        if (svg && dataLoaded) {
             svg.append("g")
                 .append("rect")
                 .attr("x", margin.left)
@@ -168,7 +282,9 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
 
                 .on("mouseover", onHover )
-                .on("mouseleave", offHover )
+                .on("mouseleave", function(event, d) {
+                    offHover(d)
+                })
                 .on("click", function(event, d) {
                     onClick(d)
                 })
@@ -181,7 +297,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
         }
 
-    }, [svg])
+    }, [svg, dataLoaded, countryData])
 
     useEffect(() => {
         
@@ -190,10 +306,12 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
                 console.log("fail")
                 clearMap();
-                selectCountryByName(selectedCountry)
                 hoverCountryByName(hoveredCountry)
+                selectCountryByName(selectedCountry)
+                
             } else {
                 clearMap();
+                //fillMap();
             }
         }
     }, [svg, hoveredCountry, selectedCountry])
