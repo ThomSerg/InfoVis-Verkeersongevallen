@@ -5,6 +5,7 @@ import {landData} from './europe'
 import data from '../europe_gov.csv';
 
 import './mapD3.css'
+import '../App.css'
 import { defaultConfig } from "antd/es/theme/internal";
 
 function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry}) {
@@ -20,6 +21,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
     const [dataLoaded, setDataLoaded] = useState(false);
     const [countryData, setCountryData] = useState({});
+
+    const svgLegendRef = useRef(null);
 
 
     // Dimensions and margins of the graph
@@ -54,9 +57,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
     }, [])
 
-    function colorScale(c) {
-        d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])(c)
-    }
+    
 
 
     
@@ -78,8 +79,10 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     //     });
     //     }, []);
 
-    useEffect(() => {
+    
 
+    useEffect(() => {
+        if (Object.keys(countryData).length != 0) {
         d3.select(resultDivRef.current)
             .append("div")
             .classed("svg-container", true); 
@@ -96,31 +99,87 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 .attr("transform", "translate(" + 0 + "," + 0 + ")")
             )  
 
+        var svg = d3.select(svgLegendRef.current)
+            .append("svg")
+            .attr('width', 500)
+            .attr('height', 100);
+            
+
+        var grad = svg.append('defs')
+            .append('linearGradient')
+            .attr('id', 'mygrad')
+            .attr('x1', '0%')
+            .attr('x2', '100%')
+            .attr('y1', '0%')
+            .attr('y2', '0%');
+
+        const numColors = 20;
+
+        const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])
+
+        var gradientColors = []
+            for (let i = 0; i < numColors; i++) {
+                console.log((i / (numColors - 1)) * colorScale.domain()[1])
+                const color = colorScale((i / (numColors - 1)) * colorScale.domain()[1]);
+                gradientColors.push(color);
+              }
+
+        console.log(gradientColors)
+        console.log(gradientColors[0])
+            
+        // for (let i = 0; i < numColors; i++) {
+        //     //const hexColor = rgbToHexs(gradientColors[i]);
+        //     grad.append("stop")
+        //         .attr("offset", 100 * (i / (numColors - 1)) + "%")
+        //         .attr("stop-color", gradientColors[i])
+        //         .attr("stop-opacity", 1);
+        //     console.log(gradientColors[i])
+        //     console.log(100 * (i / (numColors - 1)) + "%")
+        // }
+
+        grad.selectAll('stop')
+            .data(gradientColors)
+            .enter()
+            .append('stop')
+            .style('stop-color', function(d){ return d3.color(d).formatHex(); })
+            .attr('offset', function(d,i){
+              return 100 * (i / (numColors - 1)) + '%';
+            })
+
+        // grad.append("stop")
+        // .attr("offset", "0%")
+        // .attr("stop-color", d3.color(gradientColors[0]).formatHex());
+
+        // grad.append("stop")
+        // .attr("offset", "100%")
+        // .attr("stop-color", "blue");
+
+        svg.append('rect')
+            .attr('x', 10)
+            .attr('y', 50)
+            .attr('width', 500)
+            .attr('height', 50)
+            //.classed('filled', true)
+            .style('fill', 'url(#mygrad)')
+            
+        svg.append("text")
+            .attr("text-anchor", "end")
+            .attr("y", 20)
+            .attr("x", 100)
+            
+            .text("Legend");
+
+   
+        }
+    }, [countryData])
 
 
-    }, [])
+    function rgbToHexs(rgb) {
+        const hex = rgb.match(/\d+/g)
+                        .map(num => parseInt(num).toString(16).padStart(2, '0'));
+        return `#${hex.join('')}`;
+      }
 
-
-    function fillMap() {
-        // d3.selectAll(".Country").each((c) => {
-        //     const cas = countryData[c.properties["NAME"]];
-        //     console.log(colorScale(cas))
-        //     d3.select(this).style("fill", "red")
-        //     //console.log(c.properties["NAME"])
-        //     //console.log(("#" + c.properties["NAME"]).replace(/\s/g, ''))
-        //     //svg.select(("#" + c.properties["NAME"]).replace(/\s/g, '')).style("fill", colorScale(cas))
-        // })
-        // console.log("fill")
-        //var cas = countryData[country];
-        //const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])
-
-        d3.selectAll(".Country").style("fill", function(c) {return colorScale(countryData[c.properties["NAME"]])})
-            //console.log(c.properties["NAME"])
-            //console.log(("#" + c.properties["NAME"]).replace(/\s/g, ''))
-            //svg.select(("#" + c.properties["NAME"]).replace(/\s/g, '')).style("fill", colorScale(cas))
-        
-        console.log("fill")
-    }
     
     function clearMap() {
         clearSelection(d3.selectAll(".Country"));
@@ -242,13 +301,16 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         }
       
         return (
-          <div className="legend" style={{ width: '100%', height: '200px' }}>
-            <div className="legend-title" style={{ marginTop:"20px", marginBottom: '10px' }}>Legend</div>
-            <div className="legend-bar" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-              
-              <div className="legend-gradient" style={{ backgroundImage: `linear-gradient(to right, ${gradientColors.join(',')})`, width: '80%', height: '20px' }}></div>
+            <div className="legend" style={{ width: '100%', height: '200px' }}>
+                <div className="legend-title" style={{ marginTop:"20px", marginBottom: '10px' }}>
+                    Legend
+                </div>
+                <svg ref={svgLegendRef} width="500" height="100"/>
+                <div className="legend-bar" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>   
+                    <div className="legend-gradient" style={{ backgroundImage: `linear-gradient(to right, ${gradientColors.join(',')})`, width: '80%', height: '20px' }}/>
+                    <div class="verticalLine">|</div>
+                </div>
             </div>
-          </div>
         );
       }
 
@@ -322,9 +384,11 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     return (
         <div>
             <div ref={resultDivRef}></div>
-            {dataLoaded && (
+            <div height="100"></div>
+            <svg ref={svgLegendRef} width="500" height="200"/>
+            {/* {dataLoaded && (
                 <Legend colorScale={d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])} />
-            )}
+            )} */}
         </div>
         );
 

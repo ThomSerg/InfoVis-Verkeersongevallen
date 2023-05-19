@@ -12,6 +12,13 @@
   text-align: center;
 }
 
+.verticalLine {
+  border-left: thick solid #ff0000;
+}
+
+.filled {
+  fill: url(#mygrad);
+}
 
 
 button {
