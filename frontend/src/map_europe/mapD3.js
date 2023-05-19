@@ -96,6 +96,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 .attr("transform", "translate(" + 0 + "," + 0 + ")")
             )  
 
+
+
     }, [])
 
 
@@ -318,7 +320,12 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
 
     return (
-        <div ref={resultDivRef}></div>
+        <div>
+            <div ref={resultDivRef}></div>
+            {dataLoaded && (
+                <Legend colorScale={d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])} />
+            )}
+        </div>
         );
 
 }
