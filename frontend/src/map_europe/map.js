@@ -58,6 +58,7 @@ function Map({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCou
         positions={coordinates}
         eventHandlers={{
           mouseover: (e) => {
+            console.log("hover")
             onHover(e.target.options.country);
           },
           mouseout: (e) => {
@@ -94,7 +95,7 @@ function Map({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCou
       maxZoom={3.2}
       minZoom={3.2}
       zoomControl={false}
-      style={{ width: '30%', height: '65vh', background: 'lightgray', border: '1px solid #F0F0F0', borderRadius: '8px' }}
+      style={{ width: '100%', height: '65vh', background: 'lightgray', border: '1px solid #F0F0F0', borderRadius: '8px' }}
     >
       
     <ClickLayer></ClickLayer>

@@ -1,3 +1,13 @@
+/* @tailwind base;
+@tailwind components;
+@tailwind utilities; */
+
+:root {
+
+  --backgroundColor: #ce5900;
+}
+
+
 .App {
   text-align: center;
 }
@@ -20,7 +30,7 @@ button {
 
 button:hover {
   color: #565c5e;
-  background-color: #dfdbd8;
+  background-color: var(--backgroundColor);
   transition-duration: 400ms;
 }
 
@@ -48,7 +58,7 @@ h1 {
 }
 
 body {
-  background-color: #dfdbd8;
+  background-color: var(--backgroundColor);
 }
 
 div.tooltip-hover {

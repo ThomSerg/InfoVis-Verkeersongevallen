@@ -39,6 +39,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     var myColor = d3.scaleSequential()
                     .interpolator(d3.interpolateInferno)
                     .domain([0,cat2_upper[cat2_index]])
+    var x_color = ["#724d3d ", "#916e54", "#b0886b", "#d0a281", "#e9b897", "#fdc4ac"];
 
     const [data, setData] = useState(null);
 
@@ -85,7 +86,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
         if (selectedCountry.length == 0) {
             a.attr("r", 5)
-            .style("fill", function(d){ return(myColor(d[cat2[cat2_index]]))})
+            .style("fill", function(d){ return(x_color
+                )}) //myColor(d[cat2[cat2_index]]))})
         }
 
                 

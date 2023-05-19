@@ -10,6 +10,8 @@ import * as ss from 'simple-statistics'
 function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown variable", varYaxis = "Unknown variable", title = "Unknown title", setHoveredCountry, hoveredCountry}) {
   const svgRef = useRef(null);
 
+  console.log("test")
+
   useEffect(() => {
     // Set the dimensions and margins of the graph
     //const margin = { top: 10, right: 30, bottom: 60, left: 60 };
