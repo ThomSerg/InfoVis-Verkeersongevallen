@@ -1,5 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 import { Container, MantineProvider, Text } from '@mantine/core';
+import { useViewportSize } from '@mantine/hooks';
 
 import Header from './layout/header'
 import AppBody from './AppBody'
@@ -13,17 +14,27 @@ function App() {
 
     console.log(selectedCountry)
 
+    const { height, width } = useViewportSize();
+    const targetHeight = 1080,
+            targetWidth = 1920;
+    console.log("WH")
+    console.log(width)
+    console.log(height)
+    const scale = Math.min(height/targetHeight, width/targetWidth)
+
     return (
-    
-        <Container fluid px={"xl"} py={"xl"} >
-            <Header/>
+     
+        <div style={{ "padding": "2% 2% 2% 2%"}}>
+            <Header
+                scale={scale}
+            />
             <AppBody 
                 hoveredCountry={hoveredCountry}
                 setHoveredCountry={setHoveredCountry}
                 selectedCountry={selectedCountry}
                 setSelectedCountry={setSelectedCountry}
             />
-        </Container>
+        </div>
 
 
     )

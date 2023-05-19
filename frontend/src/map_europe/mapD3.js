@@ -7,6 +7,8 @@ import data from '../europe_gov.csv';
 import './mapD3.css'
 import '../App.css'
 import { defaultConfig } from "antd/es/theme/internal";
+import responsivefy from "../utils/responsify";
+import { Container } from "@mantine/core";
 
 function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry}) {
 
@@ -88,21 +90,29 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             .classed("svg-container", true); 
 
         setSvg(
-            d3.select(resultDivRef.current)
+            d3.select("#map")
                 .append("svg")
 
-                .attr("preserveAspectRatio", "xMinYMin meet")
-                .attr("viewBox", "0 0 " + " " + (width + margin.left + margin.right).toString() + " " + (height + margin.top + margin.bottom).toString())
-                .classed("svg-content-responsive", true)
+                .attr('width', width)
+                .attr('height', height)
+                .call(responsivefy) // tada!
+
+
+
+                // .attr("preserveAspectRatio", "xMinYMin meet")
+                // .attr("viewBox", "0 0 " + " " + (width + margin.left + margin.right).toString() + " " + (height + margin.top + margin.bottom).toString())
+                // .classed("svg-content-responsive", true)
 
                 .append("g")
                 .attr("transform", "translate(" + 0 + "," + 0 + ")")
             )  
 
-        var svg = d3.select(svgLegendRef.current)
+        var svg = d3.select('#legend')//d3.select(svgLegendRef.current)
             .append("svg")
             .attr('width', 500)
-            .attr('height', 100);
+            .attr('height', 100)
+            .call(responsivefy)
+
             
 
         var grad = svg.append('defs')
@@ -379,13 +389,18 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
     return (
         <div>
-            <div ref={resultDivRef}></div>
-            <div height="100"></div>
-            <svg ref={svgLegendRef} width="500" height="200"/>
-            {/* {dataLoaded && (
-                <Legend colorScale={d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])} />
-            )} */}
+            <div id="map"></div>
+            <div id="legend"></div>
         </div>
+        //<svg ref={svgLegendRef}/>
+        // <div>
+        //     <div ref={resultDivRef}></div>
+        //     <div height="100"></div>
+        //     <svg ref={svgLegendRef}/>
+        //     {/* {dataLoaded && (
+        //         <Legend colorScale={d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])} />
+        //     )} */}
+        // </div>
         );
 
 }

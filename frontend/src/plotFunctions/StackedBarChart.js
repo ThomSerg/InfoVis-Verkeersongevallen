@@ -1,10 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import data2 from "../europe_gov.csv";
+import _uniqueId from 'lodash/uniqueId';
+import responsivefy from "../utils/responsify";
 
 import './StackedBarChart.css'
 
 function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
+
+  const id = useRef(_uniqueId('stacked-bar-'))
 
   // Reference to the SVG
   const svgRef = useRef(null);
@@ -30,10 +34,13 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
    * * * * * * * * * */
   useEffect(() => {
     // append the svg object to the body of the page
-    setSvg(d3.select(svgRef.current)
+    setSvg(d3.select("#" + id.current)
               .append("svg")
               .attr("width", width + margin.left + margin.right)
               .attr("height", height + margin.top + margin.bottom)
+
+              .call(responsivefy)
+
               .append("g")
               .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             );
@@ -197,9 +204,7 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
 
   return (
-    <div>
-    <svg ref={svgRef} width="600" height="200"/>
-    </div>
+    <div id={id.current}/>
   );
 }
 

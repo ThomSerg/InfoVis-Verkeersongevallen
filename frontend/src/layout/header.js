@@ -1,24 +1,18 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import {
-  createStyles,
-  Container,
-  Avatar,
-  UnstyledButton,
-  Group,
-  Text,
-  Menu,
-  Tabs,
-  Burger,
-  rem,
-  Grid
+  Image,
+  Grid,
 } from '@mantine/core';
 
+import { useViewportSize } from '@mantine/hooks';
+
+//import slipping_car from '../../public/car_slipping.png'
 
 
 
 
-function Header() {
+function Header({scale}) {
 
   function NavigationButtons() {
     return (
@@ -30,14 +24,20 @@ function Header() {
     )
   }
 
+
   return (
     <div>
       <Grid grow>
-        <Grid.Col span={4} lg={4}>
-          <h1 class="font-mono">Road accidents in Europe</h1>
+        <Grid.Col span={1}>
+          <Image width={80*scale} src="/car_slipping.png"></Image>
         </Grid.Col>
-        <Grid.Col span={4} offset={2}>
+        <Grid.Col span={10}>
+          <h1 style={{"font-size": (60*scale).toString()+"px"}}>Road accidents in Europe</h1>
         </Grid.Col>
+        <Grid.Col span={1}>
+          <Image height={90*scale} radius="md" src="/europe.jpg"></Image>
+        </Grid.Col>
+
 
       </Grid>
       

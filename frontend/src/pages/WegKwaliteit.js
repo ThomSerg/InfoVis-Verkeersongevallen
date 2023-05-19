@@ -9,6 +9,8 @@ import ChartCard from "../plotFunctions/ChartCard";
 
 import { Grid } from '@mantine/core';
 
+import { useViewportSize } from '@mantine/hooks';
+
 
 class Wegkwaliteit extends Component {
     
@@ -38,11 +40,19 @@ class Wegkwaliteit extends Component {
         this.setState({hoveredCountry: country});
       }
 
+      
 
 //<Map setHoveredCountry={this.setHoveredCountry} hoveredCountry={this.state.hoveredCountry}/>
       render() {
-        return (
+        
 
+        var width= 550, height = 350
+        var scale = this.props.scale
+        console.log("scale")
+        console.log(scale)
+
+        return (
+          
           <Grid>
 
             <Grid.Col span={6}>
@@ -54,21 +64,21 @@ class Wegkwaliteit extends Component {
             </Grid.Col>
 
             <Grid.Col span={6}>
-              <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+              <ChartCard title="Road quality Europe" >  
                 <Scatter2 cat1="RoadQuality" cat2="cas" varXAxis='Road quality (score on 7)' varYaxis='Road fatalities (per 100000 inhabitants)' title='Road quality Europe'/>
-              </Card>
+              </ChartCard>
             </Grid.Col>
 
             <Grid.Col span={6}>
-              <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+              <ChartCard title="GDP Europe" > 
                 <Scatter2 cat1="RoadQuality" cat2="log(GDP(2019))" varXAxis='Road quality (score on 7)' varYaxis='log(GDP) (€)' title='GDP Europe'/>
-              </Card>
+              </ChartCard>
             </Grid.Col>
 
             <Grid.Col span={6}>
-              <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+              <ChartCard title="Investments in roads Europe" > 
                 <Scatter2 cat1="Invest per capita" cat2="cas" varXAxis='Invested per capita (€ per resident)' varYaxis='Road fatalities (per 100000 residents)' title='Investments in roads Europe'/>
-              </Card>
+              </ChartCard>
             </Grid.Col>
 
           </Grid>

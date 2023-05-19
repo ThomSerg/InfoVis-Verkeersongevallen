@@ -54,21 +54,21 @@ class Fines extends Component {
             </Grid.Col>
 
             <Grid.Col span={6}>
-              <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+              <ChartCard title="Speed fines on city roads" > 
                 <Scatter2 cat1="fine_city" cat2="cas" varXAxis='Speed fine on city roads' varYaxis='Road fatalities (per 100000 inhabitants)' title='Speed fines on city roads'/>
-              </Card>
+              </ChartCard>
             </Grid.Col>
 
             <Grid.Col span={6}>
-              <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+              <ChartCard title="Speed fines on rural roads" > 
                 <Scatter2 cat1="fine_rural" cat2="cas" varXAxis='Speed fine on rural roads' varYaxis='Road fatalities (per 100000 residents)' title='Speed fines on rural roads'/>
-              </Card>
+              </ChartCard>
             </Grid.Col>
 
             <Grid.Col span={6}>
-              <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
+              <ChartCard title="Speed fines on highway roads" > 
                 <Scatter2 cat1="fine_highway" cat2="cas" varXAxis='Speed fine on highway roads' varYaxis='Road fatalities (per 100000 residents)' title='Speed fines on highway roads'/>
-              </Card>
+              </ChartCard>
             </Grid.Col>
           </Grid>
         );

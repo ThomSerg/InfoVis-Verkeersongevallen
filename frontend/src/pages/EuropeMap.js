@@ -10,9 +10,11 @@ import {
   Tabs,
   Burger,
   rem,
-  Grid
+  Grid,
+  Card
 } from '@mantine/core';
 
+//import { Card, Layout, Space } from 'antd';
 import ChartCard from "../plotFunctions/ChartCard";
 
 import Map from "../map_europe/map"
@@ -27,7 +29,7 @@ function EuropeMap({
 
 
     return (
-
+   
       <ChartCard title="">
         <MapD3 
           setHoveredCountry={setHoveredCountry} 

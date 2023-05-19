@@ -4,11 +4,16 @@ import './scatter2.css';
 import * as d3 from 'd3';
 import data from '../europe_gov.csv';
 import * as ss from 'simple-statistics'
+import _uniqueId from 'lodash/uniqueId';
+
+import responsivefy from "../utils/responsify";
 
 
 
 function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown variable", varYaxis = "Unknown variable", title = "Unknown title", setHoveredCountry, hoveredCountry}) {
   const svgRef = useRef(null);
+
+  const id = useRef(_uniqueId('scatter-'))
 
   console.log("test")
 
@@ -24,11 +29,16 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     const widthPlot = width - margin.left - margin.right;
     const heightPlot = height - margin.top - margin.bottom;
 
+    console.log(id.current)
 
     // Append the SVG object to the body of the pageheight: "550px"
-    const svg = d3.select(svgRef.current)
+    const svg = d3.select("#" + id.current)
+      .append("svg")
       .attr('width', widthPlot + margin.left + margin.right)
       .attr('height', heightPlot + margin.top + margin.bottom)
+      .call(responsivefy) // tada!
+
+
       .append('g')
       .attr('transform', `translate(${margin.left}, ${margin.top})`);
     
@@ -400,8 +410,8 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
 
   return (
     <>
-    <div style={{ width: width }} className="scatterTitle">{title}</div>
-    <svg ref={svgRef}></svg>
+    {/* <div style={{ width: width }} className="scatterTitle">{title}</div> */}
+    <div id={id.current}></div>
     </>
   );
 

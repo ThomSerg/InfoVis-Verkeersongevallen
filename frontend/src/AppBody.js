@@ -13,6 +13,7 @@ import {
   Grid
 } from '@mantine/core';
 //import { IconPhoto, IconMessageCircle, IconSettings } from '@tabler/icons-react';
+import { useViewportSize } from '@mantine/hooks';
 
 import Header from './layout/header'
 
@@ -28,27 +29,35 @@ function AppBody({
     hoveredCountry, 
     setHoveredCountry, 
     selectedCountry, 
-    setSelectedCountry}
+    setSelectedCountry,
+    //scale  
+  }
   ) {
 
   console.log(selectedCountry)
 
+  const { height, width } = useViewportSize();
+  const targetHeight = 1080,
+        targetWidth = 1920;
+  const scale = Math.min(height/targetHeight, width/targetWidth)
+
   
   return (
-    <div>
       
-      <Grid grow>
+      <Grid>
 
-        <Grid.Col span={4} lg={4}>
+        <Grid.Col span={4}>
           <EuropeMap
             setHoveredCountry={setHoveredCountry} 
             hoveredCountry={hoveredCountry}
             setSelectedCountry={setSelectedCountry} 
             selectedCountry={selectedCountry}
+            scale={scale}
           />
         </Grid.Col>
 
         <Grid.Col span={8}>
+          <div>
           <Tabs variant="pills" defaultValue="road_quality">
 
             <Tabs.List>
@@ -58,7 +67,10 @@ function AppBody({
             </Tabs.List>
 
             <Tabs.Panel value="road_quality" pt="xs">
-              <Wegkwaliteit hoveredCountry={hoveredCountry}/>
+              <Wegkwaliteit 
+                hoveredCountry={hoveredCountry}
+                scale={scale}
+              />
             </Tabs.Panel>
 
             <Tabs.Panel value="alcohol" pt="xs">
@@ -67,21 +79,26 @@ function AppBody({
                 hoveredCountry={hoveredCountry}
                 setSelectedCountry={setSelectedCountry} 
                 selectedCountry={selectedCountry}
+                scale={scale}
               />
             </Tabs.Panel>
 
             <Tabs.Panel value="fines" pt="xs">
-              <Fines hoveredCountry={hoveredCountry}/> 
+              <Fines 
+                hoveredCountry={hoveredCountry}
+                scale={scale}
+              /> 
             </Tabs.Panel>
 
           </Tabs>
+          </div>
         </Grid.Col>
 
       </Grid>
 
       
         
-    </div>
+ 
   )
     
 

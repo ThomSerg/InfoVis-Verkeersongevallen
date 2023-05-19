@@ -1,10 +1,15 @@
 import React, { useState, useRef, useEffect } from "react";
 import * as d3 from "d3";
 import data2 from "../europe_gov.csv";
+import responsivefy from '../utils/responsify'
+import _uniqueId from 'lodash/uniqueId';
 
 import './violin.css'
 
 function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry, cat2_upper, cat2_selected, title="Unknown title", xLabelElement = xLabel, yLabelElement = yLabel}) {
+    
+    const id = useRef(_uniqueId('violin-'))
+    
     let cat2_index= 0 ;
     if(cat2_selected === "nestedButton1") {
         //console.log("nestedButton1")
@@ -43,6 +48,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
     const [data, setData] = useState(null);
 
+
+    
+
+
     useEffect(() => { 
         d3.csv(data2).then(d => { 
             setData(d);
@@ -56,14 +65,30 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
      * * * * * * * * * */
     useEffect(() => {
         // append the svg object to the body of the page
-        setSvg(d3.select(svgRef.current)
+        setSvg(d3.select("#" + id.current)
                     .append("svg")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
+                    .call(responsivefy)
+
+                    // .attr("preserveAspectRatio", "xMidYMid meet")
+                    // .attr("viewBox", "0 0 " + width.toString() + " " + height.toString())
+
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                 );
     }, [])
+
+    // function resize() {
+    //     const containerWidth = d3.select(svgRef.current).node().clientWidth;
+    //     const containerHeight = containerWidth * (height / width); // Maintain aspect ratio
+      
+    //     svg.attr("viewBox", `0 0 ${containerWidth} ${containerHeight}`);
+    //   }
+
+    // resize();
+
+    // d3.select(window).on("resize", resize);
     
 
     function createScatterPlot(circles, x, y, sumstat2) {
@@ -86,8 +111,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
         if (selectedCountry.length == 0) {
             a.attr("r", 5)
-            .style("fill", function(d){ return(x_color
-                )}) //myColor(d[cat2[cat2_index]]))})
+            .style("fill", function(d){ return(myColor(d[cat2[cat2_index]]))})
         }
 
                 
@@ -686,7 +710,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }, [svg, hoveredCountry, selectedCountry, updateLock])
 
 return (
-    <svg ref={svgRef} width="500" height="500"/>
+    <div id={id.current}/>
     );
 }
 
