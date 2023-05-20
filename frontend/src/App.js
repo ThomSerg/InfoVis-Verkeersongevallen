@@ -1,9 +1,11 @@
 import React, { useState, useRef, useEffect } from "react";
-import { Container, MantineProvider, Text } from '@mantine/core';
+import { Container, MantineProvider, Text, AspectRatio } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
 
 import Header from './layout/header'
 import AppBody from './AppBody'
+
+import {FitToViewport} from "react-fit-to-viewport"
 
 import './App.css';
 
@@ -12,28 +14,40 @@ function App() {
     const [hoveredCountry, setHoveredCountry] = useState([]);
     const [selectedCountry, setSelectedCountry] = useState([]);
 
-    console.log(selectedCountry)
+    const [activeTab, setActiveTab] = useState('road_quality');
 
     const { height, width } = useViewportSize();
     const targetHeight = 1080,
             targetWidth = 1920;
-    console.log("WH")
-    console.log(width)
-    console.log(height)
     const scale = Math.min(height/targetHeight, width/targetWidth)
 
     return (
-     
-        <div style={{ "padding": "2% 2% 2% 2%"}}>
+        
+        <div>
+       
             <Header
                 scale={scale}
+                activeTab={activeTab}
+                setActiveTab={setActiveTab}
             />
-            <AppBody 
-                hoveredCountry={hoveredCountry}
-                setHoveredCountry={setHoveredCountry}
-                selectedCountry={selectedCountry}
-                setSelectedCountry={setSelectedCountry}
-            />
+
+            <div class="viewp" style={{"height": "90vh"}}>
+                <FitToViewport width={targetWidth} height={targetHeight} minZoom={0} maxZoom={10} style={{ overflow: 'hidden' }}>
+                
+                    <AppBody 
+                        hoveredCountry={hoveredCountry}
+                        setHoveredCountry={setHoveredCountry}
+                        selectedCountry={selectedCountry}
+                        setSelectedCountry={setSelectedCountry}
+                        activeTab={activeTab}
+                        setActiveTab={setActiveTab}
+
+                    />
+
+                    
+                </FitToViewport>
+            </div>
+
         </div>
 
 
