@@ -31,37 +31,45 @@ function Map({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCou
   }, []);
 
   function Legend({ colorScale }) {
+  const gradientColors = [];
+  const numColors = 20;
 
-    const gradientColors = [];
-    const numColors = 20;
+  const xMin = 0;
+  const xMax = d3.max(Object.values(countryData));
 
+  const x = d3
+    .scaleLinear()
+    .domain([xMin, xMax])
+    .range([0, 200]); // Adjust the range as per your needs
 
-    const xMin = 0;
-    const xMax = [0, d3.max(Object.values(countryData))];
+  const xAxis = d3.axisBottom(x); // Create the x-axis
 
-    let x = d3.scaleLinear()
-      //.domain(d3.extent(data, d => d[cat1]))
-      .domain([xMin, xMax])
-      //.range([0, 10]);
-
-    // Create the x-axis and y-axis groups
-
-  
-    for (let i = 0; i < numColors; i++) {
-      const color = colorScale((i / (numColors - 1)) * colorScale.domain()[1]);
-      gradientColors.push(color);
-    }
-  
-    return (
-      <div className="legend" style={{ width: '100%', height: '200px' }}>
-        <div className="legend-title" style={{ marginTop:"20px", marginBottom: '10px' }}>Legend</div>
-        <div className="legend-bar" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-          
-          <div className="legend-gradient" style={{ backgroundImage: `linear-gradient(to right, ${gradientColors.join(',')})`, width: '80%', height: '20px' }}></div>
-        </div>
-      </div>
-    );
+  for (let i = 0; i < numColors; i++) {
+    const color = colorScale((i / (numColors - 1)) * colorScale.domain()[1]);
+    gradientColors.push(color);
   }
+
+  return (
+    <div className="legend" style={{ width: '100%', height: '200px' }}>
+      <div className="legend-title" style={{ marginTop: '20px', marginBottom: '10px' }}>
+        Legend
+      </div>
+      <div className="legend-bar" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+        <svg width="100%" height="50">
+          <g transform="translate(0,30)" ref={node => d3.select(node).call(xAxis)} /> {/* Render the x-axis */}
+        </svg>
+      </div>
+      <div
+        className="legend-gradient"
+        style={{
+          backgroundImage: `linear-gradient(to right, ${gradientColors.join(',')})`,
+          width: '80%',
+          height: '20px',
+        }}
+      />
+    </div>
+  );
+}
   
 
   const onHover=(country) => {

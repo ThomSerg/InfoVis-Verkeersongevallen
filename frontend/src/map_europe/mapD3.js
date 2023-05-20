@@ -24,7 +24,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     const [dataLoaded, setDataLoaded] = useState(false);
     const [countryData, setCountryData] = useState({});
 
-    const svgLegendRef = useRef(null);
+    //const svgLegendRef = useRef(null);
 
 
     // Dimensions and margins of the graph
@@ -49,7 +49,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 const country = d.Country;
                 const cas = parseFloat(d.cas);
                 if (!isNaN(cas)) {
-                    cData[country.replace(/\s/g, '')] = cas;
+                    cData[country] = cas;
                 }
                 });
             setCountryData(cData);
@@ -107,11 +107,21 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 .attr("transform", "translate(" + 0 + "," + 0 + ")")
             )  
 
-        var svg = d3.select('#legend')//d3.select(svgLegendRef.current)
-            .append("svg")
-            .attr('width', 500)
-            .attr('height', 100)
-            .call(responsivefy)
+        var legendWidth = 500; // Adjust the desired width of the legend SVG
+        var barWidth = 400; // Adjust the desired width of the bar
+
+        var svg = d3
+            .select('#legend')
+            .append('svg')
+            .attr('width', legendWidth)
+            .attr('height', 120)
+            .call(responsivefy);
+
+        
+        // Calculate the position of the bar and text elements
+        var barX = (legendWidth - barWidth) / 2; // Calculate the x position of the bar
+        var minValueTextX = barX - 35; // Adjust the x position of the minValue text
+        var maxValueTextX = barX + barWidth + 10; // Adjust the x position of the maxValue text
 
             
 
@@ -147,37 +157,66 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         //     console.log(100 * (i / (numColors - 1)) + "%")
         // }
 
-        grad.selectAll('stop')
+        // Determine the lowest and highest values
+        const values = Object.values(countryData);
+        const minValue = d3.min(values);
+        const maxValue = d3.max(values);
+
+        var stops = grad.selectAll('stop')
             .data(gradientColors)
             .enter()
             .append('stop')
             .style('stop-color', function(d){ return d3.color(d).formatHex(); })
             .attr('offset', function(d,i){
+                //return d.cas;
               return 100 * (i / (numColors - 1)) + '%';
             })
+        
+        svg.append('text')
+        .attr('x', minValueTextX)
+        .attr('y', 75)
+        .text(Math.round(minValue * 100)/100);
+        
+        svg.append('text')
+        .attr('x', maxValueTextX)
+        .attr('y', 75)
+        .text(Math.round(maxValue * 100)/100);
 
-        // grad.append("stop")
-        // .attr("offset", "0%")
-        // .attr("stop-color", d3.color(gradientColors[0]).formatHex());
-
-        // grad.append("stop")
-        // .attr("offset", "100%")
-        // .attr("stop-color", "blue");
-
+        
         svg.append('rect')
-            .attr('x', 10)
+            .attr('x', barX)
             .attr('y', 50)
-            .attr('width', 500)
+            .attr('width', barWidth)
             .attr('height', 50)
             //.classed('filled', true)
             .style('fill', 'url(#mygrad)')
             
-        svg.append("text")
-            .attr("text-anchor", "end")
-            .attr("y", 20)
-            .attr("x", 100)
-            
-            .text("Legend");
+        svg.append('text')
+        .attr('text-anchor', 'middle')
+        .attr('y', 30)
+        .attr('x', barX + 25 +barWidth/ 2)
+        .text('Road fatalities per 100,000 people');
+        
+
+        
+        console.log("MINVALUE IS " + minValue)
+        console.log("MAXVALUE IS " + maxValue)
+
+        // Create scale for the axis
+        const axisScale = d3
+        .scaleLinear()
+        .domain([minValue, maxValue])
+        .range([barX, barX + barWidth]); // Adjust the range based on the desired width
+
+        // Append a group element for the axis
+        const axisGroup = svg.append("g")
+        .attr("transform", "translate(0, 100)"); // Adjust the position as needed
+
+        // Create the axis
+        const axis = d3.axisBottom(axisScale);
+
+        // Append the axis to the group
+        axisGroup.call(axis);
 
    
         }
@@ -190,8 +229,13 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         return `#${hex.join('')}`;
       }
 
+
+     
     
-    function clearMap() {
+    function clearMap() {// setting up all the hover effects
+        var div = d3.select("body").append("div")
+        .attr("class", "tooltip-map")
+        .style("opacity", 0);
         clearSelection(d3.selectAll(".Country"));
     }
 
@@ -209,10 +253,10 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])
         selection
             .style("fill", function(c) {
-                if (!colorScale(countryData[c.properties["NAME"].replace(/\s/g, '')])) {
+                if (!colorScale(countryData[c.properties["NAME"]])) {
                    return "grey" 
                 }
-                return colorScale(countryData[c.properties["NAME"].replace(/\s/g, '')])
+                return colorScale(countryData[c.properties["NAME"]]);
             })
             .style("stroke", "white")
             .style("stroke-width", 1);
@@ -235,9 +279,9 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     function hoverSelection(selection) {
         selection
             .style("opacity", 1)
-            //.style("stroke", "black")
+            //.style("stroke", "blue")
             .style("fill","blue")
-            //.style("stroke-width", 2);
+            //.style("stroke-width", 4);
     }
 
     function selectCountryByName(countryName) {
@@ -265,10 +309,23 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     }
 
 
-    function onHover(d) {
+    // setting up all the hover effects
+    var div = d3.select("body").append("div")
+    .attr("class", "tooltip-map")
+    .style("opacity", 0);
+
+    function onHover(event,d) {
+        
         updateLockRef.current = true
-        setHoveredCountry([this.id])
-        hoverCountryByName([this.id]);
+        setHoveredCountry([d.properties["NAME"]])
+        hoverCountryByName([d.properties["NAME"]]);
+        //Makes the new div appear on hover:
+        div.transition()
+        .duration(50)
+        .style("opacity", 1);
+        div.html(`<strong><u>${d.properties["NAME"]}</u></strong><br/>${"Road fatalities"}: ${Math.round(countryData[d.properties["NAME"]] * 100)/100}<br/>`)
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 15) + "px");
     }
     
     function offHover(d) {
@@ -277,6 +334,9 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         if (selectedCountry.length == 0) {
             updateLockRef.current = false
         }
+        div.transition()
+            .duration('50')
+            .style("opacity", 0);
     }
 
     function onClick(d) {
@@ -287,44 +347,6 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         setSelectedCountry([d.properties["NAME"]])
         selectCountryByName([d.properties["NAME"]])
     }
-
-    function Legend({ colorScale }) {
-
-        const gradientColors = [];
-        const numColors = 20;
-    
-    
-        const xMin = 0;
-        const xMax = [0, d3.max(Object.values(countryData))];
-    
-        let x = d3.scaleLinear()
-          //.domain(d3.extent(data, d => d[cat1]))
-          .domain([xMin, xMax])
-          //.range([0, 10]);
-    
-        // Create the x-axis and y-axis groups
-    
-      
-        for (let i = 0; i < numColors; i++) {
-          const color = colorScale((i / (numColors - 1)) * colorScale.domain()[1]);
-          gradientColors.push(color);
-        }
-      
-        return (
-            <div className="legend" style={{ width: '100%', height: '200px' }}>
-                <div className="legend-title" style={{ marginTop:"20px", marginBottom: '10px' }}>
-                    Legend
-                </div>
-                <svg ref={svgLegendRef} width="500" height="100"/>
-                <div className="legend-bar" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>   
-                    <div className="legend-gradient" style={{ backgroundImage: `linear-gradient(to right, ${gradientColors.join(',')})`, width: '80%', height: '20px' }}/>
-                    <div class="verticalLine">|</div>
-                </div>
-            </div>
-        );
-      }
-
-    
     
 
     useEffect(() => {
@@ -351,13 +373,20 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                     
                 .style("stroke", "transparent")
                 .attr("class", function(d){ return "Country" } )
+                .attr("name", function(d) {return d.properties["NAME"]})
                 .attr("id", function(d) {return d.properties["NAME"].replace(/\s/g, '')})
                 //.style("opacity", .8)
 
 
-                .on("mouseover", onHover )
+                .on("mouseover", function(event, d) {
+                    onHover(event,d)
+                })
                 .on("mouseleave", function(event, d) {
                     offHover(d)
+                })
+                .on("mousemove", function(event, d) {
+                    div.style("left", (event.pageX + 10) + "px")
+                    .style("top", (event.pageY - 15) + "px");
                 })
                 .on("click", function(event, d) {
                     onClick(d)
@@ -387,6 +416,9 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     }, [svg, hoveredCountry, selectedCountry])
 
 
+
+
+
     return (
         <div>
             <div id="map"></div>
@@ -394,7 +426,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         </div>
         //<svg ref={svgLegendRef}/>
         // <div>
-        //     <div ref={resultDivRef}></div>
+        //     <div ref={resultDivRef}></div>gen
         //     <div height="100"></div>
         //     <svg ref={svgLegendRef}/>
         //     {/* {dataLoaded && (
