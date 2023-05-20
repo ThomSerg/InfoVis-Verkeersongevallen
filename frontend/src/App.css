@@ -1,6 +1,7 @@
-@tailwind base;
+/*@tailwind base;*/
+
 @tailwind components;
-@tailwind utilities;
+@tailwind utilities; 
 
 :root {
   --backgroundColor: #F6F1F1;
@@ -8,6 +9,8 @@
   --color2: #19A7CE;
   --color3: #146C94;
 }
+
+
 
 .App {
   text-align: center;
@@ -65,7 +68,7 @@ div.tooltip-hover {
 
 
 
-button {
+/* button {
   background-color: #565c5e;
   color: #dfdbd8;
   padding: 10px;
@@ -76,14 +79,14 @@ button {
   width: 100px;
   transition-duration: 400ms;
   /* Add box-shadow for a 3D effect */
-  box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-}
+  /* box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+} */ */
 
-button:hover {
+/* button:hover {
   color: #565c5e;
   background-color: var(--backgroundColor);
   transition-duration: 400ms;
-}
+} */
 
 /* Define the button style when it is pressed */
 .buttonContainer button.active {

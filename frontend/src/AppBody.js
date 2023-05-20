@@ -10,7 +10,8 @@ import {
   Tabs,
   Burger,
   rem,
-  Grid
+  Grid,
+  Button
 } from '@mantine/core';
 //import { IconPhoto, IconMessageCircle, IconSettings } from '@tabler/icons-react';
 import { useViewportSize } from '@mantine/hooks';
@@ -23,6 +24,7 @@ import Fines from "./pages/Fines";
 import Wegkwaliteit from './pages/WegKwaliteit';
 import Alcohol from './pages/Alcohol';
 import EuropeMap from './pages/EuropeMap';
+import TabHeader from "./plotFunctions/TabHeader";
 
 
 function AppBody({
@@ -30,6 +32,8 @@ function AppBody({
     setHoveredCountry, 
     selectedCountry, 
     setSelectedCountry,
+    activeTab,
+    setActiveTab
     //scale  
   }
   ) {
@@ -43,10 +47,10 @@ function AppBody({
 
   
   return (
-      
+    <div style={{"height": "90vh !important"}}>
       <Grid>
 
-        <Grid.Col span={4}>
+        <Grid.Col span={4} height="10vh">
           <EuropeMap
             setHoveredCountry={setHoveredCountry} 
             hoveredCountry={hoveredCountry}
@@ -54,26 +58,52 @@ function AppBody({
             selectedCountry={selectedCountry}
             scale={scale}
           />
+          
         </Grid.Col>
 
         <Grid.Col span={8}>
           <div>
-          <Tabs variant="pills" defaultValue="road_quality">
+          <Tabs variant="pills"  value={activeTab} onTabChange={setActiveTab}>
 
-            <Tabs.List>
+            {/* <Tabs.List>
               <Tabs.Tab value="road_quality">Road Quality</Tabs.Tab>
               <Tabs.Tab value="alcohol">Alcohol</Tabs.Tab>
               <Tabs.Tab value="fines">Fines</Tabs.Tab>
-            </Tabs.List>
+            </Tabs.List> */}
 
             <Tabs.Panel value="road_quality" pt="xs">
-              <Wegkwaliteit 
-                hoveredCountry={hoveredCountry}
-                scale={scale}
-              />
+              <div>
+                <div style={{"height":"10%"}}>
+                  <TabHeader title="Road Quality"></TabHeader>
+                  </div>
+                <div style={{"height":"90%"}}>
+                <Wegkwaliteit 
+                  hoveredCountry={hoveredCountry}
+                  scale={scale}
+                />
+                </div>
+       
+              </div>
             </Tabs.Panel>
 
             <Tabs.Panel value="alcohol" pt="xs">
+
+              <TabHeader title="Alcohol behind the wheel">
+                <Grid>
+                  <Grid.Col span={3}>
+                      <Button color="cyan" varient="filled">
+                      test
+                      </Button>
+                  </Grid.Col>
+
+                  <Grid.Col span={3}>
+                      <Button color="cyan">
+                      test
+                      </Button>
+                  </Grid.Col>
+
+                </Grid>
+              </TabHeader>
               <Alcohol
                 setHoveredCountry={setHoveredCountry} 
                 hoveredCountry={hoveredCountry}
@@ -84,6 +114,7 @@ function AppBody({
             </Tabs.Panel>
 
             <Tabs.Panel value="fines" pt="xs">
+              <TabHeader title="Speeding fines"></TabHeader>
               <Fines 
                 hoveredCountry={hoveredCountry}
                 scale={scale}
@@ -95,6 +126,7 @@ function AppBody({
         </Grid.Col>
 
       </Grid>
+      </div>
 
       
         

@@ -1,16 +1,7 @@
 import React, { Component, useState, useRef, useEffect } from "react";
 import {
-  createStyles,
-  Container,
-  Avatar,
-  UnstyledButton,
-  Group,
-  Text,
-  Menu,
-  Tabs,
-  Burger,
-  rem,
-  Grid
+  Grid,
+  Button
 } from '@mantine/core';
 
 import D3Card from "../plotFunctions/D3Card";
@@ -32,20 +23,31 @@ function Alcohol({
   const [selectedNestedButton, setSelectedNestedButton] = useState("nestedButton1");
 
 
+
+
+
   return (
+    <div>
+      
 
       <Grid>
 
 
-        <Grid.Col span={6}>
+        <Grid.Col span={6}>       
+          
+
           <ChartCard title="Allowed promille when driving" > 
             <D3Card
               hoveredCountry={hoveredCountry}
             />  
           </ChartCard>
+
         </Grid.Col>
 
         <Grid.Col span={6}>
+          <div>
+          
+
           <ChartCard title="Allowed promille when driving" > 
             <StackedBarChart 
               cat="standard_driver" 
@@ -54,6 +56,7 @@ function Alcohol({
               title = "Allowed promille in blood"
             />
           </ChartCard>
+          </div>
         </Grid.Col>
 
         <Grid.Col span={6}>
@@ -95,6 +98,8 @@ function Alcohol({
         </Grid.Col>
 
       </Grid>
+
+      </div>
   )
 }
 
