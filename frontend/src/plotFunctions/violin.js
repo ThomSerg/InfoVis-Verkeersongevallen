@@ -48,8 +48,16 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
     const [data, setData] = useState(null);
 
+ 
+    const tooltipRef = useRef(null);
 
-    
+
+
+    function createToolip(div, d, event) {
+        div.html(`<strong><u> ${d.Country}</u></strong><br/>${xLabelElement}: ${Math.round(d[cat1] * 100)/100}<br/>${yLabelElement}: ${Math.round(d[cat2[cat2_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
+                .style("left", (event.pageX + 10) + "px")
+                .style("top", (event.pageY - 15) + "px");
+    }
 
 
     useEffect(() => { 
@@ -114,6 +122,26 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             .style("fill", function(d){ return(myColor(d[cat2[cat2_index]]))})
         }
 
+        svg.selectAll(".data-point").on('mouseover', function(event, d) {
+            if (selectCountry.length == 0) {
+            //setUpdateLock(true);
+            }
+            
+            const div = tooltipRef.current
+
+            // d3.select(this).transition().duration('50').attr('opacity', '.85');
+            div.transition().duration('50').style('opacity', 1);
+
+            createToolip(div, d, event)
+            
+
+            // div.html(`<strong><u> ${d.Country}</u></strong><br/>${xLabelElement}: ${Math.round(d[cat1] * 100)/100}<br/>${yLabelElement}: ${Math.round(d[cat2[cat2_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
+            //     .style("left", (event.pageX + 10) + "px")
+            //     .style("top", (event.pageY - 15) + "px");
+
+            setHoveredCountry([d["Country"]])
+
+        })
                 
 
                 
@@ -192,6 +220,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         })
         
     }
+
 
     /* * * * * * * * *
      * Populate SVG  *
@@ -305,6 +334,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 .style("opacity", 0)
                 .style("position", "absolute");
 
+            tooltipRef.current = div
+
             console.log("selected")
             console.log(cat2_index);
 
@@ -331,9 +362,11 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 // d3.select(this).transition().duration('50').attr('opacity', '.85');
                 div.transition().duration('50').style('opacity', 1);
 
-                div.html(`<strong><u> ${d.Country}</u></strong><br/>${xLabelElement}: ${Math.round(d[cat1] * 100)/100}<br/>${yLabelElement}: ${Math.round(d[cat2[cat2_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
-                    .style("left", (event.pageX + 10) + "px")
-                    .style("top", (event.pageY - 15) + "px");
+                createToolip(div, d, event)
+
+                // div.html(`<strong><u> ${d.Country}</u></strong><br/>${xLabelElement}: ${Math.round(d[cat1] * 100)/100}<br/>${yLabelElement}: ${Math.round(d[cat2[cat2_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
+                //     .style("left", (event.pageX + 10) + "px")
+                //     .style("top", (event.pageY - 15) + "px");
 
                 setHoveredCountry([d["Country"]])
 
@@ -539,6 +572,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         
         createScatterPlot(circles, x, y, sumstat2)
 
+        
 
 
 
