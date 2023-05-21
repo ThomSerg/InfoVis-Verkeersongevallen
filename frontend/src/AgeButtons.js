@@ -21,7 +21,7 @@ function AgeButtons({selectedNestedButton, setSelectedNestedButton}) {
 
             refButtonYoung.current.classList.remove("bg-purple-700")
             refButtonYoung.current.classList.add("bg-black")
-        } else {
+        } else if (selectedNestedButton == "young_drivers") {
             refButtonAll.current.classList.remove("bg-purple-700")
             refButtonAll.current.classList.add("bg-black")
 
