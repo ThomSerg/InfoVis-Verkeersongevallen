@@ -22,7 +22,7 @@ function Alcohol({
     setSelectedCountry,
   }) {
 
-  const [selectedNestedButton, setSelectedNestedButton] = useState("nestedButton1");
+  const [selectedNestedButton, setSelectedNestedButton] = useState("all_drivers");
 
 
 
