@@ -1,8 +1,12 @@
-.chartTitle {
+/* .chartTitle {
     font-size: 24px;
     text-align: center;
     padding-top: 10px;
     padding-bottom: 30px;
     font-weight: bold;
     transform: translateY(5px);
-  }
+  } */
+
+.card {
+  background-color: var(--color1);
+}

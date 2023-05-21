@@ -1,10 +1,14 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
 import data2 from "../europe_gov.csv";
+import _uniqueId from 'lodash/uniqueId';
+import responsivefy from "../utils/responsify";
 
 import './StackedBarChart.css'
 
 function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
+
+  const id = useRef(_uniqueId('stacked-bar-'))
 
   // Reference to the SVG
   const svgRef = useRef(null);
@@ -13,6 +17,14 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
   // State holding a lock for graph updates
   const [updateLock, setUpdateLock] = useState(false);
+
+
+  const promilleColor = new Map();
+    promilleColor.set("0.0", "var(--color-0-promille)")
+    promilleColor.set("0.2", "var(--color-2-promille)")
+    promilleColor.set("0.4", "var(--color-4-promille)")
+    promilleColor.set("0.5", "var(--color-5-promille)")
+    promilleColor.set("0.8", "var(--color-8-promille)")
 
 
 
@@ -30,10 +42,13 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
    * * * * * * * * * */
   useEffect(() => {
     // append the svg object to the body of the page
-    setSvg(d3.select(svgRef.current)
+    setSvg(d3.select("#" + id.current)
               .append("svg")
               .attr("width", width + margin.left + margin.right)
               .attr("height", height + margin.top + margin.bottom)
+
+              .call(responsivefy)
+
               .append("g")
               .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
             );
@@ -58,10 +73,9 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
 
   useEffect(() => {
-    
     if (svg) {
 
-    const colors = ["#e41a1c", "#377eb8", "#4daf4a", "#984ea3", "#ff7f00", "#ffff33"];
+    const colors = ["#724d3d ", "#916e54", "#b0886b", "#d0a281", "#e9b897", "#fdc4ac"];
     
     d3.csv(data2).then(data => { 
       
@@ -150,7 +164,7 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
       .attr('y', height / 2 - halfBarHeight)
       .attr('height', barHeight)
       .attr('width', 0)
-      .style('fill', (d, i) => colors[i])
+      .style('fill', (d, i) => promilleColor.get(d.label))
 
       .transition()
       .duration(delay)
@@ -169,21 +183,6 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
       .transition()
       .duration(delay)
       .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
-
-    join.append('text')
-      .attr('class', 'text-label')
-      .attr('text-anchor', 'middle')
-      .attr('x', d => xScale(0))
-      .attr('y', function(d,i) {return i%2 == 0 ? (height/2) - halfBarHeight*1.1 : (height/2) + halfBarHeight*1.3})
-      .text(d => d3.format('.1f')(d.label) + ' \u2030')
-      .style('fill', (d,i) => colors[i])
-
-      .transition()
-      .duration(delay)
-      .attr('x', d => xScale(d.cumulative) + xScale(d.value) / 2)
-
-      
-
     });
   }
   }, [cat, svg]);
@@ -213,7 +212,7 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
 
   return (
-    <svg ref={svgRef} width="600" height="500"/>
+    <div id={id.current}/>
   );
 }
 

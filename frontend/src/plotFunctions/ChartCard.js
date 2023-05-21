@@ -1,6 +1,8 @@
 import React from 'react';
 import { Card, Layout, Space } from 'antd';
 
+import { Grid, Container } from '@mantine/core';
+
 import './ChartCard.css'
 
 function ChartCard({children, title="Unknown title"}) {
@@ -8,15 +10,15 @@ function ChartCard({children, title="Unknown title"}) {
     const width = 300
 
     return (
-        <div>
-        <Card style={{ backgroundColor: "lightgray", marginBottom: "0px" }}> 
-          
+
+        <Card className="card"> 
             <div className="chartTitle">{title}</div> 
-            <div ></div>
-            {children}
+            <div >
+                {children}
+            </div>
 
         </Card>
-        </div>
+   
       );
 }
 

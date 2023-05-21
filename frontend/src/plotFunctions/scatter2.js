@@ -4,6 +4,9 @@ import './scatter2.css';
 import * as d3 from 'd3';
 import data2 from '../europe_gov.csv';
 import * as ss from 'simple-statistics'
+import _uniqueId from 'lodash/uniqueId';
+
+import responsivefy from "../utils/responsify";
 
 
 
@@ -38,6 +41,10 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
       setData(d);
   })
 
+  const id = useRef(_uniqueId('scatter-'))
+
+  console.log("test")
+
   useEffect(() => {
     // Set the dimensions and margins of the graph
     //const margin = { top: 10, right: 30, bottom: 60, left: 60 };
@@ -45,7 +52,22 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     //const height = 600 - margin.top - margin.bottom;
 
         // Set the dimensions and margins of the graph
-    
+    const margin = { top: 10, right: 30, bottom: 60, left: 60 };
+    const widthPlot = width - margin.left - margin.right;
+    const heightPlot = height - margin.top - margin.bottom;
+
+    console.log(id.current)
+
+    // Append the SVG object to the body of the pageheight: "550px"
+    const svg = d3.select("#" + id.current)
+      .append("svg")
+      .attr('width', widthPlot + margin.left + margin.right)
+      .attr('height', heightPlot + margin.top + margin.bottom)
+      .call(responsivefy) // tada!
+
+
+      .append('g')
+      .attr('transform', `translate(${margin.left}, ${margin.top})`);
     
 
     // Read the data
@@ -256,25 +278,18 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
 
 
     const zoomInButton = plotGroup.append('g')
-    .attr('class', 'zoom-button')
-    .attr('transform', `translate(${widthPlot - 10}, ${0})`);
+      .attr('class', 'zoom-button')
+      .attr('transform', `translate(${widthPlot - 10}, ${0})`);
 
     zoomInButton.append('rect')
     .attr('width', 20)
     .attr('height', 20)
-    //.attr('rx', 5)
-    //.attr('ry', 5)
-    .style('fill', 'grey')
-    .style('cursor', 'pointer')
     .on('click', handleZoomInClick);
 
     zoomInButton.append('text')
     .attr('x', 10)
     .attr('y', 15)
     .attr('text-anchor', 'middle')
-    .style('fill', 'white')    // Append the zoom button
-    .style('font-size', '15px')
-    .style('pointer-events', 'none')
     .text('+');
 
 
@@ -285,19 +300,12 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     zoomOutButton.append('rect')
     .attr('width', 20)
     .attr('height', 20)
-    //.attr('rx', 5)
-    //.attr('ry', 5)
-    .style('fill', 'grey')
-    .style('cursor', 'pointer')
     .on('click', handleZoomOutClick);
 
     zoomOutButton.append('text')
     .attr('x', 10)
     .attr('y', 15)
     .attr('text-anchor', 'middle')
-    .style('fill', 'white')    // Append the zoom button
-    .style('font-size', '15px')
-    .style('pointer-events', 'none')
     .text('-');
     
 
@@ -535,8 +543,8 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
 
   return (
     <>
-    <div style={{ width: width }} className="scatterTitle">{title}</div>
-    <svg ref={svgRef}></svg>
+    {/* <div style={{ width: width }} className="scatterTitle">{title}</div> */}
+    <div id={id.current}></div>
     </>
   );
 

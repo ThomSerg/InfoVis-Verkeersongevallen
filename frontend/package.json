@@ -3,22 +3,31 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@emotion/react": "^11.11.0",
     "@fontsource/source-sans-pro": "^4.5.11",
+    "@mantine/core": "^6.0.11",
+    "@mantine/hooks": "^6.0.11",
+    "@tabler/icons": "^2.19.0",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@testing-library/user-event": "^13.5.0",
     "antd": "^5.4.0",
     "d3": "^7.8.4",
+    "d3-geo": "^3.1.0",
+    "d3-selection": "^3.0.0",
     "d3-tip": "^0.9.1",
     "file-system": "^2.2.2",
     "fs": "^0.0.1-security",
     "leaflet": "^1.9.3",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-fit-to-viewport": "^0.1.1",
     "react-leaflet": "^4.2.1",
-    "web-vitals": "^2.1.4",
     "react-scripts": "^5.0.1",
-    "simple-statistics": "^7.8.3"
+    "react-usestateref": "^1.0.8",
+    "simple-statistics": "^7.8.3",
+    "tabler-icons-react": "^1.56.0",
+    "web-vitals": "^2.1.4"
   },
   "scripts": {
     "start": "react-scripts start",
@@ -43,5 +52,10 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.3.2",
+    "autoprefixer": "^10.4.7",
+    "postcss": "^8.4.14"
   }
 }

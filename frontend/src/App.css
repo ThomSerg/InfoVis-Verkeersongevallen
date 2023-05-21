@@ -1,43 +1,38 @@
+/*@tailwind base;*/
+
+@tailwind components;
+@tailwind utilities; 
+
+:root {
+  --backgroundColor: #F6F1F1;
+  --color1: #AFD3E2;
+  --color2: #19A7CE;
+  --color3: #146C94;
+
+  --color-0-promille: #724d3d; 
+  --color-2-promille: #916e54;
+  --color-4-promille: #b0886b;
+  --color-5-promille: #d0a281; 
+  --color-8-promille: #e9b897;
+
+  --color-hover: #d68f13;
+  --color-selected: #bf584d;
+}
+
+
+
 .App {
   text-align: center;
 }
 
-
-
-button {
-  background-color: #565c5e ;
-  color: #dfdbd8;
-  padding: 10px;
-  border-radius: 20px;
-  cursor: pointer;
-  margin-left: 5px;
-  margin-right: 5px;
-  width: 100px;
-  transition-duration: 400ms;
-}
-
-button:hover {
-  color: #565c5e ;
-  background-color: #dfdbd8 ;
-  transition-duration: 400ms;
-}
-
-
-.buttonContainer {
-   justify-content: "space-between";
-   margin-bottom: 15px;
-   border-bottom: 10px solid #565c5e ;
-   padding-bottom: 15px;
-}
-
-h1 {
+/* h1 {
   font-weight: 1000;
   text-decoration: underline;
   color: #565c5e ;
-}
+} */
 
 body {
-  background-color: #dfdbd8;
+  background-color: var(--backgroundColor);
 }
 
 div.tooltip-hover {
@@ -51,4 +46,73 @@ div.tooltip-hover {
   pointer-events: none;
   font-size: 1rem;
 }
+
+.verticalLine {
+  border-left: thick solid #ff0000;
+}
+
+.filled {
+  fill: url(#mygrad);
+}
+
+.svg-container {
+  display: inline-block;
+  position: relative;
+  width: 100%;
+  padding-bottom: 100%; /* aspect ratio */
+  vertical-align: top;
+  overflow: hidden;
+}
+
+.svg-content-responsive {
+  display: inline-block;
+  position: absolute;
+  top: 10px;
+  left: 0;
+}
+
+
+
+
+
+
+
+/* button {
+  background-color: #565c5e;
+  color: #dfdbd8;
+  padding: 10px;
+  border-radius: 20px;
+  cursor: pointer;
+  margin-left: 5px;
+  margin-right: 5px;
+  width: 100px;
+  transition-duration: 400ms;
+  /* Add box-shadow for a 3D effect */
+  /* box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
+} */ */
+
+/* button:hover {
+  color: #565c5e;
+  background-color: var(--backgroundColor);
+  transition-duration: 400ms;
+} */
+
+/* Define the button style when it is pressed */
+.buttonContainer button.active {
+  background-color: #292929;
+  transition-duration: 400ms;
+  /* Add a lower opacity to create a background effect */
+  opacity: 0.8;
+  box-shadow: none;
+}
+
+.buttonContainer {
+  justify-content: space-between;
+  margin-bottom: 15px;
+  border-bottom: 10px solid #565c5e;
+  padding-bottom: 15px;
+}
+
+
+
 

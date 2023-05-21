@@ -1,10 +1,12 @@
 import React, { useRef, useEffect, useState } from "react";
 import * as d3 from "d3";
 
-function Scatter({data}) {
+function Scatter({data, hoveredCountry}) {
     
    // const [data] = useState([[90,20], [20,100], [66,44],[53,80],[24,182],[80,72],[10,76],[33,150],[100,15]]);
     const svgRef = useRef();
+
+    console.log("test")
 
   useEffect(() => {
     const w = 400;
