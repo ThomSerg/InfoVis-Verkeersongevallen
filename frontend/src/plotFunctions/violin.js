@@ -303,12 +303,13 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             svg.append("g").call( d3.axisLeft(y) )
             svg.append("text")
                 .attr("class", "y-label")
+                .attr("id", id.current + "-y-label")
                 //.style("font", legend_font_size+"px times")
                 .attr("text-anchor", "end")
                 .attr("y", -45)
                 .attr("dy", ".75em")
                 .attr("transform", "rotate(-90)")
-                .text(yLabel);
+                .text(yLabel[cat2_index]);
 
             // Build and Show the X scale. It is a band scale like for a boxplot: each group has an dedicated RANGE on the axis. This range has a length of x.bandwidth
             var x = xScale(x_values)  
@@ -617,7 +618,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         createScatterPlot(circles, x, y, sumstat2)
 
         
-
+        d3.select("#" + id.current + "-y-label").transition().text(yLabel[cat2_index]);
 
 
 
