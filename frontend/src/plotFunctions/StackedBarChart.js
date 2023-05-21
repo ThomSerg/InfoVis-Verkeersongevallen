@@ -19,6 +19,14 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
   const [updateLock, setUpdateLock] = useState(false);
 
 
+  const promilleColor = new Map();
+    promilleColor.set("0.0", "var(--color-0-promille)")
+    promilleColor.set("0.2", "var(--color-2-promille)")
+    promilleColor.set("0.4", "var(--color-4-promille)")
+    promilleColor.set("0.5", "var(--color-5-promille)")
+    promilleColor.set("0.8", "var(--color-8-promille)")
+
+
 
 
   var margin = { top: 10, right: 30, bottom: 30, left: 40 };
@@ -156,7 +164,7 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
       .attr('y', height / 2 - halfBarHeight)
       .attr('height', barHeight)
       .attr('width', 0)
-      .style('fill', (d, i) => colors[i])
+      .style('fill', (d, i) => promilleColor.get(d.label))
 
       .transition()
       .duration(delay)

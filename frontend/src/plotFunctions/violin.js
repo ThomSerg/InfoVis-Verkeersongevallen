@@ -44,6 +44,18 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     var myColor = d3.scaleSequential()
                     .interpolator(d3.interpolateInferno)
                     .domain([0,cat2_upper[cat2_index]])
+    
+    var x_color = ["var(--color-0-promille)", "var(--color-2-promille)", "var(--color-4-promille)", "var(--color-5-promille)", "var(--color-8-promille)"]
+
+    const promilleColor = new Map();
+    promilleColor.set("0.0", "var(--color-0-promille)")
+    promilleColor.set("0.2", "var(--color-2-promille)")
+    promilleColor.set("0.4", "var(--color-4-promille)")
+    promilleColor.set("0.5", "var(--color-5-promille)")
+    promilleColor.set("0.8", "var(--color-8-promille)")
+
+
+
     var x_color = ["#724d3d ", "#916e54", "#b0886b", "#d0a281", "#e9b897", "#fdc4ac"];
 
     const [data, setData] = useState(null);
@@ -119,7 +131,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
         if (selectedCountry.length == 0) {
             a.attr("r", 5)
-            .style("fill", function(d){ return(myColor(d[cat2[cat2_index]]))})
+            .style("fill", function(d){ console.log(d[cat1]); return(promilleColor.get(d[cat1]))})
         }
 
         svg.selectAll(".data-point").on('mouseover', function(event, d) {
@@ -503,7 +515,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         hcs.forEach(hc => {
             svg
             .select(("#" + hc).replace(/\s/g, ''))
-            .style("fill", function(d){ return(myColor(d[cat2[cat2_index]])) });
+            .style("fill", function(d){ return(promilleColor.get(d[cat1])) });
         })
     }
 
@@ -511,14 +523,14 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         hcs.forEach(hc => {
             svg
             .select(("#" + hc).replace(/\s/g, ''))
-            .style("fill", function(d){ return(myColor(d[cat2[cat2_index]])) });
+            .style("fill", function(d){ return(promilleColor.get(d[cat1])) });
         })
     }
 
     function colorAll(svg) {
         console.log("color all")
         svg.selectAll(".data-point")
-                    .style("fill", function(d){ return(myColor(d[cat2[cat2_index]])) })
+                    .style("fill", function(d){ return(promilleColor.get(d[cat1])) })
                     .attr("r", 5);
     }
 
