@@ -214,7 +214,7 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry, cat_selected, 
       .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
     });
   }
-  }, [cat, svg]);
+  }, [svg, cat_index]);
 
 
   /* * * * * * * * * *
@@ -236,7 +236,7 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry, cat_selected, 
           colorAll();
         }
     }
-  }, [svg, hoveredCountry, updateLock, data])
+  }, [svg, hoveredCountry, selectedCountry, updateLock, cat, cat_index])
 
 
 
