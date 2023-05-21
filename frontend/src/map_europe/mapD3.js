@@ -250,6 +250,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     // }
 
     function clearSelection(selection) {
+        svg.selectAll("path")
+            .style("opacity", 1);
         const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])
         selection
             .style("fill", function(c) {
@@ -277,12 +279,14 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     // }
 
     function hoverSelection(selection) {
+
         selection
-            .style("opacity", 1)
-            //.style("stroke", "blue")
-            .style("fill","blue")
-            //.style("stroke-width", 4);
-    }
+          .style("opacity", 1)
+          .style("fill", "blue");
+      }
+    
+      
+      
 
     function selectCountryByName(countryName) {
         countryName.forEach(cn => {
@@ -315,14 +319,17 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     .style("opacity", 0);
 
     function onHover(event,d) {
+
         
         updateLockRef.current = true
         setHoveredCountry([d.properties["NAME"]])
         hoverCountryByName([d.properties["NAME"]]);
+        // Set opacity of hovered country to 1
+
         //Makes the new div appear on hover:
         div.transition()
-        .duration(50)
-        .style("opacity", 1);
+            .duration(50)
+            .style("opacity", 1);
         div.html(`<strong><u>${d.properties["NAME"]}</u></strong><br/>${"Road fatalities"}: ${Math.round(countryData[d.properties["NAME"]] * 100)/100}<br/>`)
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 15) + "px");
@@ -330,6 +337,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     
     function offHover(d) {
         setHoveredCountry([]);
+        svg.selectAll("path")
+            .style("opacity", 1);
         clearCountryByName([d.properties["NAME"]])
         if (selectedCountry.length == 0) {
             updateLockRef.current = false
@@ -340,12 +349,21 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     }
 
     function onClick(d) {
-        var a = selectedCountryRef.current
-        selectedCountryRef.current = []
-        clearCountryByName(a)
-        selectedCountryRef.current = [d.properties["NAME"]]
-        setSelectedCountry([d.properties["NAME"]])
-        selectCountryByName([d.properties["NAME"]])
+        var a = selectedCountryRef.current;
+        selectedCountryRef.current = [];
+        if (d && d.properties && d.properties["NAME"]) {
+            /*svg.selectAll("path")
+                .style("opacity", 0.5);*/
+            selectedCountryRef.current = [d.properties["NAME"]];
+            setSelectedCountry([d.properties["NAME"]]);
+            selectCountryByName([d.properties["NAME"]]);
+            
+        } else {
+            setSelectedCountry([]);
+            selectCountryByName([]);
+        }
+
+        clearCountryByName(a);
     }
     
 
@@ -360,6 +378,9 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 .attr("stroke", "black")
                 .attr("stroke-width", "2px")
                 .attr("fill", "transparent")
+                .on("click", function(event) {
+                    onClick(null); // Pass null or any other value to indicate no country is clicked
+                  });
 
             svg.append("g")
                 .selectAll("path")
