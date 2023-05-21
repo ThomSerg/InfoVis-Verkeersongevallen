@@ -57,7 +57,7 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry}) {
 
   function selectLabels(labels) {
     svg.selectAll('.rect-stacked').filter(function(rs) {return labels.includes(rs.label) & rs.label != ""}).style('opacity', '1');
-    svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label) & rs.label != ""}).style('opacity', '.5');
+    svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label) & rs.label != ""}).style('opacity', '.2');
   }
 
   function selectCountries(countries, data) {
