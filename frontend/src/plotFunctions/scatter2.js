@@ -76,36 +76,6 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     const xname = varXAxis.split(" (")[0];
     const yname = varYaxis.split(" (")[0];
 
-    const circles = svg
-        .selectAll("indPoints")
-        .data(data)
-        .enter()
-        .append("circle")
-
-        .attr("class", "data-point")
-        .attr("id", function(d) {return d["Country"].replace(/\s/g, '')})
-
-    circles.on('mouseover', function(event, d) {
-
-      div.transition().duration('50').style('opacity', 1);
-      setHoveredCountry([d["Country"]])
-
-    })
-    .on('mouseout', function(d,i) {
-        // d3.select(this).transition().duration('50').attr('opacity', '1')
-        div.transition().duration('50').style('opacity', 0)
-
-        setHoveredCountry([])
-
-        setUpdateLock(false);
-    })
-
-    .on('click', function(event, d) {
-        console.log(d)
-        setSelectedCountry([d["Country"]])
-        console.log(selectedCountry)
-    })
-
       
 
     // x values never on the axis itself
@@ -215,6 +185,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
         })
         .on("click", function (event, d){
             d3.select(this).transition().duration(200).style("stroke", "red");
+            setSelectedCountry([d["Country"]])
         });
 
 
@@ -255,7 +226,6 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     .attr('text-anchor', 'middle')
     .text('+');
 
-
     const zoomOutButton = plotGroup.append('g')
     .attr('class', 'zoom-button')
     .attr('transform', `translate(${widthPlot - 10}, ${20})`);
@@ -294,14 +264,6 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
         .duration(1000) // Set the duration of the transition (in milliseconds)
         .attr('cx', d => newXScale(d[cat1]))
         .attr('cy', d => newYScale(d[cat2]));
-    
-      /*svg.selectAll('path')
-        .transition()
-        .duration(1000)
-        .attr('d', d3.line()
-          .x(d => newXScale(d[0]))
-          .y(d => newYScale(d[1]))
-        );*/
 
       // Update the x-axis
       xAxisGroup
@@ -353,13 +315,6 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
         .attr('cx', d => newXScale(d[cat1]))
         .attr('cy', d => newYScale(d[cat2]));
     
-      /*svg.selectAll('path')
-        .transition()
-        .duration(1000)
-        .attr('d', d3.line()
-          .x(d => newXScale(d[0]))
-          .y(d => newYScale(d[1]))
-        );*/
 
       // Update the x-axis
       xAxisGroup
@@ -456,35 +411,29 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
       })
   }
 
-  function selectMulti(hcs) {
-    hcs.forEach(hc => {
-        svg
-        .select(("#" + hc).replace(/\s/g, ''))
-        .style("fill", "#9d7463");
-    })
-  }
-
   function colorAll(svg) {
     svg.selectAll(".data-point")
                 .style("fill", "#9d7463")
+                .attr("r", 5);
   }
 
   function grayout(svg) {
     svg.selectAll(".data-point")
             .style("fill", "#ABACAD")
+            .attr("r", 5);
   }
 
   useEffect(() => {
-    if (svg && (!updateLock)) {
-      // if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
+    if (svg) {
+      if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
           grayout(svg)
-          // selectCountry(selectedCountry)
-          // hoverCountry(hoveredCountry)
-      // } else {
+          selectCountry(selectedCountry)
+          hoverCountry(hoveredCountry)
+      } else {
           colorAll(svg);
-      // }
+      }
   }
-  }, [svg, hoveredCountry])
+  }, [hoveredCountry,  selectedCountry])
 
 
   return (
