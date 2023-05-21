@@ -504,16 +504,16 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         
         if (svg && (!updateLockRef.current)) {
             //selectedCountryRef.current = selectedCountry
-            if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
-                clearMap();
-                hoverCountryByName(hoveredCountry)
-                selectCountryByName(selectedCountry)
+            //if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
+            clearMap();
+            hoverCountryByName(hoveredCountry)
+            selectCountryByName(selectedCountry)
                 
                 
-            } else {
-                clearMap();
-                //fillMap();
-            }
+            // } else {
+            //     clearMap();
+            //     //fillMap();
+            // }
         }
     }, [svg, hoveredCountry, selectedCountry])
 
