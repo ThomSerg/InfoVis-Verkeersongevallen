@@ -363,7 +363,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             
 
         } else {
-            d3.select("#legend_line").style("visibility", "hidden")
+            d3.select("#legend_line_selected").style("visibility", "hidden")
                 
         }
         
