@@ -1,14 +1,42 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import './scatter2.css';
 import * as d3 from 'd3';
-import data from '../europe_gov.csv';
+import data2 from '../europe_gov.csv';
 import * as ss from 'simple-statistics'
 
 
 
 function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown variable", varYaxis = "Unknown variable", title = "Unknown title", setHoveredCountry, hoveredCountry}) {
+
+
   const svgRef = useRef(null);
+  // State holding the initialised SVG
+  const [svg, setSvg] = useState(null);
+  // State holding a lock for graph updates
+  const [updateLock, setUpdateLock] = useState(false);
+
+  const margin = { top: 10, right: 30, bottom: 60, left: 60 };
+  const widthPlot = width - margin.left - margin.right;
+  const heightPlot = height - margin.top - margin.bottom;
+
+
+    // Append the SVG object to the body of the pageheight: "550px"
+
+  useEffect(() => {
+    setSvg(d3.select(svgRef.current)
+    .attr('width', widthPlot + margin.left + margin.right)
+    .attr('height', heightPlot + margin.top + margin.bottom)
+    .append('g')
+    .attr('transform', `translate(${margin.left}, ${margin.top})`));
+
+
+  },[]);
+
+  const [data, setData] = useState(null);
+  d3.csv(data2).then(d => { 
+      setData(d);
+  })
 
   useEffect(() => {
     // Set the dimensions and margins of the graph
@@ -17,21 +45,11 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     //const height = 600 - margin.top - margin.bottom;
 
         // Set the dimensions and margins of the graph
-    const margin = { top: 10, right: 30, bottom: 60, left: 60 };
-    const widthPlot = width - margin.left - margin.right;
-    const heightPlot = height - margin.top - margin.bottom;
-
-
-    // Append the SVG object to the body of the pageheight: "550px"
-    const svg = d3.select(svgRef.current)
-      .attr('width', widthPlot + margin.left + margin.right)
-      .attr('height', heightPlot + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
+    
     
 
     // Read the data
-    d3.csv(data).then(data => {
+    d3.csv(data2).then(data => {
       //console.log(data)
 
     // Filter data to exclude empty values
@@ -46,7 +64,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
 
     // x values never on the axis itself
     const xDiff = d3.max(data, d => parseFloat(d[cat1])) - d3.min(data, d => d[cat1]);
-    const xMin = d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff;
+    const xMin = 0;//d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff;
     const xMax = d3.max(data, d => parseFloat(d[cat1])) + 0.05 * xDiff;
 
     console.log("xmin and xmax values are:");
@@ -54,39 +72,34 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
 
 
     // Compute the domain dynamically based on the data
-    const x = d3.scaleLinear()
+    let x = d3.scaleLinear()
       //.domain(d3.extent(data, d => d[cat1]))
       .domain([xMin, xMax])
       .range([0, widthPlot]);
 
     // y values never on the axis itself
     const yDiff = d3.max(data, d => parseFloat(d[cat2])) - d3.min(data, d => d[cat2]);
-    const yMin = d3.min(data, d => parseFloat(d[cat2])) - 0.05 * yDiff;
+    const yMin = 0;//d3.min(data, d => parseFloat(d[cat2])) - 0.05 * yDiff;
     const yMax = d3.max(data, d => parseFloat(d[cat2])) + 0.05 * yDiff;
     console.log("Ymin and Ymax values are:");
     console.log(yMin, yMax);
 
-    const y = d3.scaleLinear()
+    let y = d3.scaleLinear()
     .domain([yMin, yMax])
     .range([heightPlot , 0]);
 
-      const dataArray = data.map(d => [Number(d[cat1]), Number(d[cat2])]);
-      console.log(dataArray);
+      
+    // Create the x-axis and y-axis groups
+    let xAxisGroup = svg.append('g')
+    .attr('class', 'x-axis')
+    .attr('transform', `translate(0, ${heightPlot})`)
+    .call(d3.axisBottom(x));
 
-      const regression = ss.linearRegression(dataArray);
-      console.log(regression);
-    // Get slope and intercept values
-    const slope = regression.m;
-    const intercept = regression.b;
+    let yAxisGroup = svg.append('g')
+    .attr('class', 'y-axis')
+    .call(d3.axisLeft(y));;
 
-    // Calculate predicted y values for each x value in dataset
-    const yPredicted = dataArray.map(d => slope * d[0] + intercept);
-
-      svg.append('g')
-        .attr('transform', `translate(0, ${heightPlot})`)
-        .text("test")
-        .call(d3.axisBottom(x));
-
+   
 
       svg.append("text")
         .attr("class", "x label")
@@ -105,34 +118,13 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
           .text(varYaxis);
       
 
-      svg.append('g')
-        .call(d3.axisLeft(y));
+
 
 
       // setting up all the hover effects
       var div = d3.select("body").append("div")
         .attr("class", "tooltip-scatter")
         .style("opacity", 0);
-
-      function mouseover( d) {
-        d3.select(this).transition()
-          .duration('50')
-          .attr('opacity', '.5');
-
-        div.transition()
-          .duration(50)
-          .style("opacity", 1);
-      }
-
-      function mouseout(d) {
-        d3.select(this).transition()
-          .duration('50')
-          .attr('opacity', '1');
-
-        div.transition()
-          .duration('50')
-          .style("opacity", 0);
-      }
 
 
 
@@ -172,33 +164,264 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
         .on("click", function (event, d){
             d3.select(this).transition().duration(200).style("stroke", "red");
         });
-      
-      svg.append("path")
-      .datum(dataArray)
-      .attr("fill", "none")
-      .attr("stroke", "steelblue")
-      .attr("stroke-width", 2)
-      .attr("d", d3.line()
-      .x(d => x(d[0]))
-      .y((d, i) => y(yPredicted[i]))
-      );
 
+ 
+
+
+      svg.selectAll('dot')
+        .data(data)
+        .enter()
+        .filter((d) => {
+          return d.Country == hoveredCountry})
+        .append('circle')
+        .attr('cx', d => x(d[cat1]))
+        .attr('cy', d => y(d[cat2]))
+        .attr('r', 4)
+        .style('fill', '#FFFF00')
+        .on("click", function (event, d){
+            d3.select(this).transition().duration(200).style("stroke", "red");  
+        });
+
+
+        const dataArray = data.map(d => [Number(d[cat1]), Number(d[cat2])]);
+        console.log(dataArray);
+        
+        const regression = ss.linearRegression(dataArray);
+        console.log(regression);
+        // Get slope and intercept values
+        const slope = regression.m;
+        const intercept = regression.b;
+
+        function getTrendLinedata(x, yDomain) {
+          // Calculate the minimum and maximum x-values from your data
+          let minXValue = d3.min(dataArray, d => d[0]);
+          let maxXValue = d3.max(dataArray, d => d[0]);
+        
+          // Calculate the corresponding y-values on the line for the x-axis endpoints
+          let minYValue = slope * minXValue + intercept;
+          let maxYValue = slope * maxXValue + intercept;
+        
+          // calculates the min and max xvalues so that line stays within domain
+          const xMinDomain = Math.min((yDomain.domain()[0] / slope - intercept / slope), (yDomain.domain()[1] / slope - intercept / slope));
+          const xMaxDomain = Math.max((yDomain.domain()[0] / slope - intercept / slope), (yDomain.domain()[1] / slope - intercept / slope));
+        
+          // now replace the min and max x values if needed
+          if (xMinDomain > minXValue) {
+            minXValue = xMinDomain;
+            minYValue = slope * minXValue + intercept;
+          }
+        
+          if (xMaxDomain < maxXValue) {
+            maxXValue = xMaxDomain;
+            maxYValue = slope * maxXValue + intercept;
+          }
+        
+          console.log("minXDomain is " + xMinDomain);
+          console.log("maxXDomain is " + xMaxDomain);
+        
+          // Define the line endpoints based on the calculated values
+          const lineData = [
+            [minXValue, minYValue],
+            [maxXValue, maxYValue]
+          ];
+          console.log("Line data is" + lineData);
+        
+          return lineData;
+        }
+        
+
+  
+        // Define the line endpoints based on the calculated values
+        const lineData = getTrendLinedata(x,y);
+  
+        let trendline = svg.append("path")
+          .datum(lineData)
+          .attr("fill", "none")
+          .attr("stroke", "steelblue")
+          .attr("stroke-width", 2)
+          .attr("d", d3.line()
+            .x(d => x(d[0]))
+            .y(d => y(d[1]))
+        );
+      
+
+
+
+    // Append the zoom button
+     // Append a group element to hold the scatterplot and zoom button
+    const plotGroup = svg.append('g');
+
+
+    
+
+
+    const zoomInButton = plotGroup.append('g')
+    .attr('class', 'zoom-button')
+    .attr('transform', `translate(${widthPlot - 10}, ${0})`);
+
+    zoomInButton.append('rect')
+    .attr('width', 20)
+    .attr('height', 20)
+    //.attr('rx', 5)
+    //.attr('ry', 5)
+    .style('fill', 'grey')
+    .style('cursor', 'pointer')
+    .on('click', handleZoomInClick);
+
+    zoomInButton.append('text')
+    .attr('x', 10)
+    .attr('y', 15)
+    .attr('text-anchor', 'middle')
+    .style('fill', 'white')    // Append the zoom button
+    .style('font-size', '15px')
+    .style('pointer-events', 'none')
+    .text('+');
+
+
+    const zoomOutButton = plotGroup.append('g')
+    .attr('class', 'zoom-button')
+    .attr('transform', `translate(${widthPlot - 10}, ${20})`);
+
+    zoomOutButton.append('rect')
+    .attr('width', 20)
+    .attr('height', 20)
+    //.attr('rx', 5)
+    //.attr('ry', 5)
+    .style('fill', 'grey')
+    .style('cursor', 'pointer')
+    .on('click', handleZoomOutClick);
+
+    zoomOutButton.append('text')
+    .attr('x', 10)
+    .attr('y', 15)
+    .attr('text-anchor', 'middle')
+    .style('fill', 'white')    // Append the zoom button
+    .style('font-size', '15px')
+    .style('pointer-events', 'none')
+    .text('-');
+    
+
+
+
+    function handleZoomInClick() {
+      // Calculate the new domain values based on the desired zoom level
+      const xminD = d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff;
+      const yminD = d3.min(data, d => parseFloat(d[cat2])) - 0.05 * yDiff;
+    
+      // Compute the new scales with the updated domain
+      let newXScale = d3.scaleLinear()
+        .domain([xminD, xMax])
+        .range([0, widthPlot]);
+    
+      let newYScale = d3.scaleLinear()
+        .domain([yminD, yMax])
+        .range([heightPlot, 0]);
+    
+      // Update the scatterplot elements with the new scales
+      svg.selectAll('circle')
+        .transition()
+        .duration(1000) // Set the duration of the transition (in milliseconds)
+        .attr('cx', d => newXScale(d[cat1]))
+        .attr('cy', d => newYScale(d[cat2]));
+    
+      /*svg.selectAll('path')
+        .transition()
+        .duration(1000)
+        .attr('d', d3.line()
+          .x(d => newXScale(d[0]))
+          .y(d => newYScale(d[1]))
+        );*/
+
+      // Update the x-axis
+      xAxisGroup
+      .transition()
+      .duration(1000)
+      .call(d3.axisBottom(newXScale));
+
+    // Update the y-axis
+      yAxisGroup
+      .transition()
+      .duration(1000)
+      .call(d3.axisLeft(newYScale));
+
+      // Update the line based on the new scales
+      const newLineData = getTrendLinedata(newXScale, newYScale);
+
+      trendline
+        .datum(newLineData)
+        .transition()
+        .duration(1000)
+        .attr('d', d3.line()
+          .x(d => newXScale(d[0]))
+          .y(d => newYScale(d[1]))
+        );
+
+      
+    }
+    
+
+
+    function handleZoomOutClick() {
+      // Calculate the new domain values based on the desired zoom level
+      const xminD = 0;
+      const yminD = 0;
+    
+      // Compute the new scales with the updated domain
+      const newXScale = d3.scaleLinear()
+        .domain([xminD, xMax])
+        .range([0, widthPlot]);
+    
+      const newYScale = d3.scaleLinear()
+        .domain([yminD, yMax])
+        .range([heightPlot, 0]);
+    
+      // Update the scatterplot elements with the new scales
+      svg.selectAll('circle')
+        .transition()
+        .duration(1000) // Set the duration of the transition (in milliseconds)
+        .attr('cx', d => newXScale(d[cat1]))
+        .attr('cy', d => newYScale(d[cat2]));
+    
+      /*svg.selectAll('path')
+        .transition()
+        .duration(1000)
+        .attr('d', d3.line()
+          .x(d => newXScale(d[0]))
+          .y(d => newYScale(d[1]))
+        );*/
+
+      // Update the x-axis
+      xAxisGroup
+      .transition()
+      .duration(1000)
+      .call(d3.axisBottom(newXScale));
+
+    // Update the y-axis
+      yAxisGroup
+      .transition()
+      .duration(1000)
+      .call(d3.axisLeft(newYScale));
+
+      // Update the line based on the new scales
+      const newLineData = getTrendLinedata(newXScale, newYScale);
+
+      trendline
+        .datum(newLineData)
+        .transition()
+        .duration(1000)
+        .attr('d', d3.line()
+          .x(d => newXScale(d[0]))
+          .y(d => newYScale(d[1]))
+        );
+
+      
+    }
 
     });
   }, [cat1,cat2]);
 
   useEffect(() => {
-    const margin = { top: 10, right: 30, bottom: 60, left: 60 };
-    const widthPlot = width - margin.left - margin.right;
-    const heightPlot = height - margin.top - margin.bottom;
 
-
-    // Append the SVG object to the body of the pageheight: "550px"
-    const svg = d3.select(svgRef.current)
-      .attr('width', widthPlot + margin.left + margin.right)
-      .attr('height', heightPlot + margin.top + margin.bottom)
-      .append('g')
-      .attr('transform', `translate(${margin.left}, ${margin.top})`);
     d3.csv(data).then(data => {
 
     data = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
@@ -275,6 +498,39 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     })
     },
     [hoveredCountry]);
+
+  function selectMulti(hcs) {
+    hcs.forEach(hc => {
+        svg
+        .select(("#" + hc).replace(/\s/g, ''))
+        .style("fill", "#9d7463");
+    })
+  }
+
+  function colorAll(svg) {
+    svg.selectAll(".data-point")
+                .style("fill", "#9d7463")
+}
+
+  function grayout(svg) {
+    svg.selectAll(".data-point")
+            .style("fill", "#ABACAD")
+  }
+
+  useEffect(() => {
+    if (svg && (!updateLock)) {
+  
+        if (hoveredCountry.length == 1) {
+            grayout(svg);
+            selectMulti(hoveredCountry)
+        } else if (hoveredCountry.length > 1) {
+            grayout(svg);
+            selectMulti(hoveredCountry)
+        } else {
+            colorAll(svg);
+        }
+    }
+  }, [svg, hoveredCountry])
 
 
   return (

@@ -5,7 +5,7 @@ import {landData} from './europe'
 function Map({setHoveredCountry, hoveredCountry}) {
 
   const onHover=(country)=> {
-    setHoveredCountry(country);
+    setHoveredCountry([country]);
   }
     return (<MapContainer 
         center={[55.287175894140645, 14.90326637107352]}
@@ -40,9 +40,13 @@ function Map({setHoveredCountry, hoveredCountry}) {
       </MapContainer>
 )
 
+function offHover() {
+  setHoveredCountry("");
+}
+
 function drawPolygon(coordinates, country) {
     let color;
-    country == hoveredCountry ? color = '#b5c2c7' : color = '#9d7463';
+    hoveredCountry.includes(country) ? color = '#b5c2c7' : color = '#9d7463';
     return(<Polygon
       pathOptions={{
         fillColor: color,
@@ -68,6 +72,7 @@ function drawPolygon(coordinates, country) {
           })
         },
         mouseout: (e) => {
+          offHover();
           const layer = e.target;
           layer.setStyle({
             fillOpacity: 0.7,
