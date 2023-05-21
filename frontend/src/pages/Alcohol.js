@@ -22,7 +22,7 @@ function Alcohol({
     setSelectedCountry,
   }) {
 
-  const [selectedNestedButton, setSelectedNestedButton] = useState("nestedButton1");
+  const [selectedNestedButton, setSelectedNestedButton] = useState("all_drivers");
 
 
 
@@ -44,7 +44,7 @@ function Alcohol({
         <Grid.Col span={6}>       
           
 
-          <ChartCard title="Allowed promille when driving" > 
+          <ChartCard title="Information" > 
             <D3Card
               hoveredCountry={hoveredCountry}
             />  
@@ -57,11 +57,15 @@ function Alcohol({
           
 
           <ChartCard title="Allowed promille when driving" > 
-            <StackedBarChart 
-              cat="standard_driver" 
+            <StackedBarChart            
               setHoveredCountry={setHoveredCountry} 
               hoveredCountry={hoveredCountry}
-              title = "Allowed promille in blood"
+              cat_selected={selectedNestedButton}
+              selectedCountry={selectedCountry}
+              setSelectedCountry={setSelectedCountry}
+              cat={["standard_driver", "standard_minus_novice"]} 
+
+
             />
           </ChartCard>
           </div>
