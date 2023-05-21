@@ -14,6 +14,22 @@ function AgeButtons({selectedNestedButton, setSelectedNestedButton}) {
 
     // if(cat2_selected === "nestedButton1") {
 
+    useEffect(() => {
+        if (selectedNestedButton == "all_drivers") {
+            refButtonAll.current.classList.add("bg-purple-700")
+            refButtonAll.current.classList.remove("bg-black")
+
+            refButtonYoung.current.classList.remove("bg-purple-700")
+            refButtonYoung.current.classList.add("bg-black")
+        } else {
+            refButtonAll.current.classList.remove("bg-purple-700")
+            refButtonAll.current.classList.add("bg-black")
+
+            refButtonYoung.current.classList.add("bg-purple-700")
+            refButtonYoung.current.classList.remove("bg-black")
+        }
+    }, [selectedNestedButton])
+
     return (
 
         <div>
