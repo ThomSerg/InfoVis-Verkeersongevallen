@@ -10,6 +10,8 @@ import { defaultConfig } from "antd/es/theme/internal";
 import responsivefy from "../utils/responsify";
 import { Container } from "@mantine/core";
 
+//import SVGDeselect from "../../public/deselect.png"
+
 function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry}) {
 
     // Reference to resulting HTML div
@@ -89,28 +91,29 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             .append("div")
             .classed("svg-container", true); 
 
+        var svgMap = d3.select("#map")
+                        .append("svg")
+
+                        .attr('width', width)
+                        .attr('height', height)
+                        .call(responsivefy) // tada!
+
+
+
+                        // .attr("preserveAspectRatio", "xMinYMin meet")
+                        // .attr("viewBox", "0 0 " + " " + (width + margin.left + margin.right).toString() + " " + (height + margin.top + margin.bottom).toString())
+                        // .classed("svg-content-responsive", true)
+
+                        .append("g")
+                        .attr("transform", "translate(" + 0 + "," + 0 + ")")
         setSvg(
-            d3.select("#map")
-                .append("svg")
-
-                .attr('width', width)
-                .attr('height', height)
-                .call(responsivefy) // tada!
-
-
-
-                // .attr("preserveAspectRatio", "xMinYMin meet")
-                // .attr("viewBox", "0 0 " + " " + (width + margin.left + margin.right).toString() + " " + (height + margin.top + margin.bottom).toString())
-                // .classed("svg-content-responsive", true)
-
-                .append("g")
-                .attr("transform", "translate(" + 0 + "," + 0 + ")")
+            svgMap
             )  
 
         var legendWidth = 500; // Adjust the desired width of the legend SVG
         var barWidth = 400; // Adjust the desired width of the bar
 
-        var svg = d3
+        var svgLegend = d3
             .select('#legend')
             .append('svg')
             .attr('width', legendWidth)
@@ -125,7 +128,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
             
 
-        var grad = svg.append('defs')
+        var grad = svgLegend.append('defs')
             .append('linearGradient')
             .attr('id', 'mygrad')
             .attr('x1', '0%')
@@ -172,18 +175,18 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
               return 100 * (i / (numColors - 1)) + '%';
             })
         
-        svg.append('text')
+        svgLegend.append('text')
         .attr('x', minValueTextX)
         .attr('y', 75)
         .text(Math.round(minValue * 100)/100);
         
-        svg.append('text')
+        svgLegend.append('text')
         .attr('x', maxValueTextX)
         .attr('y', 75)
         .text(Math.round(maxValue * 100)/100);
 
         
-        svg.append('rect')
+        svgLegend.append('rect')
             .attr('x', barX)
             .attr('y', 50)
             .attr('width', barWidth)
@@ -191,7 +194,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             //.classed('filled', true)
             .style('fill', 'url(#mygrad)')
             
-        svg.append('text')
+        svgLegend.append('text')
         .attr('text-anchor', 'middle')
         .attr('y', 30)
         .attr('x', barX + 25 +barWidth/ 2)
@@ -209,7 +212,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         .range([barX, barX + barWidth]); // Adjust the range based on the desired width
 
         // Append a group element for the axis
-        const axisGroup = svg.append("g")
+        const axisGroup = svgLegend.append("g")
         .attr("transform", "translate(0, 100)"); // Adjust the position as needed
 
         // Create the axis
@@ -218,8 +221,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         // Append the axis to the group
         axisGroup.call(axis);
 
-   
         }
+        
     }, [countryData])
 
 
@@ -288,6 +291,16 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         countryName.forEach(cn => {
             selectSelection(svg.select(("#" + cn).replace(/\s/g, '')))
         })
+        if (countryName.length != 0) {
+            svg.select("#selection_label").style("visibility", "visible")
+            svg.select("#selection_label_text").transition()
+                    .text(countryName[0]);
+        } else {
+            svg.select("#selection_label").style("visibility", "hidden")
+            svg.select("#selection_label_text").transition()
+                    .text("");
+        }
+        
     }
 
     // function selectCountry(country) {
@@ -343,9 +356,13 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         var a = selectedCountryRef.current
         selectedCountryRef.current = []
         clearCountryByName(a)
-        selectedCountryRef.current = [d.properties["NAME"]]
-        setSelectedCountry([d.properties["NAME"]])
-        selectCountryByName([d.properties["NAME"]])
+        if (a[0] != [d.properties["NAME"]]) {
+            selectedCountryRef.current = [d.properties["NAME"]]
+            setSelectedCountry([d.properties["NAME"]])
+            selectCountryByName([d.properties["NAME"]])
+        } else {
+            setSelectedCountry([])
+        }
     }
     
 
@@ -392,6 +409,25 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                     onClick(d)
                 })
 
+            // svg.append('g')
+            //     .attr("id", "selection_label")
+            //     .style("visibility", "hidden")
+            // .append("svg:image")
+            //     .attr('x', margin.left + 10)
+            //     .attr('y', 30)
+            //     .attr('width', 10)
+            //     .attr('height', 10)
+            //     .attr("xlink:href", "/deselect.png")
+            // .append("text")
+            //     .attr("id", "selection_label_text")
+            //     .attr('x', margin.left + 20)
+            //     .attr('y', 30)
+            //     .text("")
+     
+            
+       
+            
+
             initMap();
 
         }
@@ -403,10 +439,10 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         if (svg && (!updateLockRef.current)) {
             //selectedCountryRef.current = selectedCountry
             if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
-                console.log("fail")
                 clearMap();
                 hoverCountryByName(hoveredCountry)
                 selectCountryByName(selectedCountry)
+                
                 
             } else {
                 clearMap();
