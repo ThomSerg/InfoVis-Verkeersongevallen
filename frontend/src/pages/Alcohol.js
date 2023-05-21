@@ -44,7 +44,7 @@ function Alcohol({
         <Grid.Col span={6}>       
           
 
-          <ChartCard title="Allowed promille when driving" > 
+          <ChartCard title="Information" > 
             <D3Card
               hoveredCountry={hoveredCountry}
             />  
@@ -60,7 +60,6 @@ function Alcohol({
             <StackedBarChart            
               setHoveredCountry={setHoveredCountry} 
               hoveredCountry={hoveredCountry}
-              title = "Allowed promille in blood"
               cat_selected={selectedNestedButton}
               selectedCountry={selectedCountry}
               setSelectedCountry={setSelectedCountry}

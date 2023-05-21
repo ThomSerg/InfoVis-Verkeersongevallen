@@ -6,7 +6,7 @@ import responsivefy from "../utils/responsify";
 
 import './StackedBarChart.css'
 
-function StackedBarChart({cat, setHoveredCountry, hoveredCountry, cat_selected, selectedCountry, setSelectedCountry}) {
+function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selectedCountry, setSelectedCountry, cat}) {
 
   const id = useRef(_uniqueId('stacked-bar-'))
   let cat_index= 0 ;
@@ -74,15 +74,30 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry, cat_selected, 
     svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label) & rs.label != ""}).style('opacity', '.2');
   }
 
+  function selectLabels2(labels) {
+    svg.selectAll('.rect-stacked').filter(function(rs) {return labels.includes(rs.label) & rs.label != ""}).style("fill", function(d){ return('var(--color-selected)') })
+    ;
+  }
+
+  function hoverCountries(countries, data) {
+    // var labels = svg.selectAll('.rect-stacked').filter(function(rs) {return rs.countries.some(c => countries.includes(c))}) //.map(function(d) {return d.label})
+    // console.log(labels)
+    var labels = data.filter(function(d) {return countries.includes(d["Country"])}).map(function(d) {return d[cat[cat_index]]});
+    selectLabels(labels);
+  }
+
   function selectCountries(countries, data) {
     // var labels = svg.selectAll('.rect-stacked').filter(function(rs) {return rs.countries.some(c => countries.includes(c))}) //.map(function(d) {return d.label})
     // console.log(labels)
     var labels = data.filter(function(d) {return countries.includes(d["Country"])}).map(function(d) {return d[cat[cat_index]]});
-    selectLabels(labels)
+    selectLabels2(labels);
   }
 
   function colorAll() {
     svg.selectAll('.rect-stacked').style('opacity', '1');
+  }
+  function resetSelect() {
+    svg.selectAll('.rect-stacked').style('fill', (d, i) => promilleColor.get(d.label));
   }
 
 
@@ -158,7 +173,9 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry, cat_selected, 
 
         selectLabels([d.label]);        
         
-        setHoveredCountry(d.countries)
+        setHoveredCountry(d.countries);
+        console.log("testHover1")
+        console.log(hoverCountries)
         
       })
 
@@ -169,10 +186,13 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry, cat_selected, 
 
         colorAll();
 
-        setHoveredCountry([])
+        setHoveredCountry([]);
+        console.log("testHover2")
+        console.log(hoverCountries)
 
         setUpdateLock(false);
       })
+      
 
     var delay = 500
 
@@ -228,15 +248,18 @@ function StackedBarChart({cat, setHoveredCountry, hoveredCountry, cat_selected, 
   useEffect(() => {
     if (svg && (!updateLock)) {
   
-        if (hoveredCountry.length > 0) {
-     
-            selectCountries(hoveredCountry, data);
-        
+      if (hoveredCountry.length != 0) {
+            hoverCountries(hoveredCountry, data);    
         } else {
           colorAll();
         }
+        if (selectedCountry.length != 0) {
+          selectCountries(selectedCountry,data);  
+      } else {
+        resetSelect();
+      }
     }
-  }, [svg, hoveredCountry, selectedCountry, updateLock, cat, cat_index])
+  }, [svg, hoveredCountry, selectedCountry, updateLock])
 
 
 
