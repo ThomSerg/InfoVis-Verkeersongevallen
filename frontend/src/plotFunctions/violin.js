@@ -45,7 +45,6 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                     .interpolator(d3.interpolateInferno)
                     .domain([0,cat2_upper[cat2_index]])
     
-    var x_color = ["var(--color-0-promille)", "var(--color-2-promille)", "var(--color-4-promille)", "var(--color-5-promille)", "var(--color-8-promille)"]
 
     const promilleColor = new Map();
     promilleColor.set("0.0", "var(--color-0-promille)")
@@ -56,7 +55,6 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
 
 
-    var x_color = ["#724d3d ", "#916e54", "#b0886b", "#d0a281", "#e9b897", "#fdc4ac"];
 
     const [data, setData] = useState(null);
 
@@ -701,7 +699,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         .forEach(c => {
             svg
             .select(("#" + c).replace(/\s/g, ''))
-            .style("fill", function(d){ return('#4dbf7e') })
+            .style("fill", function(d){ return('var(--color-hover)') })
             .attr("r", country.length == 1 ? 10 : 5);
         })
     }
@@ -710,7 +708,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         country.forEach(c => {
             svg
             .select(("#" + c).replace(/\s/g, ''))
-            .style("fill", function(d){ return('#bf584d') })
+            .style("fill", function(d){ return('var(--color-selected)') })
             .attr("r", country.length == 1 ? 10 : 5);;
         })
     }

@@ -280,7 +280,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         selection
             .style("opacity", 1)
             //.style("stroke", "blue")
-            .style("fill","blue")
+            .style("fill","var(--color-hover)")
             //.style("stroke-width", 4);
     }
 
@@ -298,7 +298,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         selection
             .style("opacity", 1)
             //.style("stroke", "black")
-            .style("fill","red")
+            .style("fill","var(--color-selected)")
             //.style("stroke-width", 3);
     }
 
