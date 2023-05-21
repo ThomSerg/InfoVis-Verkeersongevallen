@@ -71,12 +71,33 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }
 
     function createXTickTooltip(div, d, event, sumstat2) {
-        console.log(d)
         var a = sumstat2.filter((e) => e.key == d)
-        console.log(a)
         div.html(`<strong><u> ${d}‰</u></strong><br/>median: ${a[0].median}<br/># countries: ${a[0].values.filter((d) => (d[cat2[cat2_index]] !== "")).length}`) //+ " : " + d[cat2[cat2_selected]])
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 15) + "px");
+    }
+
+    function SelectColumn(data, cat1value) {
+        //setUpdateLock(true);
+
+        var a = data.filter(function(d){return d[cat1] == cat1value})
+        var b = d3.map(a, function(d){return(d["Country"])})
+        var c = d3.map(b, function(d){return(d.replace(/\s/g, ''))})
+
+        console.log(c)
+
+        // grayout(svg);
+        // colorMulti(c);                
+
+        setHoveredCountry(b);
+    }
+
+    function UnSelectColumn() {
+        setHoveredCountry([]);
+
+        //colorAll(svg);
+
+        //setUpdateLock(false);
     }
 
 
@@ -161,6 +182,20 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
             setHoveredCountry([d["Country"]])
 
+        })
+
+        var xAxisTicks = svg.selectAll(".x-axis .tick")
+
+        xAxisTicks.each(function(d, i) {      
+            d3.select(this).on("mouseover", function(event, d_) {
+                SelectColumn(data, d);
+                xTickTooltipRef.current.transition().duration('50').style('opacity', 1);
+                createXTickTooltip(xTickTooltipRef.current, d_, event, sumstat2)
+            })
+            d3.select(this).on("mouseout", function() {
+                UnSelectColumn(d);
+                xTickTooltipRef.current.transition().duration('50').style('opacity', 0)
+            })
         })
                 
 
@@ -467,28 +502,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             // Allow hovering over x-label
             var xAxisTicks = svg.selectAll(".x-axis .tick")
 
-            function SelectColumn(cat1value) {
-                //setUpdateLock(true);
-
-                var a = data.filter(function(d){return d[cat1] == cat1value})
-                var b = d3.map(a, function(d){return(d["Country"])})
-                var c = d3.map(b, function(d){return(d.replace(/\s/g, ''))})
-
-                console.log(c)
-
-                // grayout(svg);
-                // colorMulti(c);                
-
-                setHoveredCountry(b);
-            }
-
-            function UnSelectColumn() {
-                setHoveredCountry([]);
-
-                //colorAll(svg);
-
-                //setUpdateLock(false);
-            }
+            
 
             xTickTooltipRef.current = d3.select("body").append("div")
                 .attr("class", "tooltip-hover")
@@ -499,7 +513,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
             xAxisTicks.each(function(d, i) {      
                 d3.select(this).on("mouseover", function(event, d_) {
-                    SelectColumn(d);
+                    SelectColumn(data, d);
                     xTickTooltipRef.current.transition().duration('50').style('opacity', 1);
                     createXTickTooltip(xTickTooltipRef.current, d_, event, sumstat2)
                 })
@@ -591,9 +605,9 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         const circles = svg.selectAll(".data-point").transition().duration(transitionDuration);
 
         var sumstat2 = Array.from(d3.group(data, d => d[cat1]), ([key, values]) => {
-            const q1 = d3.quantile(values.map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.25);
-            const median = d3.quantile(values.map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.5);
-            const q3 = d3.quantile(values.map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.75);
+            const q1 = d3.quantile(values.filter((d) => (d[cat2[cat2_index]] !== "")).map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.25);
+            const median = d3.quantile(values.filter((d) => (d[cat2[cat2_index]] !== "")).map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.5);
+            const q3 = d3.quantile(values.filter((d) => (d[cat2[cat2_index]] !== "")).map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.75);
             const interQuantileRange = q3 - q1;
             const min = q1 - 1.5 * interQuantileRange;
             const max = q3 + 1.5 * interQuantileRange;
