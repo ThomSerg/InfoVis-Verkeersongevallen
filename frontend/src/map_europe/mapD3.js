@@ -34,6 +34,14 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         width = 500 - margin.left - margin.right,
         height = 500 - margin.top - margin.bottom;
 
+        var legendWidth = 500; // Adjust the desired width of the legend SVG
+        var barWidth = 400; // Adjust the desired width of the bar
+        
+        // Calculate the position of the bar and text elements
+        var barX = (legendWidth - barWidth) / 2; // Calculate the x position of the bar
+        var minValueTextX = barX - 35; // Adjust the x position of the minValue text
+        var maxValueTextX = barX + barWidth + 10; // Adjust the x position of the maxValue text
+
     var scale = 3.5
 
     var projection = d3.geoMercator()
@@ -142,13 +150,12 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
         var gradientColors = []
             for (let i = 0; i < numColors; i++) {
-                console.log((i / (numColors - 1)) * colorScale.domain()[1])
+     
                 const color = colorScale((i / (numColors - 1)) * colorScale.domain()[1]);
                 gradientColors.push(color);
               }
 
-        console.log(gradientColors)
-        console.log(gradientColors[0])
+
             
         // for (let i = 0; i < numColors; i++) {
         //     //const hexColor = rgbToHexs(gradientColors[i]);
@@ -221,7 +228,23 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         // Append the axis to the group
         axisGroup.call(axis);
 
+        svgLegend
+            .append("line")
+            .attr("id", "legend_line_hovered")
+            .style("visibility", "hidden")
+            .attr("stroke", "var(--color-hover)")
+            .attr("stroke-width", 4)   
+
+        svgLegend
+            .append("line")
+            .attr("id", "legend_line_selected")
+            .style("visibility", "hidden")
+            .attr("stroke", "var(--color-selected)")
+            .attr("stroke-width", 4)  
+
+
         }
+
         
     }, [countryData])
 
@@ -273,6 +296,29 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         countryName.filter((cn) => !selectedCountryRef.current.includes(cn)).forEach(cn => {
             hoverSelection(svg.select(("#" + cn).replace(/\s/g, '')))
         })
+
+        if ((countryName.length == 1) && (countryData[countryName[0].replace(/\s/g, '')])) {
+          
+
+            const values = Object.values(countryData);
+            const minValue = d3.min(values);
+            const maxValue = d3.max(values);
+            d3.select("#legend_line_hovered").style("visibility", "visible")
+                .attr("x1", d => (countryData[countryName[0].replace(/\s/g, '')]-minValue) / (maxValue-minValue) * barWidth + barX)
+                .attr("x2", d => (countryData[countryName[0].replace(/\s/g, '')]-minValue) / (maxValue-minValue) * barWidth + barX)
+                .attr("y1", d => (50))
+                .attr("y2", d => (100))
+
+            
+
+        } else {
+            d3.select("#legend_line_hovered").style("visibility", "hidden")
+                
+        }
+
+        
+
+        
     }
 
     // function hoverCountry(country) {
@@ -299,6 +345,26 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             svg.select("#selection_label").style("visibility", "hidden")
             svg.select("#selection_label_text").transition()
                     .text("");
+        }
+
+     
+        var cn = countryName
+        if ((cn.length == 1) && (countryData[cn[0].replace(/\s/g, '')])) {
+
+            const values = Object.values(countryData);
+            const minValue = d3.min(values);
+            const maxValue = d3.max(values);
+            d3.select("#legend_line_selected").style("visibility", "visible")
+                .attr("x1", d => (countryData[cn[0].replace(/\s/g, '')]-minValue) / (maxValue-minValue) * barWidth + barX)
+                .attr("x2", d => (countryData[cn[0].replace(/\s/g, '')]-minValue) / (maxValue-minValue) * barWidth + barX)
+                .attr("y1", d => (50))
+                .attr("y2", d => (100))
+
+            
+
+        } else {
+            d3.select("#legend_line").style("visibility", "hidden")
+                
         }
         
     }
