@@ -72,38 +72,17 @@ function AppBody({
             </Tabs.List> */}
 
             <Tabs.Panel value="road_quality" pt="xs">
-              <div>
-                <div style={{"height":"10%"}}>
-                  <TabHeader title="Road Quality"></TabHeader>
-                  </div>
-                <div style={{"height":"90%"}}>
-                <Wegkwaliteit 
-                  hoveredCountry={hoveredCountry}
-                  scale={scale}
-                />
-                </div>
-       
-              </div>
+          
+              <Wegkwaliteit 
+                hoveredCountry={hoveredCountry}
+                scale={scale}
+              />
+               
             </Tabs.Panel>
 
             <Tabs.Panel value="alcohol" pt="xs">
 
-              <TabHeader title="Alcohol behind the wheel">
-                <Grid>
-                  <Grid.Col span={3}>
-                      <Button color="cyan" varient="filled">
-                      test
-                      </Button>
-                  </Grid.Col>
-
-                  <Grid.Col span={3}>
-                      <Button color="cyan">
-                      test
-                      </Button>
-                  </Grid.Col>
-
-                </Grid>
-              </TabHeader>
+              
               <Alcohol
                 setHoveredCountry={setHoveredCountry} 
                 hoveredCountry={hoveredCountry}
@@ -114,7 +93,7 @@ function AppBody({
             </Tabs.Panel>
 
             <Tabs.Panel value="fines" pt="xs">
-              <TabHeader title="Speeding fines"></TabHeader>
+              
               <Fines 
                 hoveredCountry={hoveredCountry}
                 scale={scale}

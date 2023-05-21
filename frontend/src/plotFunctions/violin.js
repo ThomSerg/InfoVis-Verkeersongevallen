@@ -11,10 +11,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     const id = useRef(_uniqueId('violin-'))
     
     let cat2_index= 0 ;
-    if(cat2_selected === "nestedButton1") {
+    if(cat2_selected === "all_drivers") {
         //console.log("nestedButton1")
         cat2_index = 0;
-    } else if(cat2_selected === "nestedButton2") {
+    } else if(cat2_selected === "young_drivers") {
         //console.log("nestedButton2")
         cat2_index = 1;
     }

@@ -5,6 +5,7 @@ import Map from "../map_europe/map"
 import { Card, Layout, Space } from 'antd';
 import D3Card from "../plotFunctions/D3Card";
 import ChartCard from "../plotFunctions/ChartCard";
+import TabHeader from "../plotFunctions/TabHeader";
 
 import { Grid } from '@mantine/core';
 
@@ -43,7 +44,9 @@ class Fines extends Component {
 //<Map setHoveredCountry={this.setHoveredCountry} hoveredCountry={this.state.hoveredCountry}/>
       render() {
         return (
-        
+          <div>
+          <TabHeader title="Speeding fines"></TabHeader>
+
           <Grid>
             <Grid.Col span={6}>
               <ChartCard title="Information" > 
@@ -71,6 +74,8 @@ class Fines extends Component {
               </ChartCard>
             </Grid.Col>
           </Grid>
+
+          </div>
         );
       }
 }

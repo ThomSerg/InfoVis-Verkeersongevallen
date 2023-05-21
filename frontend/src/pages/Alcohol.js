@@ -8,6 +8,8 @@ import D3Card from "../plotFunctions/D3Card";
 import StackedBarChart from "../plotFunctions/StackedBarChart";
 import ChartCard from "../plotFunctions/ChartCard";
 import ViolinGraph from "../plotFunctions/violin";
+import AgeButtons from "../AgeButtons";
+import TabHeader from "../plotFunctions/TabHeader";
 
 import Map from "../map_europe/map"
 import MapD3 from "../map_europe/mapD3"
@@ -28,7 +30,13 @@ function Alcohol({
 
   return (
     <div>
-      
+      <TabHeader title="Alcohol behind the wheel">
+        <AgeButtons
+          selectedNestedButton = {selectedNestedButton}
+          setSelectedNestedButton = {setSelectedNestedButton}
+        />
+
+      </TabHeader>
 
       <Grid>
 
