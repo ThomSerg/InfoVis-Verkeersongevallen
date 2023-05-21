@@ -57,11 +57,16 @@ function Alcohol({
           
 
           <ChartCard title="Allowed promille when driving" > 
-            <StackedBarChart 
-              cat="standard_driver" 
+            <StackedBarChart            
               setHoveredCountry={setHoveredCountry} 
               hoveredCountry={hoveredCountry}
               title = "Allowed promille in blood"
+              cat_selected={selectedNestedButton}
+              selectedCountry={selectedCountry}
+              setSelectedCountry={setSelectedCountry}
+              cat={["standard_driver", "standard_minus_novice"]} 
+
+
             />
           </ChartCard>
           </div>

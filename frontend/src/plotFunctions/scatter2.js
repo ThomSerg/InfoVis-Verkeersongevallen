@@ -15,7 +15,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
 
   const id = useRef(_uniqueId('scatter-'))
 
-  console.log("test")
+  //console.log("test")
 
   useEffect(() => {
     // Set the dimensions and margins of the graph
@@ -29,7 +29,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     const widthPlot = width - margin.left - margin.right;
     const heightPlot = height - margin.top - margin.bottom;
 
-    console.log(id.current)
+   // console.log(id.current)
 
     // Append the SVG object to the body of the pageheight: "550px"
     const svg = d3.select("#" + id.current)
@@ -50,8 +50,8 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     // Filter data to exclude empty values
     data = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
 
-    console.log("Filtered data is ");
-    console.log(data);
+   // console.log("Filtered data is ");
+   // console.log(data);
 
     const xname = varXAxis.split(" (")[0];
     const yname = varYaxis.split(" (")[0];
@@ -62,8 +62,8 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     const xMin = 0;//d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff;
     const xMax = d3.max(data, d => parseFloat(d[cat1])) + 0.05 * xDiff;
 
-    console.log("xmin and xmax values are:");
-    console.log(xMin, xMax);
+    //console.log("xmin and xmax values are:");
+   // console.log(xMin, xMax);
 
 
     // Compute the domain dynamically based on the data
@@ -76,8 +76,8 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     const yDiff = d3.max(data, d => parseFloat(d[cat2])) - d3.min(data, d => d[cat2]);
     const yMin = 0;//d3.min(data, d => parseFloat(d[cat2])) - 0.05 * yDiff;
     const yMax = d3.max(data, d => parseFloat(d[cat2])) + 0.05 * yDiff;
-    console.log("Ymin and Ymax values are:");
-    console.log(yMin, yMax);
+    //console.log("Ymin and Ymax values are:");
+   //console.log(yMin, yMax);
 
     let y = d3.scaleLinear()
     .domain([yMin, yMax])
@@ -179,10 +179,10 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
 
 
         const dataArray = data.map(d => [Number(d[cat1]), Number(d[cat2])]);
-        console.log(dataArray);
+      //  console.log(dataArray);
         
         const regression = ss.linearRegression(dataArray);
-        console.log(regression);
+      //  console.log(regression);
         // Get slope and intercept values
         const slope = regression.m;
         const intercept = regression.b;
@@ -211,15 +211,15 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
             maxYValue = slope * maxXValue + intercept;
           }
         
-          console.log("minXDomain is " + xMinDomain);
-          console.log("maxXDomain is " + xMaxDomain);
+       //   console.log("minXDomain is " + xMinDomain);
+        //  console.log("maxXDomain is " + xMaxDomain);
         
           // Define the line endpoints based on the calculated values
           const lineData = [
             [minXValue, minYValue],
             [maxXValue, maxYValue]
           ];
-          console.log("Line data is" + lineData);
+          //console.log("Line data is" + lineData);
         
           return lineData;
         }
