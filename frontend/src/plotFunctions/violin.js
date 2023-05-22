@@ -228,6 +228,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }
 
     function createViolin(data, violin,x, y) {
+        
         // Features of the histogram
         var histogram = createHistogram(y)
 
@@ -244,6 +245,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         var longuest = d3.max(lengths)
         if (longuest > maxNum) { maxNum = longuest }
         }
+
+        
 
         // The maximum width of a violin must be x.bandwidth = the width dedicated to a group
         var xNum = d3.scaleLinear()
@@ -496,7 +499,9 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 //                     .y(function(s) {return s.map(function(g) { return g.median; })})
                 // )
 
-
+            
+            
+    
             // Show the median
             svg.selectAll("medianLines")
                 .data(sumstat2)
@@ -721,17 +726,36 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         //         .attr("stroke", "black")
         //         .attr("stroke-width", 2);
 
+        // Remove old median lines
         svg.selectAll(".data-median-line")
-                .data(sumstat2)
-                .transition()
-                .duration(transitionDuration)
-                // .select("line")
-                .attr("x1", d => x(d.key) + x.bandwidth()/2 - x.bandwidth() / 4)
-                .attr("x2", d => x(d.key) + x.bandwidth()/2 + x.bandwidth() / 4)
-                .attr("y1", d => y(d.median))
-                .attr("y2", d => y(d.median))
-                .attr("stroke", "black")
-                .attr("stroke-width", 2);
+        .remove();
+        
+        // Create new median lines
+        svg.selectAll(".data-median-line")
+        .data(sumstat2)
+        .enter()
+        .append("line")
+        .attr("class", "data-median-line")
+        .attr("x1", d => x(d.key) + x.bandwidth() / 2 - x.bandwidth() / 4)
+        .attr("x2", d => x(d.key) + x.bandwidth() / 2 + x.bandwidth() / 4)
+        .attr("y1", d => y(d.median))
+        .attr("y2", d => y(d.median))
+        .attr("stroke", "black")
+        .attr("stroke-width", 2)
+        .style("opacity", 0) // Set initial opacity to 0
+        
+        // Transition and update median lines
+        svg.selectAll(".data-median-line")
+        .transition()
+        .duration(transitionDuration)
+        .attr("x1", d => x(d.key) + x.bandwidth() / 2 - x.bandwidth() / 4)
+        .attr("x2", d => x(d.key) + x.bandwidth() / 2 + x.bandwidth() / 4)
+        .attr("y1", d => y(d.median))
+        .attr("y2", d => y(d.median))
+        .attr("stroke", "black")
+        .attr("stroke-width", 2)
+        .style("opacity", 1); // Set final opacity to 1
+        
 
 
                 
