@@ -66,153 +66,139 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     const datapointTooltipRef = useRef(null);
     const xTickTooltipRef = useRef(null);
 
-
-
-
-    function createDatapointTooltip(div, d, event) {
-        const xname = xLabelElement[cat_index].split(" (")[0];
-        const yname = yLabelElement[cat_index].split(" (")[0];
-        console.log("cat1 is " + cat1[cat_index]);
-        div.html(`<strong><u> ${d.Country}</u></strong><br/>${xname}: ${Math.round(d[cat1[cat_index]] * 100)/100}<br/>${yname}: ${Math.round(d[cat2[cat_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 15) + "px");
+    function positionTooltip(tooltip, event, offsetX=10, offsetY=10) {
+        tooltip
+            // Put tooltip in place (at mouse position)
+            .style("left", function() {
+                var clientrect = d3.select(this).node().getBoundingClientRect()
+                return event.pageX > (window.innerWidth - clientrect.width)*0.95  ? ((event.pageX - clientrect.width - offsetX) + "px") : ((event.pageX + offsetX) + "px")
+            })
+            .style("top", function() {
+                var clientrect = d3.select(this).node().getBoundingClientRect()
+                return event.pageY > (window.innerHeight - clientrect.height)*0.95  ? ((event.pageY - clientrect.height - offsetY) + "px") : ((event.pageY + offsetY) + "px")
+            })
     }
 
+
+    /**
+     * Tooltip when hovering over a point in the scatter plot
+     */
+    function createDatapointTooltip(div, d, event) {
+        // Get names of labels to show in tooltip
+        const xname = xLabelElement[cat_index].split(" (")[0];
+        const yname = yLabelElement[cat_index].split(" (")[0];
+        // Create tooltip HTML markup
+        div.html(`<strong><u> ${d.Country}</u></strong><br/>${xname}: ${Math.round(d[cat1[cat_index]] * 100)/100}<br/>${yname}: ${Math.round(d[cat2[cat_index]]* 100)/100}`);
+        // Put tooltip in place (at mouse position)
+        positionTooltip(div, event);
+    }
+
+    /**
+     * Tooltip when hovering over a x-label (giving aggregated info of all countries with that x value)
+     */
     function createXTickTooltip(div, d, event, sumstat2) {
 
-        
         var a = sumstat2.filter((e) => {
             
             console.log("THE MAGICAL VALUE OF E IS " + e);
             console.log("THE MAGICAL VALUE OF E.KEY IS " + e.key);
             return e.key == d;})
-        div.html(`<strong><u> ${d}‰</u></strong><br/>median: ${Math.round(a[0].median* 100)/100}<br/># countries: ${a[0].values.filter((d) => (d[cat2[cat_index]] !== "")).length}`) //+ " : " + d[cat2[cat2_selected]])
-                .style("left", (event.pageX + 10) + "px")
-                .style("top", (event.pageY - 15) + "px");
+        // Create tooltip HTML markup
+        div.html(`<strong><u> ${d}‰</u></strong><br/>median: ${Math.round(a[0].median* 100)/100}<br/># countries: ${a[0].values.filter((d) => (d[cat2[cat_index]] !== "")).length}`)
+        // Put tooltip in place (at mouse position)
+        positionTooltip(div, event);
     }
 
+    /**
+     * Hover all countries with the same x-label (cat1)
+     */
     function SelectColumn(data, cat1value) {
-        //setUpdateLock(true);
-
-        var a = data.filter(function(d){return d[cat1[cat_index]] == cat1value})
-        var b = d3.map(a, function(d){return(d["Country"])})
-        var c = d3.map(b, function(d){return(d.replace(/\s/g, ''))})
-
-        console.log(c)
-
-        // grayout(svg);
-        // colorMulti(c);                
-
+        // Filter data on cat1
+        var a = data.filter( function(d) { return d[cat1[cat_index]] == cat1value } )
+        // Get "Country" column in dataset
+        var b = d3.map(a, function(d) { return(d["Country"]) } )
+        // Format country string (remove space)
+        var c = d3.map(b, function(d) { return(d.replace(/\s/g, '')) } ) 
+        // Hover countries
         setHoveredCountry(b);
     }
 
     function UnSelectColumn() {
         setHoveredCountry([]);
-
-        //colorAll(svg);
-
-        //setUpdateLock(false);
     }
 
-
+    /**
+     * Load data in state variable (prevent constant reloading of data)
+     */
     useEffect(() => { 
         d3.csv(data2).then(d => { 
             setData(d);
         })
     })
 
-    //const [sumstat, setSumstat] = useState(null);
 
     /* * * * * * * * * * 
      * Create the SVG  *
      * * * * * * * * * */
     useEffect(() => {
-        // append the svg object to the body of the page
+        // Append the svg object to the body of the page
         setSvg(d3.select("#" + id.current)
+                    // Create SVG element
                     .append("svg")
                     .attr("width", width + margin.left + margin.right)
                     .attr("height", height + margin.top + margin.bottom)
+
+                    // Make responsive
                     .call(responsivefy)
 
-                    // .attr("preserveAspectRatio", "xMidYMid meet")
-                    // .attr("viewBox", "0 0 " + width.toString() + " " + height.toString())
-
+                    // Translate into place
                     .append("g")
                     .attr("transform", "translate(" + margin.left + "," + margin.top + ")")
                 );
     }, [])
 
-    // function resize() {
-    //     const containerWidth = d3.select(svgRef.current).node().clientWidth;
-    //     const containerHeight = containerWidth * (height / width); // Maintain aspect ratio
-      
-    //     svg.attr("viewBox", `0 0 ${containerWidth} ${containerHeight}`);
-    //   }
-
-    // resize();
-
-    // d3.select(window).on("resize", resize);
-    
-
+   
+    /**
+     * Configures / positions scatter plot contents
+     *      also to use when upadting data / switching age
+     */
     function createScatterPlot(circles, x, y, sumstat2) {
-        var mapp = d3.map(sumstat2, function(d) { return d.key; });
-        //var groupedData = d3.group(sumstat2, d => d.key);
 
-        console.log(mapp)
-
-        var a = circles.attr("cx", function(d){return(x(d[cat1[cat_index]]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth )})
-                .attr("cy", function(d){
-                    //console.log("CY is : " + d[cat2[cat_index]]);
-                    return y(d[cat2[cat_index]])});
-                    /*
-                    return d[cat2[cat_index]] != "" ?
+        // Position scatter plot data points
+        circles
+            .attr("cx", function(d) {
+                return ( x(d[cat1[cat_index]]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth )
+            })
+            .attr("cy", function(d) {
+                return y(d[cat2[cat_index]])
+            });
                     
-                    (y(d[cat2[cat_index]])) : 
-                    y(d3.index(sumstat2, d => d.key).get(d[cat1[cat_index]]).median)*/
-                    //sumstat2[0].median
-                
-                /*cat1[cat_index]
-                .attr("stroke", "white")
-                .style("visibility", function(d) {
-                    return d[cat2[cat_index]] != "" ? "visible" : "hidden";})*/
-
-        if (selectedCountry.length == 0) {
-            a.attr("r", 5)
-            .style("fill", function(d){ console.log(d[cat1[cat_index]]); return(promilleColor.get(d[cat1[cat_index]]))})
-        }
-
+        // Add hover effects to data points
         svg.selectAll(".data-point").on('mouseover', function(event, d) {
-            if (selectCountry.length == 0) {
-            //setUpdateLock(true);
-            }
             
+            // Put tooltip into place and update its information
             const div = datapointTooltipRef.current
-
-            // d3.select(this).transition().duration('50').attr('opacity', '.85');
             div.transition().duration('50').style('opacity', 1);
-
             createDatapointTooltip(div, d, event)
             
-
-            // div.html(`<strong><u> ${d.Country}</u></strong><br/>${xLabelElement}: ${Math.round(d[cat1] * 100)/100}<br/>${yLabelElement}: ${Math.round(d[cat2[cat2_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
-            //     .style("left", (event.pageX + 10) + "px")
-            //     .style("top", (event.pageY - 15) + "px");
-
+            // Signal hovered countries
             setHoveredCountry([d["Country"]])
-
         })
 
-        var xAxisTicks = svg.selectAll(".x-axis .tick")
-
-        xAxisTicks.each(function(d, i) {      
+        // Add hover effect to x labels
+        svg.selectAll(".x-axis .tick").each(function(d, i) {      
             d3.select(this).on("mouseover", function(event, d_) {
-                SelectColumn(data, d);
+
+                // Put tooltip into place and update its information
                 xTickTooltipRef.current.transition().duration('50').style('opacity', 1);
                 createXTickTooltip(xTickTooltipRef.current, d_, event, sumstat2)
+
+                // Signal hovered countries
+                SelectColumn(data, d);
             })
             d3.select(this).on("mouseout", function() {
-                UnSelectColumn(d);
                 xTickTooltipRef.current.transition().duration('50').style('opacity', 0)
+                UnSelectColumn(d);
             })
         })
                 
