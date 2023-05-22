@@ -451,8 +451,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 .attr("y", margin.top)
                 .attr("width", width)
                 .attr("height", height)
-                .attr("stroke", "black")
-                .attr("stroke-width", "2px")
+                // .attr("stroke", "black")
+                // .attr("stroke-width", "2px")
                 .attr("fill", "transparent")
                 .on("click", function(event) {
                     onClick(null); // Pass null or any other value to indicate no country is clicked
