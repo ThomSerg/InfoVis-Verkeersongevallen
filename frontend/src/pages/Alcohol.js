@@ -30,7 +30,7 @@ function Alcohol({
 
   return (
     <div>
-      <TabHeader title="Alcohol behind the wheel">
+      <TabHeader >
         <AgeButtons
           selectedNestedButton = {selectedNestedButton}
           setSelectedNestedButton = {setSelectedNestedButton}
