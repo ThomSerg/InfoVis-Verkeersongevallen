@@ -33,6 +33,7 @@ function BarChart({ data , width, height }) {
 
     svg.append("g").call(yAxis);
 
+
     svg
       .selectAll(".bar")
       .data(data)
