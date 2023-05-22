@@ -158,7 +158,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
         .on('mouseover', function (event, d) {
             d3.select(this).transition()
                 .duration(50)
-                .attr('opacity', '.5');
+                .attr('opacity', '1');
             //Makes the new div appear on hover:
             div.transition()
                 .duration(50)
@@ -184,7 +184,6 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
 
         })
         .on("click", function (event, d){
-            d3.select(this).transition().duration(200).style("stroke", "red");
             setSelectedCountry([d["Country"]])
         });
 
