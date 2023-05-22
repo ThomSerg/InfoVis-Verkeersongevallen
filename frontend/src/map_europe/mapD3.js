@@ -441,6 +441,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             updateLegendSelected([])
         }
     }
+
+
     
 
     useEffect(() => {
@@ -488,6 +490,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 .on("click", function(event, d) {
                     onClick(d)
                 })
+
 
             // svg.append('g')
             //     .attr("id", "selection_label")

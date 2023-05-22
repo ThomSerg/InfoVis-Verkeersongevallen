@@ -744,6 +744,9 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             updateMedianLines(x, y, sumstat2);
             updateViolinPlot(x, y)
             updateScatterplot(x, y, sumstat2);
+
+            selectCountry(selectedCountry)
+            hoverCountry(hoveredCountry)
             
         }
         
