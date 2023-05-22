@@ -232,6 +232,11 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
       .transition()
       .duration(delay)
       .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
+
+      if (selectedCountry.length != 0) {
+        selectCountries(selectedCountry,data);  
+    } 
+
     });
   }
   }, [svg, cat_index]);
