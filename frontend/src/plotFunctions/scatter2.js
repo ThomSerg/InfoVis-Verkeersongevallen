@@ -48,9 +48,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     })
 })
 
-  
 
-  console.log("test")
 
   useEffect(() => {
     if (svg) {
