@@ -125,7 +125,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
             let cumulative = 0
             const _data = data_.map(d => {
               cumulative += d.value
-              var countries = data.filter(function(d_) {return d[cat[cat_index]] == d.label}).map(d => d["Country"])
+              var countries = data.filter(function(d_) {return d_[cat[cat_index]] == d.label}).map(d => d["Country"])
               return {
                 value: d.value,
                 // want the cumulative to prior value (start of rect)
@@ -141,6 +141,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
 
         const groupData = groupDataFunc(rollupData);
         console.log(groupData);
+        console.log(groupData.countries);
         console.log("testtesttest");
 
 
@@ -173,9 +174,10 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
 
         selectLabels([d.label]);        
         
+        console.log(d.countries)
         setHoveredCountry(d.countries);
         console.log("testHover1")
-        console.log(hoverCountries)
+        console.log(hoveredCountry)
         
       })
 
@@ -188,7 +190,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
 
         setHoveredCountry([]);
         console.log("testHover2")
-        console.log(hoverCountries)
+        console.log(hoveredCountry)
 
         setUpdateLock(false);
       })
@@ -219,6 +221,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
       .attr('y', function(d,i) {return i%2 == 0 ? (height/2) - halfBarHeight*1.1 : (height/2) + halfBarHeight*1.3})
       .text(d => d3.format('.1f')(d.label) + ' \u2030')
       .style('fill', (d,i) => promilleColor.get(d.label))
+      .style('font-weight', 'bold')
       .transition()
       .duration(delay)
       .attr('x', d => xScale(d.cumulative) + xScale(d.value) / 2)
@@ -232,6 +235,11 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
       .transition()
       .duration(delay)
       .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
+
+      if (selectedCountry.length != 0) {
+        selectCountries(selectedCountry,data);  
+    } 
+
     });
   }
   }, [svg, cat_index]);
@@ -254,6 +262,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
           colorAll();
         }
         if (selectedCountry.length != 0) {
+          resetSelect();
           selectCountries(selectedCountry,data);  
       } else {
         resetSelect();

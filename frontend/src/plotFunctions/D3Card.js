@@ -5,9 +5,15 @@ import data2 from "../europe_gov.csv";
 function D3Card({ hoveredCountry }) {
   const [countryText, setCountryText] = useState('No country hovered');
 
+
+  const [data, setData] = useState(null);
+
+  d3.csv(data2).then(d => { 
+    setData(d);
+  })
+
   useEffect(() => {
     if (hoveredCountry.length > 0) {
-      d3.csv(data2).then(data => {
         const hoveredData = data.find(d => d.Country === hoveredCountry[0]);
         if (hoveredData) {
          console.log(hoveredData)
@@ -47,7 +53,6 @@ function D3Card({ hoveredCountry }) {
           else {
           setCountryText(hoveredCountry[0]);
         }
-      });
     } else {
       setCountryText('Hover over a country to highlight their respective points on the graphs. You can also select a country by clicking and then compare with another country by hovering.');
     }
