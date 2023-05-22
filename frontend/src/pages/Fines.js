@@ -35,7 +35,7 @@ class Fines extends Component {
       render() {
         return (
           <div>
-          <TabHeader ></TabHeader>
+          <TabHeader></TabHeader>
 
           <Grid>
             <Grid.Col span={6}>
