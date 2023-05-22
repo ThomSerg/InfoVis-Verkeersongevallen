@@ -23,31 +23,30 @@ function D3Card({ hoveredCountry }) {
          const area = parseInt(hoveredData["area_km2"]);
          const formattedArea = area.toLocaleString();
 
-          const oppData = `Surface of the country: ${formattedArea} km2`;
-          const bewData = `Citizens: ${formattedPopulation}`;
-          const gdpData = `GDP: ${hoveredData["speed_city"]}`;
-          const highwayData = `Speed limit highway: ${hoveredData["speed_highway"]} km/h`;
-          const ruralData = `Speed limit rural: ${hoveredData["speed_rural"]} km/h`;
-          const cityData = `Speed limit city: ${hoveredData["speed_city"]} km/h`;
+         const oppData = <span><strong>Surface of the country:</strong> {formattedArea} km2</span>;
+         const bewData = <span><strong>Citizens:</strong> {formattedPopulation}</span>;
+         const highwayData = <span><strong>Speed limit highway:</strong> {hoveredData["speed_highway"]} km/h</span>;
+         const ruralData = <span><strong>Speed limit rural:</strong> {hoveredData["speed_rural"]} km/h</span>;
+         const cityData = <span><strong>Speed limit city:</strong> {hoveredData["speed_city"]} km/h</span>;
 
           
           
           setCountryText(
             <>
-              <span>{hoveredCountry[0]}</span>
-              <br />
-              <span>{oppData}</span>
-              <br />
-              <span>{bewData}</span>
-              <br />
-              <span>{highwayData}</span>
-              <br />
-              <span>{ruralData}</span>
-              <br />
-              <span>{cityData}</span>
-              <br />
-
-            </>
+            <span style={{ fontWeight: 'bold', fontSize: '18px' }}>{hoveredCountry[0]}</span>
+            <br />
+            <br /> {/* Empty line */}
+            <span style={{fontSize: '14px' }}>{oppData}</span>
+            <br />
+            <span style={{fontSize: '14px' }}>{bewData}</span>
+            <br />
+            <span style={{fontSize: '14px' }}>{highwayData}</span>
+            <br />
+            <span style={{fontSize: '14px' }}>{ruralData}</span>
+            <br />
+            <span style={{fontSize: '14px' }}>{cityData}</span>
+            <br />
+          </>
           );
         } 
           else {

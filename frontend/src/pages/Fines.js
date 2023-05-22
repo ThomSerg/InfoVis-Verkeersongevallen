@@ -57,7 +57,7 @@ class Fines extends Component {
                 setHoveredCountry={this.props.setHoveredCountry} 
                 hoveredCountry={this.props.hoveredCountry} 
                 selectedCountry={this.props.selectedCountry} 
-                setSelectedCountry={this.props.setSelectedCountry}/>/>
+                setSelectedCountry={this.props.setSelectedCountry}/>
               </ChartCard>
             </Grid.Col>
 
@@ -72,7 +72,7 @@ class Fines extends Component {
                 setHoveredCountry={this.props.setHoveredCountry} 
                 hoveredCountry={this.props.hoveredCountry} 
                 selectedCountry={this.props.selectedCountry} 
-                setSelectedCountry={this.props.setSelectedCountry}/>/>
+                setSelectedCountry={this.props.setSelectedCountry}/>
               </ChartCard>
             </Grid.Col>
 
@@ -87,7 +87,7 @@ class Fines extends Component {
                 setHoveredCountry={this.props.setHoveredCountry} 
                 hoveredCountry={this.props.hoveredCountry} 
                 selectedCountry={this.props.selectedCountry} 
-                setSelectedCountry={this.props.setSelectedCountry}/>/>
+                setSelectedCountry={this.props.setSelectedCountry}/>
               </ChartCard>
             </Grid.Col>
           </Grid>
