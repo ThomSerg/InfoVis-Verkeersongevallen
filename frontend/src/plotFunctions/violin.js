@@ -552,8 +552,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                     .attr("class", "data-median-line")
                     //.attr("id", function(d) {return d["Country"].replace(/\s/g, '')})
 
-                    .attr("x1", d => x(d.key) + x.bandwidth()/2 - x.bandwidth() / 4)
-                    .attr("x2", d => x(d.key) + x.bandwidth()/2 + x.bandwidth() / 4)
+                    .attr("x1", d => x(d.key) + x.bandwidth()/2 - x.bandwidth() / 3)
+                    .attr("x2", d => x(d.key) + x.bandwidth()/2)
                     .attr("y1", d => y(d.median))
                     .attr("y2", d => y(d.median))
                     .attr("stroke", "black")
@@ -664,31 +664,39 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }
 
     function updateMedianLines(x, y, sumstat2) {
+
+        // svg.selectAll(".data-median-line")
+        //     .transition()
+        //     .duration(transitionDuration/2)
+        //     .style("opacity", 0) 
         
         // Remove old median lines
         svg.selectAll(".data-median-line")
             .remove();
         
         // Create new median lines
-        svg.selectAll(".data-median-line")
+        svg.selectAll(".medianLines")
             .data(sumstat2)
             .enter()
+            .append("g")
             .append("line")
             .attr("class", "data-median-line")
-            .attr("x1", d => x(d.key) + x.bandwidth() / 2 - x.bandwidth() / 4)
-            .attr("x2", d => x(d.key) + x.bandwidth() / 2 + x.bandwidth() / 4)
+            .transition().delay(transitionDuration/2).duration(0)
+            .attr("x1", d => x(d.key) + x.bandwidth() / 2 - x.bandwidth() / 3)
+            .attr("x2", d => x(d.key) + x.bandwidth() / 2)
             .attr("y1", d => y(d.median))
             .attr("y2", d => y(d.median))
             .attr("stroke", "black")
             .attr("stroke-width", 2)
             .style("opacity", 0) // Set initial opacity to 0
         
-        // Transition and update median lines
+        // // Transition and update median lines
         svg.selectAll(".data-median-line")
             .transition()
-            .duration(transitionDuration)
-            .attr("x1", d => x(d.key) + x.bandwidth() / 2 - x.bandwidth() / 4)
-            .attr("x2", d => x(d.key) + x.bandwidth() / 2 + x.bandwidth() / 4)
+            .delay(transitionDuration/2)
+            .duration(transitionDuration/2)
+            .attr("x1", d => x(d.key) + x.bandwidth() / 2 - x.bandwidth() / 3)
+            .attr("x2", d => x(d.key) + x.bandwidth() / 2)
             .attr("y1", d => y(d.median))
             .attr("y2", d => y(d.median))
             .attr("stroke", "black")
@@ -733,9 +741,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             setSumstat(sumstat2)
 
             updateAxis(x, y);
+            updateMedianLines(x, y, sumstat2);
             updateViolinPlot(x, y)
             updateScatterplot(x, y, sumstat2);
-            updateMedianLines(x, y, sumstat2);
+            
         }
         
     }, [cat_index])
