@@ -47,7 +47,7 @@ class Wegkwaliteit extends Component {
 
         return (
           <div>
-            <TabHeader title="Road Quality"></TabHeader>
+            <TabHeader ></TabHeader>
 
             <Grid>
 
