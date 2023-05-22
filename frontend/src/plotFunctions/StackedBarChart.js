@@ -123,7 +123,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
             // also get mapping for next placement
             // (save having to format data for d3 stack)
             let cumulative = 0
-            const _data = data_.map(d => {
+            const _data = data_.sort((x,y) => {return d3.descending(x.value, y.value)}).map(d => {
               cumulative += d.value
               var countries = data.filter(function(d_) {return d_[cat[cat_index]] == d.label}).map(d => d["Country"])
               return {
@@ -139,15 +139,14 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
           };
 
 
-        const groupData = groupDataFunc(rollupData);
-        console.log(groupData);
-        console.log(groupData.countries);
-        console.log("testtesttest");
+      const groupData = groupDataFunc(rollupData);
+      console.log(groupData);
+      console.log(groupData.countries);
 
 
 
 
-        const xScale = d3.scaleLinear()
+      const xScale = d3.scaleLinear()
       .domain([0, total])
       .range([0, width]);
 
@@ -155,6 +154,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
                 .attr("class", "tooltip-hover")
                 .style("opacity", 0)
                 .style("position", "absolute");
+
 
     const join = svg.selectAll('g')
       .data(groupData)

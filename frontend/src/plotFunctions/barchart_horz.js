@@ -41,6 +41,8 @@ const BarChart = () => {
       svg.append("g")
         .call(d3.axisLeft(y))
 
+      
+
       //Bars
       svg.selectAll("myRect")
       .data(data)
