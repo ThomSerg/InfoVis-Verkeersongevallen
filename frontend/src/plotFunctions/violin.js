@@ -10,13 +10,13 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     
     const id = useRef(_uniqueId('violin-'))
     
-    let cat2_index= 0 ;
+    let cat_index= 0 ;
     if(cat2_selected === "all_drivers") {
         //console.log("nestedButton1")
-        cat2_index = 0;
+        cat_index = 0;
     } else if(cat2_selected === "young_drivers") {
         //console.log("nestedButton2")
-        cat2_index = 1;
+        cat_index = 1;
     }
     // Reference to the SVG
     const svgRef = useRef(null);
@@ -43,7 +43,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     // Color scale for the scatter plot
     var myColor = d3.scaleSequential()
                     .interpolator(d3.interpolateInferno)
-                    .domain([0,cat2_upper[cat2_index]])
+                    .domain([0,cat2_upper[cat_index]])
     
 
     const promilleColor = new Map();
@@ -66,16 +66,17 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
 
     function createDatapointTooltip(div, d, event) {
-        const xname = xLabelElement[cat2_index].split(" (")[0];
-        const yname = yLabelElement[cat2_index].split(" (")[0];
-        div.html(`<strong><u> ${d.Country}</u></strong><br/>${xname}: ${Math.round(d[cat1] * 100)/100}<br/>${yname}: ${Math.round(d[cat2[cat2_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
+        const xname = xLabelElement[cat_index].split(" (")[0];
+        const yname = yLabelElement[cat_index].split(" (")[0];
+        console.log("cat1 is " + cat1[cat_index]);
+        div.html(`<strong><u> ${d.Country}</u></strong><br/>${xname}: ${Math.round(d[cat1[cat_index]] * 100)/100}<br/>${yname}: ${Math.round(d[cat2[cat_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 15) + "px");
     }
 
     function createXTickTooltip(div, d, event, sumstat2) {
         var a = sumstat2.filter((e) => e.key == d)
-        div.html(`<strong><u> ${d}‰</u></strong><br/>median: ${a[0].median}<br/># countries: ${a[0].values.filter((d) => (d[cat2[cat2_index]] !== "")).length}`) //+ " : " + d[cat2[cat2_selected]])
+        div.html(`<strong><u> ${d}‰</u></strong><br/>median: ${a[0].median}<br/># countries: ${a[0].values.filter((d) => (d[cat2[cat_index]] !== "")).length}`) //+ " : " + d[cat2[cat2_selected]])
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 15) + "px");
     }
@@ -83,7 +84,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     function SelectColumn(data, cat1value) {
         //setUpdateLock(true);
 
-        var a = data.filter(function(d){return d[cat1] == cat1value})
+        var a = data.filter(function(d){return d[cat1[cat_index]] == cat1value})
         var b = d3.map(a, function(d){return(d["Country"])})
         var c = d3.map(b, function(d){return(d.replace(/\s/g, ''))})
 
@@ -145,25 +146,29 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
     function createScatterPlot(circles, x, y, sumstat2) {
         var mapp = d3.map(sumstat2, function(d) { return d.key; });
+        var groupedData = d3.group(sumstat2, d => d.key);
 
         console.log(mapp)
 
-        var a = circles.attr("cx", function(d){return(x(d[cat1]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth )})
+        var a = circles.attr("cx", function(d){return(x(d[cat1[cat_index]]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth )})
                 .attr("cy", function(d){
-                    return d[cat2[cat2_index]] != "" ?
+                    //console.log("CY is : " + d[cat2[cat_index]]);
+                    return y(d[cat2[cat_index]])});
+                    /*
+                    return d[cat2[cat_index]] != "" ?
                     
-                    (y(d[cat2[cat2_index]])) : 
-                    y(d3.index(sumstat2, d => d.key).get(d[cat1]).median)
+                    (y(d[cat2[cat_index]])) : 
+                    y(d3.index(sumstat2, d => d.key).get(d[cat1[cat_index]]).median)*/
                     //sumstat2[0].median
-                })
                 
+                /*cat1[cat_index]
                 .attr("stroke", "white")
                 .style("visibility", function(d) {
-                    return d[cat2[cat2_index]] != "" ? "visible" : "hidden";})
+                    return d[cat2[cat_index]] != "" ? "visible" : "hidden";})*/
 
         if (selectedCountry.length == 0) {
             a.attr("r", 5)
-            .style("fill", function(d){ console.log(d[cat1]); return(promilleColor.get(d[cat1]))})
+            .style("fill", function(d){ console.log(d[cat1[cat_index]]); return(promilleColor.get(d[cat1[cat_index]]))})
         }
 
         svg.selectAll(".data-point").on('mouseover', function(event, d) {
@@ -215,11 +220,11 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     function createSumstat(data, histogram) {
         return d3.rollup(data, 
             function(d) {   // For each key..
-                var input = d.filter((g) => g[cat2[cat2_index]] !== "").map(function(g) { return g[cat2[cat2_index]] })    // Keep the variable called Sepal_Length
+                var input = d.filter((g) => g[cat2[cat_index]] !== "").map(function(g) { return g[cat2[cat_index]] })    // Keep the variable called Sepal_Length
                 var bins = histogram(input)   // And compute the binning on it.
                 return(bins)
             },
-            d => d[cat1])  // nest function allows to group the calculation per level of a factor
+            d => d[cat1[cat_index]])  // nest function allows to group the calculation per level of a factor
     }
 
     function createViolin(data, violin,x, y) {
@@ -298,6 +303,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         // Read the data and compute summary statistics for each specie
         d3.csv(data2).then(data => {  
 
+            // Filter data to exclude empty values
+            data = data.filter(d => d[cat1[0]] !== "" && d[cat2[0]] !== "");
+            data = data.filter(d => d[cat1[1]] !== "" && d[cat2[1]] !== "");
+
             // Get x-axis labels, sorted
             const x_values = xValues(data)
                 
@@ -312,7 +321,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 .attr("y", -45)
                 .attr("dy", ".75em")
                 .attr("transform", "rotate(-90)")
-                .text(yLabel[cat2_index]);
+                .text(yLabel[cat_index]);
 
             // Build and Show the X scale. It is a band scale like for a boxplot: each group has an dedicated RANGE on the axis. This range has a length of x.bandwidth
             var x = xScale(x_values)  
@@ -327,7 +336,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 .attr("text-anchor", "end")
                 .attr("x", width)
                 .attr("y", height + 30)
-                .text(xLabel[cat2_index]);
+                .text(xLabel[cat_index]);
 
             var histogram = createHistogram(y)
             var sumstat = createSumstat(data, histogram);
@@ -376,10 +385,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
 
             // Data statistics
-            var sumstat2 = Array.from(d3.group(data, d => d[cat1]), ([key, values]) => {
-                const q1 = d3.quantile(values.filter((d) => (d[cat2[cat2_index]] !== "")).map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.25);
-                const median = d3.quantile(values.filter((d) => (d[cat2[cat2_index]] !== "")).map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.5);
-                const q3 = d3.quantile(values.filter((d) => (d[cat2[cat2_index]] !== "")).map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.75);
+            var sumstat2 = Array.from(d3.group(data, d => d[cat1[cat_index]]), ([key, values]) => {
+                const q1 = d3.quantile(values.filter((d) => (d[cat2[cat_index]] !== "")).map(d => d[cat2[cat_index]]).sort(d3.ascending), 0.25);
+                const median = d3.quantile(values.filter((d) => (d[cat2[cat_index]] !== "")).map(d => d[cat2[cat_index]]).sort(d3.ascending), 0.5);
+                const q3 = d3.quantile(values.filter((d) => (d[cat2[cat_index]] !== "")).map(d => d[cat2[cat_index]]).sort(d3.ascending), 0.75);
                 const interQuantileRange = q3 - q1;
                 const min = q1 - 1.5 * interQuantileRange;
                 const max = q3 + 1.5 * interQuantileRange;
@@ -397,14 +406,14 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             datapointTooltipRef.current = div
 
             console.log("selected")
-            console.log(cat2_index);
+            console.log(cat_index);
 
             // Add individual points with jitter
             const circles = svg
                 .selectAll("indPoints")
                 .data(data)
                 .enter()
-                .filter(d => d[cat1] !== "")
+                .filter(d => d[cat1[cat_index]] !== "")
                 //.filter(d => d[cat2[cat2_selected]] !== "")
                 .append("circle")
 
@@ -552,7 +561,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         hcs.forEach(hc => {
             svg
             .select(("#" + hc).replace(/\s/g, ''))
-            .style("fill", function(d){ return(promilleColor.get(d[cat1])) });
+            .style("fill", function(d){ return(promilleColor.get(d[cat1[cat_index]])) });
         })
     }
 
@@ -560,27 +569,27 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         hcs.forEach(hc => {
             svg
             .select(("#" + hc).replace(/\s/g, ''))
-            .style("fill", function(d){ return(promilleColor.get(d[cat1])) });
+            .style("fill", function(d){ return(promilleColor.get(d[cat1[cat_index]])) });
         })
     }
 
     function colorAll(svg) {
         console.log("color all")
         svg.selectAll(".data-point")
-                    .style("fill", function(d){ return(promilleColor.get(d[cat1])) })
+                    .style("fill", function(d){ return(promilleColor.get(d[cat1[cat_index]])) })
                     .attr("r", 5);
     }
 
     function yScale() {
         return d3.scaleLinear()
-                    .domain([ 0,cat2_upper[cat2_index] ])
+                    .domain([ 0,cat2_upper[cat_index] ])
                     .range([height, 0]);
     }
 
     function xValues(data) {
-        return data.filter(function(d) {return d[cat2[cat2_index]] != ""}).reduce((acc, cur) => {
-                    if (!acc.includes(cur[cat1])) {
-                        acc.push(cur[cat1]);
+        return data.filter(function(d) {return d[cat2[cat_index]] != ""}).reduce((acc, cur) => {
+                    if (!acc.includes(cur[cat1[cat_index]])) {
+                        acc.push(cur[cat1[cat_index]]);
                     }
                     return acc;
                 }, []).sort(d3.ascending).filter(d => d !== "");
@@ -598,7 +607,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
         if (data) {
             console.log("switch")
-            console.log(cat2_index)
+            console.log(cat_index)
         // Build and Show the Y scale
         var y = yScale();
 
@@ -609,10 +618,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 
         const circles = svg.selectAll(".data-point").transition().duration(transitionDuration);
 
-        var sumstat2 = Array.from(d3.group(data, d => d[cat1]), ([key, values]) => {
-            const q1 = d3.quantile(values.filter((d) => (d[cat2[cat2_index]] !== "")).map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.25);
-            const median = d3.quantile(values.filter((d) => (d[cat2[cat2_index]] !== "")).map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.5);
-            const q3 = d3.quantile(values.filter((d) => (d[cat2[cat2_index]] !== "")).map(d => d[cat2[cat2_index]]).sort(d3.ascending), 0.75);
+        var sumstat2 = Array.from(d3.group(data, d => d[cat1[cat_index]]), ([key, values]) => {
+            const q1 = d3.quantile(values.filter((d) => (d[cat2[cat_index]] !== "")).map(d => d[cat2[cat_index]]).sort(d3.ascending), 0.25);
+            const median = d3.quantile(values.filter((d) => (d[cat2[cat_index]] !== "")).map(d => d[cat2[cat_index]]).sort(d3.ascending), 0.5);
+            const q3 = d3.quantile(values.filter((d) => (d[cat2[cat_index]] !== "")).map(d => d[cat2[cat_index]]).sort(d3.ascending), 0.75);
             const interQuantileRange = q3 - q1;
             const min = q1 - 1.5 * interQuantileRange;
             const max = q3 + 1.5 * interQuantileRange;
@@ -621,8 +630,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         
         createScatterPlot(circles, x, y, sumstat2)
 
-        d3.select("#" + id.current + "-y-label").transition().text(yLabel[cat2_index]);
-        d3.select("#" + id.current + "-x-label").transition().text(xLabel[cat2_index]);
+        d3.select("#" + id.current + "-y-label").transition().text(yLabel[cat_index]);
+        d3.select("#" + id.current + "-x-label").transition().text(xLabel[cat_index]);
 
 
 
@@ -730,7 +739,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         //createViolin(data, violin, x, y)
     }
         
-    }, [cat2_index])
+    }, [cat_index])
 
 
     function hoverCountry(country) {

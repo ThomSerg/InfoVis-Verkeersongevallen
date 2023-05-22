@@ -74,8 +74,8 @@ function Alcohol({
         <Grid.Col span={6}>
           <ChartCard title="Drunk driving acceptance">
               <ViolinGraph 
-                cat1="standard_driver" 
-                cat2={["beh_alchohol", "standard_minus_novice"]} 
+                cat1={["standard_driver", "standard_minus_novice"]} 
+                cat2={["beh_alchohol", "beh_alchohol"]} 
                 xLabel={["Allowed promille (normal driver)", "Difference allowed promille (normal driver - novice driver)"]}
                 yLabel={["People that drive above the limit (% in last 30 days)", "People that drive above the limit (% in last 30 days)"]}
                 setHoveredCountry={setHoveredCountry} 
@@ -92,7 +92,7 @@ function Alcohol({
         <Grid.Col span={6}>
           <ChartCard title="Casualities with respect to drink driving limits">
             <ViolinGraph 
-              cat1="standard_driver" 
+              cat1={["standard_driver", "standard_minus_novice"]}  
               cat2={["cas", "cas_young"]} 
               xLabel={["Allowed promille (normal driver)", "Difference allowed promille (normal driver - novice driver)"]}
               yLabel={["Road fatalities (per 100000 inhabitants)", "Road fatalities (age 15-24, per 100000 inhabitants)"]}
