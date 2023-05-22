@@ -166,13 +166,50 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     function createScatterPlot(circles, x, y, sumstat2) {
 
         // Position scatter plot data points
+        // circles
+        //     .attr("cx", function(d) {
+        //         return ( x(d[cat1[cat_index]]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth )
+        //     })
+        //     .attr("cy", function(d) {
+        //         return y(d[cat2[cat_index]])
+        //     });
+
+
+
         circles
-            .attr("cx", function(d) {
-                return ( x(d[cat1[cat_index]]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth )
+            .attr("cx", function(d){ 
+                console.log(d)
+                console.log(x(d[cat1[cat_index]]))
+                console.log(x(d[cat1[cat_index]]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth)
+                return(
+                    d[cat1[cat_index]] != "" ? (
+                    x(d[cat1[cat_index]]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth 
+                    ) :  (
+                    d[cat1[1-cat_index]] != "" ? x(d[cat1[1-cat_index]]) + x.bandwidth()/2 - 0.2*jitterWidth : 0)
+
+                )
+
+
             })
-            .attr("cy", function(d) {
-                return y(d[cat2[cat_index]])
-            });
+            .attr("cy", function(d){
+                console.log(d[cat1[cat_index]])
+                console.log(sumstat2)
+                return (
+                    d[cat1[cat_index]] != "" ? (
+                        d[cat2[cat_index]] != "" ?
+                        (y(d[cat2[cat_index]])) : 
+                        y(d3.index(sumstat2, d => d.key).get(d[cat1[cat_index]]).median) 
+                    ) : (
+                        d[cat1[1-cat_index]] != "" ? y(d3.index(sumstat2, d => d.key).get(d[cat1[1-cat_index]]).median) : 0
+                    )
+                    
+                )
+            })
+            
+            .attr("stroke", "white")
+            .style("visibility", function(d) {
+                return ((d[cat1[cat_index]] != "") && (d[cat2[cat_index]])) != "" ? "visible" : "hidden";
+            })
 
         // Set circle styling
         circles
@@ -607,9 +644,9 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                     .padding(xLabelPadding);
     }
 
-    function updateScatterplot(x, y, sumstat2, data) {
+    function updateScatterplot(x, y, sumstat2) {
         // Create transition
-        const circles = svg.selectAll(".data-point").data(data).transition().duration(transitionDuration);
+        const circles = svg.selectAll(".data-point").transition().duration(transitionDuration);
 
         //circles
 
@@ -694,7 +731,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
             updateAxis(x, y);
             updateViolinPlot(x, y)
-            updateScatterplot(x, y, sumstat2, data_filtered);
+            updateScatterplot(x, y, sumstat2);
             updateMedianLines(x, y, sumstat2);
         }
         
