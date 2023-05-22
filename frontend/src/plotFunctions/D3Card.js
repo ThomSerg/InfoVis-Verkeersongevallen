@@ -13,7 +13,7 @@ function D3Card({ hoveredCountry }) {
   })
 
   useEffect(() => {
-    if (hoveredCountry.length > 0) {
+    if (hoveredCountry.length == 1) {
         const hoveredData = data.find(d => d.Country === hoveredCountry[0]);
         if (hoveredData) {
          console.log(hoveredData)
