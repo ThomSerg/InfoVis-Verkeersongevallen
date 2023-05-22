@@ -43,7 +43,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
 
 
 
-  var margin = { top: 10, right: 30, bottom: 30, left: 40 };
+  var margin = { top: 10, right: 30, bottom: 30, left: 10 };
   const barHeight = 100;
   var halfBarHeight = barHeight / 2;
   var width = 600 - margin.left - margin.right;
