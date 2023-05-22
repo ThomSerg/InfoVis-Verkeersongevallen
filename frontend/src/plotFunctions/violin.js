@@ -64,8 +64,11 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
 
 
+
     function createDatapointTooltip(div, d, event) {
-        div.html(`<strong><u> ${d.Country}</u></strong><br/>${xLabelElement}: ${Math.round(d[cat1] * 100)/100}<br/>${yLabelElement}: ${Math.round(d[cat2[cat2_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
+        const xname = xLabelElement[cat2_index].split(" (")[0];
+        const yname = yLabelElement[cat2_index].split(" (")[0];
+        div.html(`<strong><u> ${d.Country}</u></strong><br/>${xname}: ${Math.round(d[cat1] * 100)/100}<br/>${yname}: ${Math.round(d[cat2[cat2_index]]* 100)/100}`) //+ " : " + d[cat2[cat2_selected]])
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 15) + "px");
     }
@@ -320,10 +323,11 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 .call(d3.axisBottom(x))
             svg.append("text")
                 .attr("class", "x-label")
+                .attr("id", id.current + "-x-label")
                 .attr("text-anchor", "end")
                 .attr("x", width)
                 .attr("y", height + 30)
-                .text(xLabel);
+                .text(xLabel[cat2_index]);
 
             var histogram = createHistogram(y)
             var sumstat = createSumstat(data, histogram);
@@ -617,8 +621,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         
         createScatterPlot(circles, x, y, sumstat2)
 
-        
         d3.select("#" + id.current + "-y-label").transition().text(yLabel[cat2_index]);
+        d3.select("#" + id.current + "-x-label").transition().text(xLabel[cat2_index]);
 
 
 

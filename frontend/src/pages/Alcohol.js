@@ -72,20 +72,19 @@ function Alcohol({
         </Grid.Col>
 
         <Grid.Col span={6}>
-          <ChartCard title="Drink driving acceptance">
+          <ChartCard title="Drunk driving acceptance">
               <ViolinGraph 
                 cat1="standard_driver" 
                 cat2={["beh_alchohol", "standard_minus_novice"]} 
-                xLabel="standard driver"
-                yLabel={["beh alchohol", "standard minus novice"]}
+                xLabel={["Allowed promille (normal driver)", "Difference allowed promille (normal driver - novice driver)"]}
+                yLabel={["People that drive above the limit (% in last 30 days)", "People that drive above the limit (% in last 30 days)"]}
                 setHoveredCountry={setHoveredCountry} 
                 hoveredCountry={hoveredCountry}
                 setSelectedCountry={setSelectedCountry} 
                 selectedCountry={selectedCountry}
                 cat2_upper={[0.5, 0.5]}
                 cat2_selected={selectedNestedButton}
-                xLabelElement={"Max promille"}
-                yLabelElement={"Acceptance of drunk driving"}
+
               />
             </ChartCard>
         </Grid.Col>
@@ -95,16 +94,15 @@ function Alcohol({
             <ViolinGraph 
               cat1="standard_driver" 
               cat2={["cas", "cas_young"]} 
-              xLabel="standard driver"
-              yLabel={["casualties", "casualties young"]}
+              xLabel={["Allowed promille (normal driver)", "Difference allowed promille (normal driver - novice driver)"]}
+              yLabel={["Road fatalities (per 100000 inhabitants)", "Road fatalities (age 15-24, per 100000 inhabitants)"]}
               setHoveredCountry={setHoveredCountry} 
               hoveredCountry={hoveredCountry}
               setSelectedCountry={setSelectedCountry} 
               selectedCountry={selectedCountry}
               cat2_upper={[10, 10]}
               cat2_selected={selectedNestedButton}
-              xLabelElement={"Max promille"}
-              yLabelElement={"Casualties young drivers"}
+              
             />
           </ChartCard>
         </Grid.Col>
@@ -113,6 +111,10 @@ function Alcohol({
 
       </div>
   )
+  /*
+  xLabelElement={"Max promille"}
+              yLabelElement={"Casualties young drivers"}
+  */
 }
 
 export default Alcohol;
