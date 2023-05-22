@@ -245,7 +245,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
 
     function handleZoomInClick() {
       // Calculate the new domain values based on the desired zoom level
-      const xminD = d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff;
+      const xminD = Math.max(0, d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff);
       const yminD = d3.min(data, d => parseFloat(d[cat2])) - 0.05 * yDiff;
     
       // Compute the new scales with the updated domain
