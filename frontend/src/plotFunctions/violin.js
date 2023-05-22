@@ -8,6 +8,9 @@ import './violin.css'
 
 function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry, cat2_upper, cat2_selected, title="Unknown title", xLabelElement = xLabel, yLabelElement = yLabel}) {
     
+    const [data, setData] = useState(null);
+    const [sumstat, setSumstat] = useState(null);
+
     const id = useRef(_uniqueId('violin-'))
     
     let cat_index= 0 ;
@@ -56,7 +59,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
 
 
-    const [data, setData] = useState(null);
+
+    
 
  
     const datapointTooltipRef = useRef(null);
@@ -75,8 +79,14 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }
 
     function createXTickTooltip(div, d, event, sumstat2) {
-        var a = sumstat2.filter((e) => e.key == d)
-        div.html(`<strong><u> ${d}‰</u></strong><br/>median: ${a[0].median}<br/># countries: ${a[0].values.filter((d) => (d[cat2[cat_index]] !== "")).length}`) //+ " : " + d[cat2[cat2_selected]])
+
+        
+        var a = sumstat2.filter((e) => {
+            
+            console.log("THE MAGICAL VALUE OF E IS " + e);
+            console.log("THE MAGICAL VALUE OF E.KEY IS " + e.key);
+            return e.key == d;})
+        div.html(`<strong><u> ${d}‰</u></strong><br/>median: ${Math.round(a[0].median* 100)/100}<br/># countries: ${a[0].values.filter((d) => (d[cat2[cat_index]] !== "")).length}`) //+ " : " + d[cat2[cat2_selected]])
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 15) + "px");
     }
@@ -146,7 +156,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
     function createScatterPlot(circles, x, y, sumstat2) {
         var mapp = d3.map(sumstat2, function(d) { return d.key; });
-        var groupedData = d3.group(sumstat2, d => d.key);
+        //var groupedData = d3.group(sumstat2, d => d.key);
 
         console.log(mapp)
 
@@ -287,6 +297,58 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
         
     }
 
+    function updateViolin(transitionDuration) {
+        d3.csv(data2).then(data => {  
+            if(svg){
+
+
+                var x_values = xValues(data)
+
+                let newXScale = xScale(x_values)  
+                let newYScale = yScale()
+        
+                
+                // Features of the histogram
+                var xAxisGroup = svg.select(".x-axis");
+                var yAxisGroup = svg.select(".y-axis");
+                // Filter data to exclude empty values
+                data = data.filter(d => d[cat1[0]] !== "" && d[cat2[0]] !== "");
+                data = data.filter(d => d[cat1[1]] !== "" && d[cat2[1]] !== "");
+        
+                // Update the x-axis
+                xAxisGroup
+                .transition()
+                .duration(transitionDuration)
+                .call(d3.axisBottom(newXScale));
+          
+              // Update the y-axis
+                yAxisGroup
+                .transition()
+                .duration(transitionDuration)
+                .call(d3.axisLeft(newYScale));
+
+                // Data statistics
+                var sumstat = Array.from(d3.group(data, d => d[cat1[cat_index]]), ([key, values]) => {
+                    const q1 = d3.quantile(values.filter((d) => (d[cat2[cat_index]] !== "")).map(d => d[cat2[cat_index]]).sort(d3.ascending), 0.25);
+                    const median = d3.quantile(values.filter((d) => (d[cat2[cat_index]] !== "")).map(d => d[cat2[cat_index]]).sort(d3.ascending), 0.5);
+                    const q3 = d3.quantile(values.filter((d) => (d[cat2[cat_index]] !== "")).map(d => d[cat2[cat_index]]).sort(d3.ascending), 0.75);
+                    const interQuantileRange = q3 - q1;
+                    const min = q1 - 1.5 * interQuantileRange;
+                    const max = q3 + 1.5 * interQuantileRange;
+                    return { key, values, q1, median, q3, interQuantileRange, min, max };
+                }).filter(({ key }) => key !== "");
+
+                setSumstat(sumstat);
+            }
+
+        });
+
+    }
+
+    useEffect(() => {
+        updateViolin( transitionDuration)
+    }, [cat_index])
+
 
     /* * * * * * * * *
      * Populate SVG  *
@@ -311,7 +373,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             data = data.filter(d => d[cat1[1]] !== "" && d[cat2[1]] !== "");
 
             // Get x-axis labels, sorted
-            const x_values = xValues(data)
+            var x_values = xValues(data)
                 
             // Build and Show the Y scale
             var y = yScale();
@@ -398,6 +460,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 return { key, values, q1, median, q3, interQuantileRange, min, max };
             }).filter(({ key }) => key !== "")
 
+            setSumstat(sumstat2);
                 
 
             // Hover tooltip
@@ -632,6 +695,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             const max = q3 + 1.5 * interQuantileRange;
             return { key, values, q1, median, q3, interQuantileRange, min, max };
         }).filter(({ key }) => key !== "")
+
+        setSumstat(sumstat2)
         
         createScatterPlot(circles, x, y, sumstat2)
 
