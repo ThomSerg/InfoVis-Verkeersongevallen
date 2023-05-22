@@ -336,23 +336,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             //.style("stroke-width", 4);
     }
 
-    function selectCountryByName(countryName) {
-        countryName.forEach(cn => {
-            selectSelection(svg.select(("#" + cn).replace(/\s/g, '')))
-        })
-        if (countryName.length != 0) {
-            svg.select("#selection_label").style("visibility", "visible")
-            svg.select("#selection_label_text").transition()
-                    .text(countryName[0]);
-        } else {
-            svg.select("#selection_label").style("visibility", "hidden")
-            svg.select("#selection_label_text").transition()
-                    .text("");
-        }
-
-     
-        var cn = countryName
-        if ((cn.length == 1) && (countryData[countryName])) {
+    function updateLegendSelected(countryName) {
+        if ((countryName.length == 1) && (countryData[countryName])) {
 
             const values = Object.values(countryData);
             const minValue = d3.min(values);
@@ -369,6 +354,23 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             d3.select("#legend_line_selected").style("visibility", "hidden")
                 
         }
+    }
+
+    function selectCountryByName(countryName) {
+        countryName.forEach(cn => {
+            selectSelection(svg.select(("#" + cn).replace(/\s/g, '')))
+        })
+        if (countryName.length != 0) {
+            svg.select("#selection_label").style("visibility", "visible")
+            svg.select("#selection_label_text").transition()
+                    .text(countryName[0]);
+        } else {
+            svg.select("#selection_label").style("visibility", "hidden")
+            svg.select("#selection_label_text").transition()
+                    .text("");
+        }
+
+        updateLegendSelected(countryName)
         
     }
 
@@ -436,6 +438,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             selectCountryByName([d.properties["NAME"]])
         } else {
             setSelectedCountry([])
+            updateLegendSelected([])
         }
     }
     
