@@ -432,6 +432,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         var a = selectedCountryRef.current
         selectedCountryRef.current = []
         clearCountryByName(a)
+
         if (d!= null && a[0] != [d.properties["NAME"]]) {
             selectedCountryRef.current = [d.properties["NAME"]]
             setSelectedCountry([d.properties["NAME"]])
@@ -520,7 +521,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     useEffect(() => {
         
         if (svg && (!updateLockRef.current)) {
-            //selectedCountryRef.current = selectedCountry
+            selectedCountryRef.current = selectedCountry
             //if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
             clearMap();
             hoverCountryByName(hoveredCountry)
