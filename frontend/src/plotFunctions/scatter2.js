@@ -48,6 +48,11 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     })
 })
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> 433fc5134e9c1b15afa9658dee8f9ba77c31b13f
   useEffect(() => {
     if (svg) {
 

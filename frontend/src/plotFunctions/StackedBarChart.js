@@ -222,6 +222,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
       .text(d => d3.format('.1f')(d.label) + ' \u2030')
       .style('fill', (d,i) => promilleColor.get(d.label))
       .style('font-weight', 'bold')
+      .style('font-size', '17px') // Adjust the font size as needed
       .transition()
       .duration(delay)
       .attr('x', d => xScale(d.cumulative) + xScale(d.value) / 2)
@@ -232,6 +233,8 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
       .attr('x', d => xScale(0))
       .attr('y', (height / 2) + 5)
       .text(d => d.value)
+      .style('font-weight', 'bold')
+      .style('font-size', '17px') // Adjust the font size as needed
       .transition()
       .duration(delay)
       .attr('x', d => xScale(d.cumulative) + (xScale(d.value) / 2))
