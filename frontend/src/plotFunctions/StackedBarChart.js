@@ -259,6 +259,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
           colorAll();
         }
         if (selectedCountry.length != 0) {
+          resetSelect();
           selectCountries(selectedCountry,data);  
       } else {
         resetSelect();
