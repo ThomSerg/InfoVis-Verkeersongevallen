@@ -74,7 +74,10 @@ function AppBody({
             <Tabs.Panel value="road_quality" pt="xs">
           
               <Wegkwaliteit 
+                setHoveredCountry={setHoveredCountry} 
                 hoveredCountry={hoveredCountry}
+                setSelectedCountry={setSelectedCountry} 
+                selectedCountry={selectedCountry}
                 scale={scale}
               />
                
