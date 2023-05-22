@@ -123,7 +123,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
             // also get mapping for next placement
             // (save having to format data for d3 stack)
             let cumulative = 0
-            const _data = data_.sort((x,y) => {return d3.descending(x.value, y.value)}).map(d => {
+            const _data = data_.sort((x,y) => {return d3.ascending(x.label, y.label)}).map(d => {
               cumulative += d.value
               var countries = data.filter(function(d_) {return d_[cat[cat_index]] == d.label}).map(d => d["Country"])
               return {
