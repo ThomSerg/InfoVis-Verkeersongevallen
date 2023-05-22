@@ -98,7 +98,10 @@ function AppBody({
             <Tabs.Panel value="fines" pt="xs">
               
               <Fines 
+                setHoveredCountry={setHoveredCountry} 
                 hoveredCountry={hoveredCountry}
+                setSelectedCountry={setSelectedCountry} 
+                selectedCountry={selectedCountry}
                 scale={scale}
               /> 
             </Tabs.Panel>
