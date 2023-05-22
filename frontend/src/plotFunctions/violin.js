@@ -34,7 +34,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     // Dimensions and margins of the graph
     var margin = {top: 10, right: 30, bottom: 40, left: 50},
     width = 500 - margin.left - margin.right,
-    height = 400 - margin.top - margin.bottom;
+    height = 350 - margin.top - margin.bottom;
 
     // Upper value for cat2 range
     //const cat2_upper = 0.5;
