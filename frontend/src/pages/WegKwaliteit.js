@@ -6,6 +6,7 @@ import Map from "../map_europe/map"
 import { Card, Layout, Space } from 'antd';
 import D3Card from "../plotFunctions/D3Card";
 import ChartCard from "../plotFunctions/ChartCard";
+import TabHeader from "../plotFunctions/TabHeader";
 
 import { Grid } from '@mantine/core';
 
@@ -36,13 +37,6 @@ class Wegkwaliteit extends Component {
         });*/
       }
 
-      setHoveredCountry = (country) => {
-        this.setState({hoveredCountry: country});
-      }
-
-      
-
-//<Map setHoveredCountry={this.setHoveredCountry} hoveredCountry={this.state.hoveredCountry}/>
       render() {
         
 
@@ -52,36 +46,39 @@ class Wegkwaliteit extends Component {
         console.log(scale)
 
         return (
-          
-          <Grid>
+          <div>
+            <TabHeader title="Road Quality"></TabHeader>
 
-            <Grid.Col span={6}>
-              <ChartCard title="Information" > 
-                <D3Card
-                  hoveredCountry={this.props.hoveredCountry}
-                />  
-              </ChartCard> 
-            </Grid.Col>
+            <Grid>
 
-            <Grid.Col span={6}>
-              <ChartCard title="Road quality Europe" >  
-                <Scatter2 cat1="RoadQuality" cat2="cas" varXAxis='Road quality (score on 7)' varYaxis='Road fatalities (per 100000 inhabitants)' title='Road quality Europe'/>
-              </ChartCard>
-            </Grid.Col>
+              <Grid.Col span={6}>
+                <ChartCard title="Information" > 
+                  <D3Card
+                    hoveredCountry={this.props.hoveredCountry}
+                  />  
+                </ChartCard> 
+              </Grid.Col>
 
-            <Grid.Col span={6}>
-              <ChartCard title="GDP Europe" > 
-                <Scatter2 cat1="RoadQuality" cat2="log(GDP(2019))" varXAxis='Road quality (score on 7)' varYaxis='log(GDP) (€)' title='GDP Europe'/>
-              </ChartCard>
-            </Grid.Col>
+              <Grid.Col span={6}>
+                <ChartCard title="Road quality Europe" >  
+                  <Scatter2 cat1="RoadQuality" cat2="cas" varXAxis='Road quality (score on 7)' varYaxis='Road fatalities (per 100000 inhabitants)' title='Road quality Europe' setHoveredCountry={this.props.setHoveredCountry} hoveredCountry={this.props.hoveredCountry} selectedCountry={this.props.selectedCountry} setSelectedCountry={this.props.setSelectedCountry}/>
+                </ChartCard>
+              </Grid.Col>
 
-            <Grid.Col span={6}>
-              <ChartCard title="Investments in roads Europe" > 
-                <Scatter2 cat1="Invest per capita" cat2="cas" varXAxis='Invested per capita (€ per resident)' varYaxis='Road fatalities (per 100000 residents)' title='Investments in roads Europe'/>
-              </ChartCard>
-            </Grid.Col>
+              <Grid.Col span={6}>
+                <ChartCard title="GDP Europe" > 
+                  <Scatter2 cat1="RoadQuality" cat2="log(GDP(2019))" varXAxis='Road quality (score on 7)' varYaxis='log(GDP) (€)' title='GDP Europe' setHoveredCountry={this.props.setHoveredCountry} hoveredCountry={this.props.hoveredCountry} selectedCountry={this.props.selectedCountry} setSelectedCountry={this.props.setSelectedCountry}/>
+                </ChartCard>
+              </Grid.Col>
 
-          </Grid>
+              <Grid.Col span={6}>
+                <ChartCard title="Investments in roads Europe" > 
+                  <Scatter2 cat1="Invest per capita" cat2="cas" varXAxis='Invested per capita (€ per resident)' varYaxis='Road fatalities (per 100000 residents)' title='Investments in roads Europe' setHoveredCountry={this.props.setHoveredCountry} hoveredCountry={this.props.hoveredCountry} selectedCountry={this.props.selectedCountry} setSelectedCountry={this.props.setSelectedCountry}/>
+                </ChartCard>
+              </Grid.Col>
+
+            </Grid>
+          </div>
         );
       }
 }

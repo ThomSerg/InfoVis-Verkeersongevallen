@@ -8,6 +8,8 @@ import D3Card from "../plotFunctions/D3Card";
 import StackedBarChart from "../plotFunctions/StackedBarChart";
 import ChartCard from "../plotFunctions/ChartCard";
 import ViolinGraph from "../plotFunctions/violin";
+import AgeButtons from "../AgeButtons";
+import TabHeader from "../plotFunctions/TabHeader";
 
 import Map from "../map_europe/map"
 import MapD3 from "../map_europe/mapD3"
@@ -20,7 +22,7 @@ function Alcohol({
     setSelectedCountry,
   }) {
 
-  const [selectedNestedButton, setSelectedNestedButton] = useState("nestedButton1");
+  const [selectedNestedButton, setSelectedNestedButton] = useState("all_drivers");
 
 
 
@@ -28,7 +30,13 @@ function Alcohol({
 
   return (
     <div>
-      
+      <TabHeader title="Alcohol behind the wheel">
+        <AgeButtons
+          selectedNestedButton = {selectedNestedButton}
+          setSelectedNestedButton = {setSelectedNestedButton}
+        />
+
+      </TabHeader>
 
       <Grid>
 
@@ -36,7 +44,7 @@ function Alcohol({
         <Grid.Col span={6}>       
           
 
-          <ChartCard title="Allowed promille when driving" > 
+          <ChartCard title="Information" > 
             <D3Card
               hoveredCountry={hoveredCountry}
             />  
@@ -49,11 +57,15 @@ function Alcohol({
           
 
           <ChartCard title="Allowed promille when driving" > 
-            <StackedBarChart 
-              cat="standard_driver" 
+            <StackedBarChart            
               setHoveredCountry={setHoveredCountry} 
               hoveredCountry={hoveredCountry}
-              title = "Allowed promille in blood"
+              cat_selected={selectedNestedButton}
+              selectedCountry={selectedCountry}
+              setSelectedCountry={setSelectedCountry}
+              cat={["standard_driver", "standard_minus_novice"]} 
+
+
             />
           </ChartCard>
           </div>

@@ -11,15 +11,45 @@ function D3Card({ hoveredCountry }) {
         const hoveredData = data.find(d => d.Country === hoveredCountry[0]);
         if (hoveredData) {
          console.log(hoveredData)
+         const population = parseInt(hoveredData["pop"]);
+         const formattedPopulation = population.toLocaleString();
 
-          const additionalData = `Speed limit highway: ${hoveredData["speed_highway"]}, Speed limit rural: ${hoveredData["speed_rural"]}, Speed limit city: ${hoveredData["speed_city"]}`;
-          setCountryText(`${hoveredCountry[0]} (${additionalData})`);
-        } else {
+         const area = parseInt(hoveredData["area_km2"]);
+         const formattedArea = area.toLocaleString();
+
+          const oppData = `Surface of the country: ${formattedArea} km2`;
+          const bewData = `Citizens: ${formattedPopulation}`;
+          const gdpData = `GDP: ${hoveredData["speed_city"]}`;
+          const highwayData = `Speed limit highway: ${hoveredData["speed_highway"]} km/h`;
+          const ruralData = `Speed limit rural: ${hoveredData["speed_rural"]} km/h`;
+          const cityData = `Speed limit city: ${hoveredData["speed_city"]} km/h`;
+
+          
+          
+          setCountryText(
+            <>
+              <span>{hoveredCountry[0]}</span>
+              <br />
+              <span>{oppData}</span>
+              <br />
+              <span>{bewData}</span>
+              <br />
+              <span>{highwayData}</span>
+              <br />
+              <span>{ruralData}</span>
+              <br />
+              <span>{cityData}</span>
+              <br />
+
+            </>
+          );
+        } 
+          else {
           setCountryText(hoveredCountry[0]);
         }
       });
     } else {
-      setCountryText('Hover over a country to highlight their respective points on the graphs');
+      setCountryText('Hover over a country to highlight their respective points on the graphs. You can also select a country by clicking and then compare with another country by hovering.');
     }
   }, [hoveredCountry]);
 
