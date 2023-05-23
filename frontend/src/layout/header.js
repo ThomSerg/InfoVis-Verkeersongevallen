@@ -44,7 +44,7 @@ function Header({scale, activeTab, setActiveTab}) {
 
     return (
       
-      <Grid grow>
+      <Grid grow style={{"width": "100%"}}>
         <Grid.Col span={4}>
           <Button 
             fullWidth 
@@ -99,17 +99,21 @@ function Header({scale, activeTab, setActiveTab}) {
             <Image width={80*scale} src="/car_slipping.png"></Image>
           </div>
         </Grid.Col>
-        <Grid.Col span={6}>
+        <Grid.Col span={5}>
           {/* <div style = {{"position": "relative", "top": "50%", "-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}> */}
           <div style={{"height": "100%", "display": "flex", "align-items": "center"}}>
             <h1 style={{"font-size": (60*scale).toString()+"px"}}>Road accidents in Europe</h1>
           </div>
         </Grid.Col>
-        <Grid.Col span={4}>
-          <NavigationButtons/>
+        <Grid.Col span={3}>
+          <div style={{"height": "100%", "width": "100%", "display": "flex", "align-items": "center"}}>
+            <NavigationButtons/>
+          </div>
         </Grid.Col>
         <Grid.Col span={1}>
-          <Image height={90*scale} radius="md" src="/europe.jpg"></Image>
+          <div style={{"height": "15vh", "width": "15vh", "display": "flex", "align-items": "center"}}>
+            <Image height={"10vh"} radius="md" src="/europe.jpg"></Image>
+          </div>
         </Grid.Col>
 
 
