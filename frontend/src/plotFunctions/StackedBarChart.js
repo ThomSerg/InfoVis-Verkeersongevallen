@@ -70,13 +70,14 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
 
 
   function selectLabels(labels) {
-    svg.selectAll('.rect-stacked').filter(function(rs) {return labels.includes(rs.label) & rs.label != ""}).style('opacity', '1');
-    svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label) & rs.label != ""}).style('opacity', '.2');
+    svg.selectAll('.rect-stacked').filter(function(rs) {return labels.includes(rs.label) & rs.label != ""}).style('fill-opacity', '1');
+    svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label) & rs.label != ""}).style('fill-opacity', '.2');
   }
 
   function selectLabels2(labels) {
-    svg.selectAll('.rect-stacked').filter(function(rs) {return labels.includes(rs.label) & rs.label != ""}).style("fill", function(d){ return('var(--color-selected)') })
-    ;
+    svg.selectAll('.rect-stacked').filter(function(rs) {return labels.includes(rs.label) & rs.label != ""}).attr("stroke", function(d){ return('var(--color-selected)') }).attr('stroke-width', '6')
+    svg.selectAll('.rect-stacked').filter(function(rs) {return !labels.includes(rs.label) & rs.label != ""}).attr("stroke", function(d){ return('var(--color-selected)') }).attr('stroke-width', '0')
+
   }
 
   function hoverCountries(countries, data) {
@@ -94,10 +95,12 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
   }
 
   function colorAll() {
-    svg.selectAll('.rect-stacked').style('opacity', '1');
+    svg.selectAll('.rect-stacked').style('fill-opacity', '1');
   }
   function resetSelect() {
     svg.selectAll('.rect-stacked').style('fill', (d, i) => promilleColor.get(d.label));
+    svg.selectAll('.rect-stacked').attr("stroke", function(d){ return('var(--color-selected)') }).attr('stroke-width', '0')
+
   }
 
 
@@ -258,18 +261,19 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
   })
   useEffect(() => {
     if (svg && (!updateLock)) {
+      if (selectedCountry.length != 0) {
+        resetSelect();
+        selectCountries(selectedCountry,data);  
+      } else {
+        resetSelect();
+      }
   
       if (hoveredCountry.length != 0) {
             hoverCountries(hoveredCountry, data);    
         } else {
           colorAll();
         }
-        if (selectedCountry.length != 0) {
-          resetSelect();
-          selectCountries(selectedCountry,data);  
-      } else {
-        resetSelect();
-      }
+        
     }
   }, [svg, hoveredCountry, selectedCountry, updateLock])
 

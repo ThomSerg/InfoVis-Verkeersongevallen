@@ -10,7 +10,7 @@ import {
 function TabHeader({title, children}) {
 
     return (
-        <div height="200">
+        <div style={{"height":"8vh"}}>
         <Grid>
 
             <Grid.Col span={6}>  

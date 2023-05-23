@@ -19,6 +19,7 @@ import ChartCard from "../plotFunctions/ChartCard";
 
 import Map from "../map_europe/map"
 import MapD3 from "../map_europe/mapD3"
+import TabHeader from "../plotFunctions/TabHeader";
 
 function EuropeMap({
     hoveredCountry,
@@ -29,15 +30,22 @@ function EuropeMap({
 
 
     return (
-   
-      <ChartCard title="">
-        <MapD3 
-          setHoveredCountry={setHoveredCountry} 
-          hoveredCountry={hoveredCountry}
-          setSelectedCountry={setSelectedCountry} 
-          selectedCountry={selectedCountry}
-        />
-      </ChartCard>
+      <div>
+        <TabHeader></TabHeader>
+        <Grid>
+            <Grid.Col span={12}>
+              <ChartCard title="">
+                
+                <MapD3 
+                  setHoveredCountry={setHoveredCountry} 
+                  hoveredCountry={hoveredCountry}
+                  setSelectedCountry={setSelectedCountry} 
+                  selectedCountry={selectedCountry}
+                />
+              </ChartCard>
+            </Grid.Col>
+          </Grid>
+      </div>
 
     )
   }

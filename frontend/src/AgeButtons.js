@@ -21,6 +21,7 @@ function AgeButtons({selectedNestedButton, setSelectedNestedButton}) {
 
             refButtonYoung.current.classList.remove("bg-purple-700")
             refButtonYoung.current.classList.add("bg-black")
+
         } else if (selectedNestedButton == "young_drivers") {
             refButtonAll.current.classList.remove("bg-purple-700")
             refButtonAll.current.classList.add("bg-black")
@@ -34,7 +35,7 @@ function AgeButtons({selectedNestedButton, setSelectedNestedButton}) {
 
         <div>
 
-            <div style={{"float": "left"}}>
+            <div style={{"float": "left", "marginRight": "10px"}}>
                 <Button
                     fullWidth 
                     variant="filled" 

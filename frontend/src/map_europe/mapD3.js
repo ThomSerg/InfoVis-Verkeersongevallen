@@ -336,23 +336,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             //.style("stroke-width", 4);
     }
 
-    function selectCountryByName(countryName) {
-        countryName.forEach(cn => {
-            selectSelection(svg.select(("#" + cn).replace(/\s/g, '')))
-        })
-        if (countryName.length != 0) {
-            svg.select("#selection_label").style("visibility", "visible")
-            svg.select("#selection_label_text").transition()
-                    .text(countryName[0]);
-        } else {
-            svg.select("#selection_label").style("visibility", "hidden")
-            svg.select("#selection_label_text").transition()
-                    .text("");
-        }
-
-     
-        var cn = countryName
-        if ((cn.length == 1) && (countryData[countryName])) {
+    function updateLegendSelected(countryName) {
+        if ((countryName.length == 1) && (countryData[countryName])) {
 
             const values = Object.values(countryData);
             const minValue = d3.min(values);
@@ -369,6 +354,23 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             d3.select("#legend_line_selected").style("visibility", "hidden")
                 
         }
+    }
+
+    function selectCountryByName(countryName) {
+        countryName.forEach(cn => {
+            selectSelection(svg.select(("#" + cn).replace(/\s/g, '')))
+        })
+        if (countryName.length != 0) {
+            svg.select("#selection_label").style("visibility", "visible")
+            svg.select("#selection_label_text").transition()
+                    .text(countryName[0]);
+        } else {
+            svg.select("#selection_label").style("visibility", "hidden")
+            svg.select("#selection_label_text").transition()
+                    .text("");
+        }
+
+        updateLegendSelected(countryName)
         
     }
 
@@ -430,14 +432,18 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         var a = selectedCountryRef.current
         selectedCountryRef.current = []
         clearCountryByName(a)
+
         if (d!= null && a[0] != [d.properties["NAME"]]) {
             selectedCountryRef.current = [d.properties["NAME"]]
             setSelectedCountry([d.properties["NAME"]])
             selectCountryByName([d.properties["NAME"]])
         } else {
             setSelectedCountry([])
+            updateLegendSelected([])
         }
     }
+
+
     
 
     useEffect(() => {
@@ -448,8 +454,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 .attr("y", margin.top)
                 .attr("width", width)
                 .attr("height", height)
-                .attr("stroke", "black")
-                .attr("stroke-width", "2px")
+                // .attr("stroke", "black")
+                // .attr("stroke-width", "2px")
                 .attr("fill", "transparent")
                 .on("click", function(event) {
                     onClick(null); // Pass null or any other value to indicate no country is clicked
@@ -486,6 +492,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                     onClick(d)
                 })
 
+
             // svg.append('g')
             //     .attr("id", "selection_label")
             //     .style("visibility", "hidden")
@@ -514,7 +521,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     useEffect(() => {
         
         if (svg && (!updateLockRef.current)) {
-            //selectedCountryRef.current = selectedCountry
+            selectedCountryRef.current = selectedCountry
             //if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
             clearMap();
             hoverCountryByName(hoveredCountry)

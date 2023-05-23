@@ -51,6 +51,7 @@ function AppBody({
       <Grid>
 
         <Grid.Col span={4} height="10vh">
+          <div style={{"height":"1.2vh"}}></div>
           <EuropeMap
             setHoveredCountry={setHoveredCountry} 
             hoveredCountry={hoveredCountry}

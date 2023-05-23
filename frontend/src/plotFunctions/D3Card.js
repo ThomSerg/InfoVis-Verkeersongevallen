@@ -24,30 +24,25 @@ function D3Card({ hoveredCountry }) {
          const formattedArea = area.toLocaleString();
 
          const oppData = <span><strong>Surface of the country:</strong> {formattedArea} km2</span>;
-         const bewData = <span><strong>Citizens:</strong> {formattedPopulation}</span>;
-         const highwayData = <span><strong>Speed limit highway:</strong> {hoveredData["speed_highway"]} km/h</span>;
-         const ruralData = <span><strong>Speed limit rural:</strong> {hoveredData["speed_rural"]} km/h</span>;
-         const cityData = <span><strong>Speed limit city:</strong> {hoveredData["speed_city"]} km/h</span>;
+         const bewData = <span><strong>Citizens (2019):</strong> {formattedPopulation}</span>;
+         const highwayData = hoveredData["speed_highway"] !== "" && !isNaN(hoveredData["speed_highway"]) ? <span><strong>Speed limit highway:</strong> {hoveredData["speed_highway"]} km/h</span> : null;
+         const ruralData = hoveredData["speed_rural"] !== "" && !isNaN(hoveredData["speed_rural"]) ? <span><strong>Speed limit rural:</strong> {hoveredData["speed_rural"]} km/h</span> : null;
+         const cityData = hoveredData["speed_city"] !== "" && !isNaN(hoveredData["speed_city"]) ? <span><strong>Speed limit city:</strong> {hoveredData["speed_city"]} km/h</span> : null;
+
 
           
           
-          setCountryText(
-            <>
+         setCountryText(
+          <>
             <span style={{ fontWeight: 'bold', fontSize: '18px' }}>{hoveredCountry[0]}</span>
-            <br />
-            <br /> {/* Empty line */}
-            <span style={{fontSize: '14px' }}>{oppData}</span>
-            <br />
-            <span style={{fontSize: '14px' }}>{bewData}</span>
-            <br />
-            <span style={{fontSize: '14px' }}>{highwayData}</span>
-            <br />
-            <span style={{fontSize: '14px' }}>{ruralData}</span>
-            <br />
-            <span style={{fontSize: '14px' }}>{cityData}</span>
-            <br />
+            {oppData && <><br /><span style={{fontSize: '14px' }}>{oppData}</span></>}
+            {bewData && <><br /><span style={{fontSize: '14px' }}>{bewData}</span></>}
+            {highwayData && <><br /><span style={{fontSize: '14px' }}>{highwayData}</span></>}
+            {ruralData && <><br /><span style={{fontSize: '14px' }}>{ruralData}</span></>}
+            {cityData && <><br /><span style={{fontSize: '14px' }}>{cityData}</span></>}
           </>
-          );
+        );
+        
         } 
           else {
           setCountryText(hoveredCountry[0]);

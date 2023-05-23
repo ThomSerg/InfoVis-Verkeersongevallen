@@ -1,11 +1,11 @@
-/* .chartTitle {
-    font-size: 24px;
+.chartTitle {
+    font-size: 22px;
     text-align: center;
-    padding-top: 10px;
-    padding-bottom: 30px;
+    padding-top: 0px;
+    padding-bottom: 0px;
     font-weight: bold;
-    transform: translateY(5px);
-  } */
+    transform: translateY(0px);
+  }
 
 .card {
   background-color: var(--color1);
