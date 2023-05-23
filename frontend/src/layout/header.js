@@ -94,10 +94,16 @@ function Header({scale, activeTab, setActiveTab}) {
     <div>
       <Grid grow>
         <Grid.Col span={1}>
-          <Image width={80*scale} src="/car_slipping.png"></Image>
+          {/* <div style = {{"position": "relative", "top": "50%", "-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}> */}
+          <div style={{"height": "100%", "display": "flex", "justify-content": "center", "align-items": "center"}}>
+            <Image width={80*scale} src="/car_slipping.png"></Image>
+          </div>
         </Grid.Col>
         <Grid.Col span={6}>
-          <h1 style={{"font-size": (60*scale).toString()+"px"}}>Road accidents in Europe</h1>
+          {/* <div style = {{"position": "relative", "top": "50%", "-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}> */}
+          <div style={{"height": "100%", "display": "flex", "align-items": "center"}}>
+            <h1 style={{"font-size": (60*scale).toString()+"px"}}>Road accidents in Europe</h1>
+          </div>
         </Grid.Col>
         <Grid.Col span={4}>
           <NavigationButtons/>
