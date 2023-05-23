@@ -18,6 +18,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     const resultDivRef = useRef(null);
     // State holding the initialised SVG
     const [svg, setSvg] = useState(null);
+    const [svgLegend, setSvgLegend] = useState(null);
     // State holding a lock for graph updates
     const updateLockRef = useRef(false);
     // Which country is selected, updates faster then setSelectedCountry
@@ -121,13 +122,13 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         var legendWidth = 500; // Adjust the desired width of the legend SVG
         var barWidth = 400; // Adjust the desired width of the bar
 
-        var svgLegend = d3
+        var svgLegend_ = d3
             .select('#legend')
             .append('svg')
             .attr('width', legendWidth)
             .attr('height', 120)
             .call(responsivefy);
-
+        setSvgLegend(svgLegend_)
         
         // Calculate the position of the bar and text elements
         var barX = (legendWidth - barWidth) / 2; // Calculate the x position of the bar
@@ -136,7 +137,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
             
 
-        var grad = svgLegend.append('defs')
+        var grad = svgLegend_.append('defs')
             .append('linearGradient')
             .attr('id', 'mygrad')
             .attr('x1', '0%')
@@ -182,18 +183,18 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
               return 100 * (i / (numColors - 1)) + '%';
             })
         
-        svgLegend.append('text')
+        svgLegend_.append('text')
         .attr('x', minValueTextX)
         .attr('y', 75)
         .text(Math.round(minValue * 100)/100);
         
-        svgLegend.append('text')
+        svgLegend_.append('text')
         .attr('x', maxValueTextX)
         .attr('y', 75)
         .text(Math.round(maxValue * 100)/100);
 
         
-        svgLegend.append('rect')
+        svgLegend_.append('rect')
             .attr('x', barX)
             .attr('y', 50)
             .attr('width', barWidth)
@@ -201,7 +202,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             //.classed('filled', true)
             .style('fill', 'url(#mygrad)')
             
-        svgLegend.append('text')
+        svgLegend_.append('text')
         .attr('text-anchor', 'middle')
         .attr('y', 30)
         .attr('x', barX + 25 +barWidth/ 2)
@@ -209,8 +210,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         
 
         
-        console.log("MINVALUE IS " + minValue)
-        console.log("MAXVALUE IS " + maxValue)
+        // console.log("MINVALUE IS " + minValue)
+        // console.log("MAXVALUE IS " + maxValue)
 
         // Create scale for the axis
         const axisScale = d3
@@ -219,7 +220,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         .range([barX, barX + barWidth]); // Adjust the range based on the desired width
 
         // Append a group element for the axis
-        const axisGroup = svgLegend.append("g")
+        const axisGroup = svgLegend_.append("g")
         .attr("transform", "translate(0, 100)"); // Adjust the position as needed
 
         // Create the axis
@@ -228,23 +229,16 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         // Append the axis to the group
         axisGroup.call(axis);
 
-        svgLegend
-            .append("line")
-            .attr("id", "legend_line_hovered")
-            .style("visibility", "hidden")
-            .attr("stroke", "var(--color-hover)")
-            .attr("stroke-width", 4)   
+        var countries = Object.keys(countryData);
 
-        svgLegend
-            .append("line")
-            .attr("id", "legend_line_selected")
-            .style("visibility", "hidden")
-            .attr("stroke", "var(--color-selected)")
-            .attr("stroke-width", 4)  
-
-
-        }
-
+        countries.forEach((country) => {
+            svgLegend_
+                .append("line")
+                .attr("id", "legend_line_" + country)
+                .style("visibility", "hidden")
+                .attr("stroke-width", 4)   
+        })
+    }
         
     }, [countryData])
 
@@ -288,10 +282,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             })
             .style("stroke", "grey")
             .style("stroke-width", 1);
-            // .style("opacity", .5)
-            // .style("fill","grey")
-            // .style("stroke", "white")
-            // .style("stroke-width", 1);
+
     }
 
     function hoverCountryByName(countryName) {
@@ -299,28 +290,34 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
             hoverSelection(svg.select(("#" + cn).replace(/\s/g, '')))
         })
 
-        if ((countryName.length == 1) && (countryData[countryName])) {//&& (countryData[countryName[0].replace(/\s/g, '')])) {
+        var allCountries = Object.keys(countryData);
+        allCountries.forEach((country) => {
+            if (! selectedCountryRef.current.includes(country)) {
+                console.log(selectedCountry)
+                d3.select("#legend_line_" + country)
+                    .style("visibility", "hidden")
+            }
+        })
+
+        if ((countryName.length > 0)) {//&& (countryData[countryName[0].replace(/\s/g, '')])) {
           
+            countryName.forEach((country) => {
+                if (countryData[country]) {
+                    const values = Object.values(countryData);
+                    const minValue = d3.min(values);
+                    const maxValue = d3.max(values);
+                    d3.select("#legend_line_" + country)
+                        .style("visibility", "visible")
+                        .attr("stroke", "var(--color-hover)")
+                        .attr("x1", d => (countryData[country]-minValue) / (maxValue-minValue) * barWidth + barX)
+                        .attr("x2", d => (countryData[country]-minValue) / (maxValue-minValue) * barWidth + barX)
+                        .attr("y1", d => (50))
+                        .attr("y2", d => (100))
+                }
+            })  
 
-            const values = Object.values(countryData);
-            const minValue = d3.min(values);
-            const maxValue = d3.max(values);
-            d3.select("#legend_line_hovered").style("visibility", "visible")
-                .attr("x1", d => (countryData[countryName]-minValue) / (maxValue-minValue) * barWidth + barX)
-                .attr("x2", d => (countryData[countryName]-minValue) / (maxValue-minValue) * barWidth + barX)
-                .attr("y1", d => (50))
-                .attr("y2", d => (100))
+        } 
 
-            
-
-        } else {
-            d3.select("#legend_line_hovered").style("visibility", "hidden")
-                
-        }
-
-        
-
-        
     }
 
     // function hoverCountry(country) {
@@ -337,22 +334,33 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     }
 
     function updateLegendSelected(countryName) {
-        if ((countryName.length == 1) && (countryData[countryName])) {
+
+        var allCountries = Object.keys(countryData);
+        allCountries.forEach((country) => {
+            if (! hoveredCountry.includes(country)) {
+                d3.select("#legend_line_" + country)
+                    .style("visibility", "hidden")
+            }
+        })
+
+        if ((countryName.length > 0)) {
 
             const values = Object.values(countryData);
             const minValue = d3.min(values);
             const maxValue = d3.max(values);
-            d3.select("#legend_line_selected").style("visibility", "visible")
-                .attr("x1", d => (countryData[countryName]-minValue) / (maxValue-minValue) * barWidth + barX)
-                .attr("x2", d => (countryData[countryName]-minValue) / (maxValue-minValue) * barWidth + barX)
-                .attr("y1", d => (50))
-                .attr("y2", d => (100))
 
-            
 
-        } else {
-            d3.select("#legend_line_selected").style("visibility", "hidden")
-                
+            countryName.forEach((country) => {
+                if (countryData[country]) {
+                    d3.select("#legend_line_" + country)
+                        .style("visibility", "visible")
+                        .attr("stroke", "var(--color-selected)")
+                        .attr("x1", d => (countryData[country]-minValue) / (maxValue-minValue) * barWidth + barX)
+                        .attr("x2", d => (countryData[country]-minValue) / (maxValue-minValue) * barWidth + barX)
+                        .attr("y1", d => (40))
+                        .attr("y2", d => (110))
+                }
+            })
         }
     }
 

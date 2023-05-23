@@ -103,32 +103,44 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
         var a = sumstat2.filter((e) => {
             
-            console.log("THE MAGICAL VALUE OF E IS " + e);
-            console.log("THE MAGICAL VALUE OF E.KEY IS " + e.key);
+            // console.log("THE MAGICAL VALUE OF E IS " + e);
+            // console.log("THE MAGICAL VALUE OF E.KEY IS " + e.key);
             return e.key == d;})
-        console.log(sumstat2);
         // Create tooltip HTML markup
         div.html(`<strong><u> ${d}‰</u></strong><br/>median: ${Math.round(a[0].median* 100)/100}<br/># countries: ${a[0].values.filter((d) => (d[cat2[cat_index]] !== "")).length}`)
         // Put tooltip in place (at mouse position)
         positionTooltip(div, event);
     }
 
-    /**
-     * Hover all countries with the same x-label (cat1)
-     */
-    function SelectColumn(data, cat1value) {
+    function countriesWithXLabel(data, cat1value) {
         // Filter data on cat1
         var a = data.filter( function(d) { return d[cat1[cat_index]] == cat1value } )
         // Get "Country" column in dataset
         var b = d3.map(a, function(d) { return(d["Country"]) } )
         // Format country string (remove space)
-        var c = d3.map(b, function(d) { return(d.replace(/\s/g, '')) } ) 
-        // Hover countries
-        setHoveredCountry(b);
+        // var c = d3.map(b, function(d) { return(d.replace(/\s/g, '')) } ) 
+        return b
     }
 
-    function UnSelectColumn() {
+    /**
+     * Hover all countries with the same x-label (cat1)
+     */
+    function hoverColumn(data, cat1value) {
+        // Hover countries
+        setHoveredCountry(countriesWithXLabel(data, cat1value));
+    }
+
+    function unHoverColumn() {
         setHoveredCountry([]);
+    }
+
+    function selectColumn(data, cat1value) {
+        // Select countries
+        setSelectedCountry(countriesWithXLabel(data, cat1value));
+    }
+
+    function unSelectColumn() {
+        setSelectedCountry([]);
     }
 
     /**
@@ -181,9 +193,6 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
         circles
             .attr("cx", function(d){ 
-                console.log(d)
-                console.log(x(d[cat1[cat_index]]))
-                console.log(x(d[cat1[cat_index]]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth)
                 return(
                     d[cat1[cat_index]] != "" ? (
                     x(d[cat1[cat_index]]) + x.bandwidth()/2 - 0.2*jitterWidth - Math.random()*jitterWidth 
@@ -195,8 +204,6 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
 
             })
             .attr("cy", function(d){
-                console.log(d[cat1[cat_index]])
-                console.log(sumstat2)
                 return (
                     d[cat1[cat_index]] != "" ? (
                         d[cat2[cat_index]] != "" ?
@@ -236,10 +243,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             setHoveredCountry([])
             setUpdateLock(false);
         })
-        .on('click', function(event, d) {
-            // Signal selected country
-            setSelectedCountry([d["Country"]])
-        })
+        // .on('click', function(event, d) {
+        //     // Signal selected country
+        //     setSelectedCountry([d["Country"]])
+        // })
 
         // // Add hover effect to x labels
         // svg.selectAll(".x-axis .tick").each(function(d, i) {      
@@ -272,12 +279,15 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 xTickTooltipRef.current.transition().duration('50').style('opacity', 1);
                 createXTickTooltip(xTickTooltipRef.current, d_, event, sumstat2)
                 // Signal hovered countries
-                SelectColumn(data, d);
+                hoverColumn(data, d);
             })
             d3.select(this).on("mouseout", function() {
                 xTickTooltipRef.current.transition().duration('50').style('opacity', 0);
-                UnSelectColumn(d);
+                unHoverColumn(d);
             })
+            // d3.select(this).on("click", function() {
+            //     selectColumn(data, d)
+            // })
         })          
     }
 
@@ -574,11 +584,14 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                         xTickTooltipRef.current.transition().duration('50').style('opacity', 1);
                         createXTickTooltip(xTickTooltipRef.current, d_, event, sumstat2)
                         // Signal hovered countries
-                        SelectColumn(data, d);
+                        hoverColumn(data, d);
                     })
                     d3.select(this).on("mouseout", function() {
                         xTickTooltipRef.current.transition().duration('50').style('opacity', 0);
-                        UnSelectColumn(d);
+                        unHoverColumn(d);
+                    })
+                    d3.select(this).on("click", function() {
+                        selectColumn(data, d)
                     })
                 })
         
@@ -619,7 +632,6 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }
 
     function colorAll(svg) {
-        console.log("color all")
         svg.selectAll(".data-point")
                     .style("fill", function(d){ return(promilleColor.get(d[cat1[cat_index]])) })
                     .attr("r", 5);
@@ -707,8 +719,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }
 
     function updateAxis(x, y) {
-        console.log("update axis, y is: " + y)
-        console.log("update axis, x is: " + x)
+        // console.log("update axis, y is: " + y)
+        // console.log("update axis, x is: " + x)
         // Get axis
         var xAxisGroup = svg.select(".x-axis");
         var yAxisGroup = svg.select(".y-axis");
@@ -732,7 +744,6 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     useEffect(() => {
         
         if (data) {
-            console.log(cat2[cat_index])
             const data_filtered = data.filter(d => (d[cat1[cat_index]] !== "") && (d[cat2[cat_index]] !== "")); 
 
             // Get new axis ranges
