@@ -647,6 +647,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                     .padding(xLabelPadding);
     }
 
+    
+
     function updateScatterplot(x, y, sumstat2) {
         // Create transition
         const circles = svg.selectAll(".data-point").transition().duration(transitionDuration);
@@ -705,6 +707,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     }
 
     function updateAxis(x, y) {
+        console.log("update axis, y is: " + y)
+        console.log("update axis, x is: " + x)
         // Get axis
         var xAxisGroup = svg.select(".x-axis");
         var yAxisGroup = svg.select(".y-axis");
@@ -734,6 +738,8 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             // Get new axis ranges
             var x_values = xValues(data_filtered)
             let x = xScale(x_values)  
+            //var y_values = yValues(data_filtered)
+            //let y = yScale(y_values)
             let y = yScale()
 
             // Get statistics per cat1
