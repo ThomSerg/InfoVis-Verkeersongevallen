@@ -5,7 +5,7 @@
 
 :root {
   --backgroundColor: #F6F1F1;
-  --color1: #AFD3E2;
+  --color1: #b9e7d3;  /*#e1e1e1;*/
   --color2: #19A7CE;
   --color3: #146C94;
 
@@ -16,7 +16,7 @@
   --color-8-promille: #B78CDB;
 
   --color-hover: #d68f13;
-  --color-selected: #bf584d;
+  --color-selected: #dc2c19;
 }
 
 

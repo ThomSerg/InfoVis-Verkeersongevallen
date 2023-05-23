@@ -146,7 +146,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
         const numColors = 20;
 
-        const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])
+        const colorScale = d3.scaleSequential(d3.interpolateBlues).domain([0, d3.max(Object.values(countryData))])
 
         var gradientColors = []
             for (let i = 0; i < numColors; i++) {
@@ -278,7 +278,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     function clearSelection(selection) {
         svg.selectAll("path")
             .style("opacity", 1);
-        const colorScale = d3.scaleSequential(d3.interpolateGreens).domain([0, d3.max(Object.values(countryData))])
+        const colorScale = d3.scaleSequential(d3.interpolateBlues).domain([0, d3.max(Object.values(countryData))])
         selection
             .style("fill", function(c) {
                 if (!colorScale(countryData[c.properties["NAME"]])) {
@@ -286,7 +286,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 }
                 return colorScale(countryData[c.properties["NAME"]]);
             })
-            .style("stroke", "white")
+            .style("stroke", "grey")
             .style("stroke-width", 1);
             // .style("opacity", .5)
             // .style("fill","grey")
