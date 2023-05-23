@@ -339,6 +339,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                 }).filter(({ key }) => key !== "");
 
                 setSumstat(sumstat);
+                
             }
 
         });
