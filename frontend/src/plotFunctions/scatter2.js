@@ -158,7 +158,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, xMax=null, yMax=null, v
         .attr('r', 4)
         .attr("class", "data-point")
         .attr("id", function(d) {return d["Country"].replace(/\s/g, '')})
-        .style('fill', '#9d7463')
+        .style('fill', '#6B46C1')
         //Our new hover effects
         .on('mouseover', function (event, d) {
             d3.select(this).transition()
@@ -420,7 +420,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, xMax=null, yMax=null, v
 
   function colorAll(svg) {
     svg.selectAll(".data-point")
-                .style("fill", "#9d7463")
+                .style("fill", "#6B46C1")
                 .attr("r", 5);
   }
 
