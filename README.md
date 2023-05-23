@@ -1,5 +1,10 @@
 # InfoVis Verkeersongevallen
 
+## Presentatie
+
+- powerpoint: https://docs.google.com/presentation/d/19KHKXHYE9dm_BLGk31ztTdj3s74EWRByhtJ3gHZDy2Y/edit?usp=sharing
+- demo script: [link](./frontend/demo.md)
+
 ### Feedback
 - opletten met kaart, misschien dat er niet zo veel ruimtelijke inzichten kunnen zijn
 	- is het wel interesant om regios met elkaar te vergelijken
