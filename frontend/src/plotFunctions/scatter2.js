@@ -10,7 +10,7 @@ import responsivefy from "../utils/responsify";
 
 
 
-function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown variable", varYaxis = "Unknown variable", title = "Unknown title", setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry,}) {
+function Scatter2({cat1, cat2, width= 550, height = 350, xMax=null, yMax=null, varXAxis = "Unknown variable", varYaxis = "Unknown variable", title = "Unknown title", setHoveredCountry, hoveredCountry, setSelectedCountry, selectedCountry,}) {
 
   const id = useRef(_uniqueId('scatter-'))
   const svgRef = useRef(null);
@@ -79,7 +79,9 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     // x values never on the axis itself
     const xDiff = d3.max(data, d => parseFloat(d[cat1])) - d3.min(data, d => d[cat1]);
     const xMin = 0;//d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff;
-    const xMax = d3.max(data, d => parseFloat(d[cat1])) + 0.05 * xDiff;
+    if (xMax == null) {
+      xMax = d3.max(data, d => parseFloat(d[cat1])) + 0.05 * xDiff;
+    }
 
     //console.log("xmin and xmax values are:");
    // console.log(xMin, xMax);
@@ -94,13 +96,18 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
     // y values never on the axis itself
     const yDiff = d3.max(data, d => parseFloat(d[cat2])) - d3.min(data, d => d[cat2]);
     const yMin = 0;//d3.min(data, d => parseFloat(d[cat2])) - 0.05 * yDiff;
-    const yMax = d3.max(data, d => parseFloat(d[cat2])) + 0.05 * yDiff;
+    if (yMax==null) {
+      yMax = d3.max(data, d => parseFloat(d[cat2])) + 0.05 * yDiff;
+    }
     //console.log("Ymin and Ymax values are:");
    //console.log(yMin, yMax);
 
     let y = d3.scaleLinear()
     .domain([yMin, yMax])
     .range([heightPlot , 0]);
+
+    // Filter data to exclude empty values
+    data = data.filter(d => d[cat1] !== "" && d[cat2] !== "");
 
       
     // Create the x-axis and y-axis groups
@@ -245,14 +252,17 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
       // Calculate the new domain values based on the desired zoom level
       const xminD = Math.max(0, d3.min(data, d => parseFloat(d[cat1])) - 0.05 * xDiff);
       const yminD = d3.min(data, d => parseFloat(d[cat2])) - 0.05 * yDiff;
+
+      const xMax_ = d3.max(data, d => parseFloat(d[cat1])) + 0.05 * xDiff;
+      const yMax_ = d3.max(data, d => parseFloat(d[cat2])) + 0.05 * yDiff;
     
       // Compute the new scales with the updated domain
       let newXScale = d3.scaleLinear()
-        .domain([xminD, xMax])
+        .domain([xminD, xMax_])
         .range([0, widthPlot]);
     
       let newYScale = d3.scaleLinear()
-        .domain([yminD, yMax])
+        .domain([yminD, yMax_])
         .range([heightPlot, 0]);
     
       // Update the scatterplot elements with the new scales
@@ -295,7 +305,7 @@ function Scatter2({cat1, cat2, width= 550, height = 350, varXAxis = "Unknown var
       // Calculate the new domain values based on the desired zoom level
       const xminD = 0;
       const yminD = 0;
-    
+      
       // Compute the new scales with the updated domain
       const newXScale = d3.scaleLinear()
         .domain([xminD, xMax])
