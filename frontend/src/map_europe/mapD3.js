@@ -287,37 +287,46 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
     function hoverCountryByName(countryName) {
         countryName.filter((cn) => !selectedCountryRef.current.includes(cn)).forEach(cn => {
-            hoverSelection(svg.select(("#" + cn.replace(/\s/g, '_'))))
+            hoverSelection(svg.select(("#" + cn).replace(/\s/g, '')))
         })
-    
+
+        console.log("HOVERED COUNTRY IS : " + countryName)
+
         var allCountries = Object.keys(countryData);
         allCountries.forEach((country) => {
-            if (!selectedCountryRef.current.includes(country)) {
-                d3.select("#legend_line_" + country.replace(/\s/g, '_'))
-                    .style("visibility", "hidden");
+            if (! selectedCountryRef.current.includes(country)) {
+                //console.log(selectedCountry)
+                d3.select("#legend_line_" + country)
+                    .style("visibility", "hidden")
             }
-        });
-    
-        if (countryName.length > 0) {
+        })
+
+        if ((countryName.length > 0)) {//&& (countryData[countryName[0].replace(/\s/g, '')])) {
+          
             countryName.forEach((country) => {
-                console.log("BEFORE HOVERED COUNTRY IS: " + country);
+                console.log("BEFORE HOVERED COUNTRY IS : " + country)
                 if (countryData[country] && !selectedCountryRef.current.includes(country)) {
-                    console.log("HOVERED COUNTRY IS: " + country);
+                    console.log("HOVERED COUNTRY IS : " + country)
                     const values = Object.values(countryData);
                     const minValue = d3.min(values);
                     const maxValue = d3.max(values);
-                    d3.select("#legend_line_" + country.replace(/\s/g, '_'))
+
+
+
+                    d3.select("#legend_line_" + country)
                         .style("visibility", "visible")
                         .attr("stroke", "var(--color-hover)")
-                        .attr("x1", d => (countryData[country] - minValue) / (maxValue - minValue) * barWidth + barX)
-                        .attr("x2", d => (countryData[country] - minValue) / (maxValue - minValue) * barWidth + barX)
+                        .attr("x1", d => (countryData[country]-minValue) / (maxValue-minValue) * barWidth + barX)
+                        .attr("x2", d => (countryData[country]-minValue) / (maxValue-minValue) * barWidth + barX)
                         .attr("y1", d => (50))
-                        .attr("y2", d => (100));
+                        .attr("y2", d => (100))
                 }
-            });
-        }
+            })  
+
+        } 
+
     }
-    
+
     // function hoverCountry(country) {
     //     hoverSelection(d3.select(country));     
     // }
