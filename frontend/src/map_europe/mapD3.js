@@ -27,6 +27,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     const [dataLoaded, setDataLoaded] = useState(false);
     const [countryData, setCountryData] = useState({});
 
+    const tooltipRef = useRef(null)
+
     //const svgLegendRef = useRef(null);
 
 
@@ -253,9 +255,9 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
      
     
     function clearMap() {// setting up all the hover effects
-        var div = d3.select("body").append("div")
-        .attr("class", "tooltip-map")
-        .style("opacity", 0);
+        // var div = d3.select("body").append("div")
+        // .attr("class", "tooltip-map")
+        // .style("opacity", 0);
         clearSelection(d3.selectAll(".Country"));
     }
 
@@ -410,10 +412,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     }
 
 
-    // setting up all the hover effects
-    var div = d3.select("body").append("div")
-    .attr("class", "tooltip-map")
-    .style("opacity", 0);
+    
 
     function onHover(event,d) {
 
@@ -424,10 +423,10 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         // Set opacity of hovered country to 1
 
         //Makes the new div appear on hover:
-        div.transition()
+        tooltipRef.current.transition()
             .duration(50)
             .style("opacity", 1);
-        div.html(`<strong><u>${d.properties["NAME"]}</u></strong><br/>${"Road fatalities"}: ${Math.round(countryData[d.properties["NAME"]] * 100)/100}<br/>`)
+        tooltipRef.current.html(`<strong><u>${d.properties["NAME"]}</u></strong><br/>${"Road fatalities"}: ${Math.round(countryData[d.properties["NAME"]] * 100)/100}<br/>`)
                 .style("left", (event.pageX + 10) + "px")
                 .style("top", (event.pageY - 15) + "px");
     }
@@ -440,7 +439,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         if (selectedCountry.length == 0) {
             updateLockRef.current = false
         }
-        div.transition()
+        tooltipRef.current.transition()
             .duration('50')
             .style("opacity", 0);
     }
@@ -465,6 +464,11 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
     useEffect(() => {
         if (svg && dataLoaded) {
+            // setting up all the hover effects
+            tooltipRef.current = d3.select("body").append("div")
+            .attr("class", "tooltip-map")
+            .style("opacity", 0);
+
             svg.append("g")
                 .append("rect")
                 .attr("x", margin.left)
@@ -502,7 +506,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                     offHover(d)
                 })
                 .on("mousemove", function(event, d) {
-                    div.style("left", (event.pageX + 10) + "px")
+                    tooltipRef.current.style("left", (event.pageX + 10) + "px")
                     .style("top", (event.pageY - 15) + "px");
                 })
                 .on("click", function(event, d) {

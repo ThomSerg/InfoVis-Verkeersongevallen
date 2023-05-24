@@ -30,6 +30,8 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
   // State holding a lock for graph updates
   const [updateLock, setUpdateLock] = useState(false);
 
+  const tooltipRef = useRef(null);
+
 
   const promilleColor = new Map();
     promilleColor.set("0.0", "var(--color-0-promille)")
@@ -153,10 +155,12 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
       .domain([0, total])
       .range([0, width]);
 
-      var div = d3.select("body").append("div")
-                .attr("class", "tooltip-hover")
-                .style("opacity", 0)
-                .style("position", "absolute");
+      if (tooltipRef.current == null) {
+        tooltipRef.current = d3.select("body").append("div")
+                  .attr("class", "tooltip-hover")
+                  .style("opacity", 0)
+                  .style("position", "absolute");
+      }
 
 
     const join = svg.selectAll('g')
@@ -165,11 +169,11 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
       .attr('transform', 'translate(' + margin.left + ',' + margin.top + ')')
 
       .on('mouseover', function(event, d) {
-        div.transition()
+        tooltipRef.current.transition()
         .duration(50)
         .style("opacity", 1);
 
-        div.html(`${d.label} promille<br>${d.percent.toFixed(2)}%`)     
+        tooltipRef.current.html(`${d.label} promille<br>${d.percent.toFixed(2)}%`)     
           .style("left", (event.pageX + 10) + "px")
           .style("top", (event.pageY - 15) + "px");
 
@@ -185,7 +189,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
       })
 
       .on('mouseout', function(event, d) {
-        div.transition()
+        tooltipRef.current.transition()
                 .duration('50')
                 .style("opacity", 0);
 
