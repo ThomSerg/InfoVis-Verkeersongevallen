@@ -243,10 +243,10 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             setHoveredCountry([])
             setUpdateLock(false);
         })
-        // .on('click', function(event, d) {
-        //     // Signal selected country
-        //     setSelectedCountry([d["Country"]])
-        // })
+        .on('click', function(event, d) {
+            // Signal selected country
+            setSelectedCountry([d["Country"]])
+        })
 
         // // Add hover effect to x labels
         // svg.selectAll(".x-axis .tick").each(function(d, i) {      
@@ -590,9 +590,9 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
                         xTickTooltipRef.current.transition().duration('50').style('opacity', 0);
                         unHoverColumn(d);
                     })
-                    d3.select(this).on("click", function() {
-                        selectColumn(data, d)
-                    })
+                    // d3.select(this).on("click", function() {
+                    //     selectColumn(data, d)
+                    // })
                 })
         
 

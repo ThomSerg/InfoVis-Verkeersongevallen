@@ -10,6 +10,8 @@ import { useViewportSize } from '@mantine/hooks';
 
 //import slipping_car from '../../public/car_slipping.png'
 
+import ChartCard from "../plotFunctions/ChartCard";
+
 
 
 
@@ -86,12 +88,14 @@ function Header({scale, activeTab, setActiveTab}) {
           </Button>
         </Grid.Col>
       </Grid>
+  
     )
   }
 
 
   return (
     <div>
+      {/* <ChartCard  title=""> */}
       <Grid grow>
         <Grid.Col span={1}>
           {/* <div style = {{"position": "relative", "top": "50%", "-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}> */}
@@ -119,7 +123,9 @@ function Header({scale, activeTab, setActiveTab}) {
 
       </Grid>
       
+      {/* </ChartCard> */}
     </div>
+    
   )
 }
 
