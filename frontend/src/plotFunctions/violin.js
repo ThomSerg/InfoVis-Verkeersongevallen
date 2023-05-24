@@ -762,8 +762,13 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
             updateViolinPlot(x, y)
             updateScatterplot(x, y, sumstat2);
 
-            selectCountry(selectedCountry)
-            hoverCountry(hoveredCountry)
+            if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
+                grayout(svg)
+                selectCountry(selectedCountry)
+                hoverCountry(hoveredCountry)
+            } else {
+                colorAll(svg);
+            }
             
         }
         
