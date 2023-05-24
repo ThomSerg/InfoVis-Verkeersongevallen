@@ -15,11 +15,7 @@ Je kunt de applicatie nu gebruiken zoals bedoeld.
 
 ## Hoe werkt de interface?
 
-De interface toont verschillende inzichten die we uit de data gehaald hebben. Op elk tablad vind je een kaart van Europa, door hierover te hoveren
-worden de aangeduide landen gemarkeerd met een oranje kleur. Deze kleur vindt je ook terug in de andere grafieken waarbijen deze hetzelfde land voorstellen.
-Indien er geen data beschikbaar is voor dit land zal er dus ook geen kleur op de grafiek getoont worden. Door nu op een land (of punt) te klikken wordt dit land 
-geselecteerd en krijgt dit een rode kleur. Dit biedt een houvast indien we 1 bepaald land met andere landen willen vergelijken of willen kijken waar het land zich bevindt
-op de trendlijn. Bovenaan zie 3 knoppen die gebruikt kunnen worden om van tablad te wisselen.
+De interface toont verschillende inzichten die we uit de data hebben gehaald. Op elk tabblad vind je een kaart van Europa. Door eroverheen te hoveren, worden de aangeduide landen gemarkeerd met een oranje kleur. Deze kleur komt ook terug in de andere grafieken, waarbij ze hetzelfde land vertegenwoordigen. Als er geen beschikbare gegevens zijn voor een bepaald land, wordt er geen kleur getoond in de grafiek. Door op een land (of punt) te klikken, wordt het land geselecteerd en krijgt het een rode kleur. Dit biedt een referentiepunt wanneer we een specifiek land willen vergelijken met andere landen of willen zien waar het land zich bevindt op de trendlijn. Bovenaan zie je drie knoppen die gebruikt kunnen worden om tussen tabbladen te wisselen.
 
 
 
