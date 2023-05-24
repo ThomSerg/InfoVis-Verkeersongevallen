@@ -38,7 +38,7 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
     promilleColor.set("0", "var(--color-0-promille)")
     promilleColor.set("0.1", "var(--color-1-promille)")
     promilleColor.set("0.2", "var(--color-2-promille)")
-    promilleColor.set("0.3", "var(--color-2-promille)")
+    promilleColor.set("0.3", "var(--color-3-promille)")
     promilleColor.set("0.4", "var(--color-4-promille)")
     promilleColor.set("0.5", "var(--color-5-promille)")
     promilleColor.set("0.8", "var(--color-8-promille)")
