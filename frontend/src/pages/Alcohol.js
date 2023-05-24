@@ -100,7 +100,7 @@ function Alcohol({
               hoveredCountry={hoveredCountry}
               setSelectedCountry={setSelectedCountry} 
               selectedCountry={selectedCountry}
-              cat2_upper={[10, 10]}
+              cat2_upper={[11, 11]}
               cat2_selected={selectedNestedButton}
               
             />
