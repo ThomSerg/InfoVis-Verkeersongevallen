@@ -53,6 +53,7 @@ function ViolinGraph({cat1, cat2, xLabel, yLabel, setHoveredCountry, hoveredCoun
     promilleColor.set("", "var(--color-0-promille)")
     promilleColor.set("0.0", "var(--color-0-promille)")
     promilleColor.set("0", "var(--color-0-promille)")
+    promilleColor.set("0.1", "var(--color-1-promille)")
     promilleColor.set("0.2", "var(--color-2-promille)")
     promilleColor.set("0.3", "var(--color-2-promille)")
     promilleColor.set("0.4", "var(--color-4-promille)")
