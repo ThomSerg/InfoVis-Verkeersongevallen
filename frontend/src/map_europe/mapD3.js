@@ -234,7 +234,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         countries.forEach((country) => {
             svgLegend_
                 .append("line")
-                .attr("id", "legend_line_" + country)
+                .attr("id", "legend_line_" + country.replace(/\s/g, '_'))
                 .style("visibility", "hidden")
                 .attr("stroke-width", 4)   
         })
@@ -286,14 +286,26 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     }
 
     function hoverCountryByName(countryName) {
+<<<<<<< HEAD
         countryName.filter((cn) => !selectedCountryRef.current.includes(cn)).forEach(cn => {
             hoverSelection(svg.select(("#" + cn).replace(/\s/g, '')))
+=======
+        console.log("hover")
+        console.log(countryName)
+        console.log(selectedCountryRef.current)
+
+
+
+        countryName.filter((cn) => !selectedCountryRef.current.includes(cn.replace(/\s/g, '_'))).forEach(cn => {
+            hoverSelection(svg.select(("#" + cn.replace(/\s/g, '_'))))
+>>>>>>> 74d81c1b93c398cb3248e5f4d30ea6d0124ecff0
         })
 
         console.log("HOVERED COUNTRY IS : " + countryName)
 
         var allCountries = Object.keys(countryData);
         allCountries.forEach((country) => {
+<<<<<<< HEAD
             if (! selectedCountryRef.current.includes(country)) {
                 //console.log(selectedCountry)
                 d3.select("#legend_line_" + country)
@@ -307,6 +319,24 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 console.log("BEFORE HOVERED COUNTRY IS : " + country)
                 if (countryData[country] && !selectedCountryRef.current.includes(country)) {
                     console.log("HOVERED COUNTRY IS : " + country)
+=======
+            if (!selectedCountryRef.current.includes(country.replace(/\s/g, '_'))) {
+                d3.select("#legend_line_" + country.replace(/\s/g, '_'))
+                    .style("visibility", "hidden");
+                if (!countryName.includes(country.replace(/\s/g, '_'))) {
+                    clearCountryByName([country])
+                }
+            }
+
+            
+        });
+    
+        if (countryName.length > 0) {
+            countryName.forEach((country) => {
+                console.log("BEFORE HOVERED COUNTRY IS: " + country);
+                if (countryData[country] && !selectedCountryRef.current.includes(country.replace(/\s/g, '_'))) {
+                    console.log("HOVERED COUNTRY IS: " + country);
+>>>>>>> 74d81c1b93c398cb3248e5f4d30ea6d0124ecff0
                     const values = Object.values(countryData);
                     const minValue = d3.min(values);
                     const maxValue = d3.max(values);
@@ -345,7 +375,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         var allCountries = Object.keys(countryData);
         allCountries.forEach((country) => {
             if (! hoveredCountry.includes(country)) {
-                d3.select("#legend_line_" + country)
+                d3.select("#legend_line_" + country.replace(/\s/g, '_'))
                     .style("visibility", "hidden")
             }
         })
@@ -359,7 +389,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
             countryName.forEach((country) => {
                 if (countryData[country]) {
-                    d3.select("#legend_line_" + country)
+                    d3.select("#legend_line_" + country.replace(/\s/g, '_'))
                         .style("visibility", "visible")
                         .attr("stroke", "var(--color-selected)")
                         .attr("x1", d => (countryData[country]-minValue) / (maxValue-minValue) * barWidth + barX)
@@ -373,7 +403,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
 
     function selectCountryByName(countryName) {
         countryName.forEach(cn => {
-            selectSelection(svg.select(("#" + cn).replace(/\s/g, '')))
+            selectSelection(svg.select(("#" + cn).replace(/\s/g, '_')))
         })
         if (countryName.length != 0) {
             svg.select("#selection_label").style("visibility", "visible")
@@ -434,7 +464,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         setHoveredCountry([]);
         svg.selectAll("path")
             .style("opacity", 1);
-        clearCountryByName([d.properties["NAME"]])
+        clearCountryByName([d.properties["NAME"].replace(/\s/g, '_')])
         if (selectedCountry.length == 0) {
             updateLockRef.current = false
         }
@@ -448,8 +478,8 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         selectedCountryRef.current = []
         clearCountryByName(a)
 
-        if (d!= null && a[0] != [d.properties["NAME"]]) {
-            selectedCountryRef.current = [d.properties["NAME"]]
+        if (d!= null && a[0] != [d.properties["NAME"].replace(/\s/g, '_')]) {
+            selectedCountryRef.current = [d.properties["NAME"].replace(/\s/g, '_')]
             setSelectedCountry([d.properties["NAME"]])
             selectCountryByName([d.properties["NAME"]])
         } else {
@@ -489,7 +519,7 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
                 .style("stroke", "transparent")
                 .attr("class", function(d){ return "Country" } )
                 .attr("name", function(d) {return d.properties["NAME"]})
-                .attr("id", function(d) {return d.properties["NAME"].replace(/\s/g, '')})
+                .attr("id", function(d) {return d.properties["NAME"].replace(/\s/g, '_')})
                 //.style("opacity", .8)
 
 
@@ -536,7 +566,9 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
     useEffect(() => {
         
         if (svg && (!updateLockRef.current)) {
-            selectedCountryRef.current = selectedCountry
+            selectedCountryRef.current = selectedCountry.map((sc) => {return sc.replace(/\s/g, '_')})
+            console.log("selected")
+            console.log(selectedCountryRef.current)
             //if (selectedCountry.length != 0 | hoveredCountry.length != 0) {
             clearMap();
             hoverCountryByName(hoveredCountry)
