@@ -9,7 +9,7 @@ Eenmaal react geinstalleerd is, ga da in de folder "frontend". Voer daar het vol
 ```
 npm start
 ```
-Normaal gesproken krijg je nu een aantal foutmeldingen over ontbrekende pakketten. Installeer ze met``` npm install {pakket-naam}```.
+Normaal gesproken krijg je nu een aantal foutmeldingen over ontbrekende pakketten. Installeer ze met ```npm install``` (via package.json) of ```npm install {pakket-naam}``` voor één specifieke pakket.
 Met alle vereiste pakketten geïnstalleerd, zou de applicatie nu volledig operationeel moeten zijn op je computer.
 Je kunt de applicatie nu gebruiken zoals bedoeld. 
 
