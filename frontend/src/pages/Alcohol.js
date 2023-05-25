@@ -1,19 +1,14 @@
 import React, { Component, useState, useRef, useEffect } from "react";
 import {
   Grid,
-  Button
 } from '@mantine/core';
 
-import D3Card from "../plotFunctions/D3Card";
+import D3Card from "../components/D3Card";
 import StackedBarChart from "../plotFunctions/StackedBarChart";
-import ChartCard from "../plotFunctions/ChartCard";
+import ChartCard from "../components/ChartCard";
 import ViolinGraph from "../plotFunctions/violin";
-import AgeButtons from "../AgeButtons";
-import TabHeader from "../plotFunctions/TabHeader";
-
-import Map from "../map_europe/map"
-import MapD3 from "../map_europe/mapD3"
-import EuropeMap from '../pages/EuropeMap';
+import AgeButtons from "../components/AgeButtons";
+import TabHeader from "../layout/TabHeader";
 
 function Alcohol({
     hoveredCountry,
@@ -24,10 +19,6 @@ function Alcohol({
 
   const [selectedNestedButton, setSelectedNestedButton] = useState("all_drivers");
 
-
-
-
-
   return (
     <div>
       <TabHeader >
@@ -35,39 +26,30 @@ function Alcohol({
           selectedNestedButton = {selectedNestedButton}
           setSelectedNestedButton = {setSelectedNestedButton}
         />
-
       </TabHeader>
 
       <Grid>
 
-
         <Grid.Col span={6}>       
-          
-
           <ChartCard title="Information" > 
             <D3Card
               hoveredCountry={hoveredCountry}
             />  
           </ChartCard>
-
         </Grid.Col>
 
         <Grid.Col span={6}>
           <div>
-          
-
-          <ChartCard title={selectedNestedButton === "all_drivers" ? "Allowed promille when driving" : "Allowed promille, when driving, of a normal driver minus a novice driver"}>
-            <StackedBarChart            
-              setHoveredCountry={setHoveredCountry} 
-              hoveredCountry={hoveredCountry}
-              cat_selected={selectedNestedButton}
-              selectedCountry={selectedCountry}
-              setSelectedCountry={setSelectedCountry}
-              cat={["standard_driver", "standard_minus_novice"]} 
-
-
-            />
-          </ChartCard>
+            <ChartCard title={selectedNestedButton === "all_drivers" ? "Allowed promille when driving" : "Allowed promille, when driving, of a normal driver minus a novice driver"}>
+              <StackedBarChart            
+                setHoveredCountry={setHoveredCountry} 
+                hoveredCountry={hoveredCountry}
+                cat_selected={selectedNestedButton}
+                selectedCountry={selectedCountry}
+                setSelectedCountry={setSelectedCountry}
+                cat={["standard_driver", "standard_minus_novice"]} 
+              />
+            </ChartCard>
           </div>
         </Grid.Col>
 
@@ -84,7 +66,6 @@ function Alcohol({
                 selectedCountry={selectedCountry}
                 cat2_upper={[0.5, 0.5]}
                 cat2_selected={selectedNestedButton}
-
               />
             </ChartCard>
         </Grid.Col>
@@ -102,19 +83,13 @@ function Alcohol({
               selectedCountry={selectedCountry}
               cat2_upper={[11, 11]}
               cat2_selected={selectedNestedButton}
-              
             />
           </ChartCard>
         </Grid.Col>
 
       </Grid>
-
-      </div>
+    </div>
   )
-  /*
-  xLabelElement={"Max promille"}
-              yLabelElement={"Casualties young drivers"}
-  */
 }
 
 export default Alcohol;

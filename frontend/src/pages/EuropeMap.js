@@ -1,25 +1,12 @@
 import React, { Component, useState, useRef, useEffect } from "react";
 import {
-  createStyles,
-  Container,
-  Avatar,
-  UnstyledButton,
-  Group,
-  Text,
-  Menu,
-  Tabs,
-  Burger,
-  rem,
-  Grid,
-  Card
+  Grid
 } from '@mantine/core';
 
-//import { Card, Layout, Space } from 'antd';
-import ChartCard from "../plotFunctions/ChartCard";
+import ChartCard from "../components/ChartCard";
 
-import Map from "../map_europe/map"
-import MapD3 from "../map_europe/mapD3"
-import TabHeader from "../plotFunctions/TabHeader";
+import MapD3 from "../plotFunctions/map_europe/mapD3"
+import TabHeader from "../layout/TabHeader";
 
 function EuropeMap({
     hoveredCountry,
@@ -35,7 +22,6 @@ function EuropeMap({
         <Grid>
             <Grid.Col span={12}>
               <ChartCard title="">
-                
                 <MapD3 
                   setHoveredCountry={setHoveredCountry} 
                   hoveredCountry={hoveredCountry}
@@ -46,7 +32,6 @@ function EuropeMap({
             </Grid.Col>
           </Grid>
       </div>
-
     )
   }
 

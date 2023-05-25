@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect, useMemo } from "react";
-import { Container, MantineProvider, Text, AspectRatio } from '@mantine/core';
 import { useViewportSize } from '@mantine/hooks';
 
 import Header from './layout/header'
@@ -38,39 +37,7 @@ function App() {
     return (
         <div>
         {MemoizedHeader}
-        {<div>
-
-       <div class="viewp" style={{"height": "90vh"}}>
-           <FitToViewport width={targetWidth} height={targetHeight} minZoom={0} maxZoom={10} style={{ overflow: 'hidden' }}>
-           
-               <AppBody 
-                   hoveredCountry={hoveredCountry}
-                   setHoveredCountry={setHoveredCountry}
-                   selectedCountry={selectedCountry}
-                   setSelectedCountry={setSelectedCountry}
-                   activeTab={activeTab}
-                   setActiveTab={setActiveTab}
-
-               />
-
-               
-           </FitToViewport>
-       </div>
-
-   </div>}
-        </div>
-    );
-
-    return (
-        
-        <div>
-       
-            <Header
-                scale={scale}
-                activeTab={activeTab}
-                setActiveTab={setActiveTab}
-            />
-
+        {
             <div class="viewp" style={{"height": "90vh"}}>
                 <FitToViewport width={targetWidth} height={targetHeight} minZoom={0} maxZoom={10} style={{ overflow: 'hidden' }}>
                 
@@ -81,18 +48,13 @@ function App() {
                         setSelectedCountry={setSelectedCountry}
                         activeTab={activeTab}
                         setActiveTab={setActiveTab}
-
                     />
 
-                    
                 </FitToViewport>
             </div>
-
+        }
         </div>
-
-
-    )
-
+    );
 }
 
 export default App;

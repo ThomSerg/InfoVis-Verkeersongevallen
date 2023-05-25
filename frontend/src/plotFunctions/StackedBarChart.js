@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import * as d3 from 'd3';
-import data2 from "../europe_gov.csv";
+import data2 from "../data/europe_gov.csv";
 import _uniqueId from 'lodash/uniqueId';
 import responsivefy from "../utils/responsify";
 
@@ -10,17 +10,14 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
 
   const id = useRef(_uniqueId('stacked-bar-'))
   let cat_index= 0 ;
-    if(cat_selected === "all_drivers") {
-        //console.log("nestedButton1")
-        cat_index = 0;
-    } else if(cat_selected === "young_drivers") {
-        //console.log("nestedButton2")
-        cat_index = 1;
-    }   
 
-
-
-
+  if(cat_selected === "all_drivers") {
+      //console.log("nestedButton1")
+      cat_index = 0;
+  } else if(cat_selected === "young_drivers") {
+      //console.log("nestedButton2")
+      cat_index = 1;
+  }   
 
   // Reference to the SVG
   const svgRef = useRef(null);
@@ -32,7 +29,6 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
 
   const tooltipRef = useRef(null);
 
-
   const promilleColor = new Map();
     promilleColor.set("0.0", "var(--color-0-promille)")
     promilleColor.set("0", "var(--color-0-promille)")
@@ -43,15 +39,11 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
     promilleColor.set("0.5", "var(--color-5-promille)")
     promilleColor.set("0.8", "var(--color-8-promille)")
 
-
-
-
   var margin = { top: 10, right: 30, bottom: 30, left: 10 };
   const barHeight = 100;
   var halfBarHeight = barHeight / 2;
   var width = 600 - margin.left - margin.right;
   var height = 300 - margin.top - margin.bottom;
-
 
 
   /* * * * * * * * * * 
@@ -84,15 +76,11 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
   }
 
   function hoverCountries(countries, data) {
-    // var labels = svg.selectAll('.rect-stacked').filter(function(rs) {return rs.countries.some(c => countries.includes(c))}) //.map(function(d) {return d.label})
-    // console.log(labels)
     var labels = data.filter(function(d) {return countries.includes(d["Country"])}).map(function(d) {return d[cat[cat_index]]});
     selectLabels(labels);
   }
 
   function selectCountries(countries, data) {
-    // var labels = svg.selectAll('.rect-stacked').filter(function(rs) {return rs.countries.some(c => countries.includes(c))}) //.map(function(d) {return d.label})
-    // console.log(labels)
     var labels = data.filter(function(d) {return countries.includes(d["Country"])}).map(function(d) {return d[cat[cat_index]]});
     selectLabels2(labels);
   }
@@ -109,8 +97,6 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
 
   useEffect(() => {
     if (svg) {
-
-    const colors = ["#724d3d ", "#916e54", "#b0886b", "#d0a281", "#e9b897", "#fdc4ac"];
     
     d3.csv(data2).then(data => { 
       
@@ -148,9 +134,6 @@ function StackedBarChart({setHoveredCountry, hoveredCountry, cat_selected, selec
       const groupData = groupDataFunc(rollupData);
       console.log(groupData);
       console.log(groupData.countries);
-
-
-
 
       const xScale = d3.scaleLinear()
       .domain([0, total])

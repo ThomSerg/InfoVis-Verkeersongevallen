@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import * as d3 from 'd3';
-import data2 from "../europe_gov.csv";
+import data2 from "../data/europe_gov.csv";
 
 function D3Card({ hoveredCountry }) {
   const [countryText, setCountryText] = useState('No country hovered');
@@ -29,9 +29,6 @@ function D3Card({ hoveredCountry }) {
          const ruralData = hoveredData["speed_rural"] !== "" && !isNaN(hoveredData["speed_rural"]) ? <span><strong>Speed limit rural:</strong> {hoveredData["speed_rural"]} km/h</span> : null;
          const cityData = hoveredData["speed_city"] !== "" && !isNaN(hoveredData["speed_city"]) ? <span><strong>Speed limit city:</strong> {hoveredData["speed_city"]} km/h</span> : null;
 
-
-          
-          
          setCountryText(
           <>
             <span style={{ fontWeight: 'bold', fontSize: '18px' }}>{hoveredCountry[0]}</span>

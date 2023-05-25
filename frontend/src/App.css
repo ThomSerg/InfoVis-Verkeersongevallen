@@ -1,11 +1,9 @@
-/*@tailwind base;*/
-
 @tailwind components;
 @tailwind utilities; 
 
 :root {
   --backgroundColor: #F6F1F1;
-  --color1: #e1e1e1;  /*#b9e7d3;*/
+  --color1: #e1e1e1;
   --color2: #19A7CE;
   --color3: #146C94;
 
@@ -20,17 +18,9 @@
   --color-selected: #dc2c19;
 }
 
-
-
 .App {
   text-align: center;
 }
-
-/* h1 {
-  font-weight: 1000;
-  text-decoration: underline;
-  color: #565c5e ;
-} */
 
 body {
   background-color: var(--backgroundColor);
@@ -71,32 +61,6 @@ div.tooltip-hover {
   top: 10px;
   left: 0;
 }
-
-
-
-
-
-
-
-/* button {
-  background-color: #565c5e;
-  color: #dfdbd8;
-  padding: 10px;
-  border-radius: 20px;
-  cursor: pointer;
-  margin-left: 5px;
-  margin-right: 5px;
-  width: 100px;
-  transition-duration: 400ms;
-  /* Add box-shadow for a 3D effect */
-  /* box-shadow: 0 3px 6px rgba(0, 0, 0, 0.16), 0 3px 6px rgba(0, 0, 0, 0.23);
-} */ */
-
-/* button:hover {
-  color: #565c5e;
-  background-color: var(--backgroundColor);
-  transition-duration: 400ms;
-} */
 
 /* Define the button style when it is pressed */
 .buttonContainer button.active {

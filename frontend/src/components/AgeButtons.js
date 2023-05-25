@@ -1,8 +1,6 @@
 import React, { useState, useRef, useEffect } from "react";
 
 import {
-  Image,
-  Grid,
   Button
 } from '@mantine/core';
 
@@ -11,8 +9,6 @@ function AgeButtons({selectedNestedButton, setSelectedNestedButton}) {
 
     const refButtonAll = useRef(null);
     const refButtonYoung = useRef(null);
-
-    // if(cat2_selected === "nestedButton1") {
 
     useEffect(() => {
         if (selectedNestedButton == "all_drivers") {

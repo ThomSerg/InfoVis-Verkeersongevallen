@@ -6,25 +6,10 @@ import {
   Button
 } from '@mantine/core';
 
-import { useViewportSize } from '@mantine/hooks';
-
-//import slipping_car from '../../public/car_slipping.png'
-
-import ChartCard from "../plotFunctions/ChartCard";
-
-
-
 
 function Header({scale, activeTab, setActiveTab}) {
 
   function NavigationButtons() {
-    // return (
-    //     <div class="buttonContainer" >
-    //         <button id="button1" class="active" >Road Quality</button>
-    //         <button id="button2" >Alcohol</button>
-    //         <button id="button3" >Fines</button>
-    //     </div>
-    // )
 
     const refButtonRoad = useRef(null);
     const refButtonAlcohol = useRef(null);
@@ -47,6 +32,7 @@ function Header({scale, activeTab, setActiveTab}) {
     return (
       
       <Grid grow style={{"width": "100%"}}>
+
         <Grid.Col span={4}>
           <Button 
             fullWidth 
@@ -87,6 +73,7 @@ function Header({scale, activeTab, setActiveTab}) {
             Fines
           </Button>
         </Grid.Col>
+
       </Grid>
   
     )
@@ -95,37 +82,34 @@ function Header({scale, activeTab, setActiveTab}) {
 
   return (
     <div>
-      {/* <ChartCard  title=""> */}
       <Grid grow>
+
         <Grid.Col span={1}>
-          {/* <div style = {{"position": "relative", "top": "50%", "-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}> */}
           <div style={{"height": "100%", "display": "flex", "justify-content": "center", "align-items": "center"}}>
             <Image width={80*scale} src="/car_slipping.png"></Image>
           </div>
         </Grid.Col>
+
         <Grid.Col span={5}>
-          {/* <div style = {{"position": "relative", "top": "50%", "-ms-transform": "translateY(-50%)", "transform": "translateY(-50%)"}}> */}
           <div style={{"height": "100%", "display": "flex", "align-items": "center"}}>
             <h1 style={{"font-size": (60*scale).toString()+"px"}}>Road accidents in Europe</h1>
           </div>
         </Grid.Col>
+
         <Grid.Col span={3}>
           <div style={{"height": "100%", "width": "100%", "display": "flex", "align-items": "center"}}>
             <NavigationButtons/>
           </div>
         </Grid.Col>
+
         <Grid.Col span={1}>
           <div style={{"height": "15vh", "width": "15vh", "display": "flex", "align-items": "center"}}>
             <Image height={"10vh"} radius="md" src="/europe.jpg"></Image>
           </div>
         </Grid.Col>
 
-
       </Grid>
-      
-      {/* </ChartCard> */}
     </div>
-    
   )
 }
 
