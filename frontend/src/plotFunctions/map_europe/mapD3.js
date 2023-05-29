@@ -122,6 +122,15 @@ function MapD3({setHoveredCountry, hoveredCountry, setSelectedCountry, selectedC
         const values = Object.values(countryData);
         const minValue = d3.min(values);
         const maxValue = d3.max(values);
+
+        grad.selectAll('stop')
+              .data(gradientColors)
+              .enter()
+              .append('stop')
+              .style('stop-color', function(d){ return d3.color(d).formatHex(); })
+              .attr('offset', function(d,i) {
+                return 100 * (i / (numColors - 1)) + '%';
+              })
         
         svgLegend_.append('text')
         .attr('x', minValueTextX)
